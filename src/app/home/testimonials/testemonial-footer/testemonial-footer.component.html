@@ -1,0 +1,85 @@
+<section class="testimonials">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300..900&display=swap');
+  </style>
+
+  <div class="testimonials-header">
+    <h2 class="testimonials-title">Testimoni</h2>
+    <p class="testimonials-subtitle">kata mereka setelah menggunakan horuzt.com</p>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="loading-spinner"></div>
+    <p class="loading-text">Memuat testimoni...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="hasError && !isLoading" class="error-container">
+    <div class="error-message">
+      <i class="fas fa-exclamation-triangle"></i>
+      <p>Maaf, testimoni tidak dapat dimuat saat ini.</p>
+      <button class="retry-btn" (click)="loadTestimonials()">Coba Lagi</button>
+    </div>
+  </div>
+
+  <!-- Testimonials Content -->
+  <div *ngIf="!isLoading && !hasError" class="testimonials-content">
+    <div class="testimonial-cards">
+      <div
+        *ngFor="let testimonial of testimonials; trackBy: trackByTestimonialId"
+        class="testimonial-card"
+      >
+        <div class="card-header">
+          <div class="user-avatar">
+            <span class="avatar-initials">{{ getUserInitials(testimonial.user.name || 'User') }}</span>
+          </div>
+          <div class="user-info">
+            <h3 class="user-name">{{ testimonial.user.name }}</h3>
+            <p class="user-location">{{ getLocationDisplay(testimonial.kota, testimonial.provinsi) }}</p>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <p class="testimonial-text">{{ truncateReview(testimonial.ulasan) }}</p>
+        </div>
+
+        <div class="card-footer">
+          <div class="rating">
+            <span class="star filled">&#9733;</span>
+            <span class="star filled">&#9733;</span>
+            <span class="star filled">&#9733;</span>
+            <span class="star filled">&#9733;</span>
+            <span class="star filled">&#9733;</span>
+          </div>
+          <small class="testimonial-date">
+            {{ formatDate(testimonial.created_at) }}
+          </small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Load More Button -->
+    <div *ngIf="testimonials.length < totalItems" class="load-more-container">
+      <button
+        class="load-more-btn"
+        (click)="loadMore()"
+        [disabled]="isLoading"
+      >
+        <span *ngIf="!isLoading">Lihat Lebih Banyak</span>
+        <span *ngIf="isLoading">
+          <i class="fas fa-spinner fa-spin"></i> Memuat...
+        </span>
+      </button>
+    </div>
+
+    <!-- No Testimonials Message -->
+    <div *ngIf="testimonials.length === 0" class="no-testimonials">
+      <div class="empty-state">
+        <i class="fas fa-comments"></i>
+        <h3>Belum Ada Testimoni</h3>
+        <p>Jadilah yang pertama memberikan testimoni untuk layanan kami!</p>
+      </div>
+    </div>
+  </div>
+</section>

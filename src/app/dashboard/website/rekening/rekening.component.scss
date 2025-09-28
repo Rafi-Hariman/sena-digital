@@ -1,0 +1,594 @@
+:root {
+  --primary-color: #ff66a3;
+  --secondary-color: #4bd0f1;
+  --success-color: #28a745;
+  --danger-color: #dc3545;
+  --warning-color: #ffc107;
+  --info-color: #17a2b8;
+  --light-color: #f8f9fa;
+  --dark-color: #343a40;
+  --border-color: #e5e5e5;
+  --border-radius: 12px;
+  --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --transition: all 0.3s ease;
+}
+
+.rekening-container {
+  padding: 2rem 1rem;
+  // background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  min-height: 100vh;
+
+  .container-fluid {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .account-card {
+    background: #fff;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    transition: var(--transition);
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-header {
+      background: white;
+      color: white;
+      padding: 1.5rem 1.5rem 0rem 1.5rem;
+      border-bottom: none;
+
+      .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+
+        .card-title {
+          font-size: 1.25rem;
+          font-weight: 600;
+          margin: 0;
+          display: flex;
+          align-items: center;
+          color: var(--primary-color);
+
+          i {
+            color: var(--primary-color);
+          }
+        }
+
+        .account-number {
+          background: var(--primary-color);
+          padding: 0.5rem 1rem;
+          border-radius: 20px;
+          font-weight: 600;
+          font-size: 0.9rem;
+        }
+      }
+
+      .header-actions {
+        display: flex;
+        gap: 0.5rem;
+
+        .btn {
+          border: 2px solid rgba(255, 255, 255, 0.3);
+          // color: ;
+          font-weight: 500;
+          transition: var(--transition);
+
+          // &:hover {
+            // background: rgba(255, 255, 255, 0.2);
+            // border-color: rgba(255, 255, 255, 0.5);
+          // }
+
+          &:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+          }
+        }
+      }
+    }
+
+    .card-body {
+      padding: 2rem;
+
+      .form-group {
+        margin-bottom: 1.5rem;
+
+        .form-label {
+          display: flex;
+          align-items: center;
+          font-weight: 600;
+          color: var(--dark-color);
+          margin-bottom: 0.5rem;
+          font-size: 0.95rem;
+
+          &.required::after {
+            content: " *";
+            color: var(--danger-color);
+            font-weight: bold;
+          }
+
+          i {
+            color: var(--primary-color);
+            width: 18px;
+          }
+        }
+
+        .form-control {
+          /* border: 2px solid var(--border-color); */
+          border-radius: 8px;
+          /* padding: .75rem; */
+          font-size: 1rem;
+          transition: var(--transition);
+
+          &:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(255, 102, 163, 0.25);
+            outline: none;
+          }
+
+          &:read-only {
+            background-color: #f8f9fa;
+            cursor: not-allowed;
+          }
+
+          &.is-invalid {
+            border-color: var(--danger-color);
+          }
+        }
+
+        .bank-select {
+          .ngx-select {
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            transition: var(--transition);
+
+            &:focus-within {
+              border-color: var(--primary-color);
+              box-shadow: 0 0 0 0.2rem rgba(255, 102, 163, 0.25);
+            }
+          }
+        }
+
+        .file-upload-wrapper {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+          flex-wrap: wrap;
+
+          .file-input {
+            display: none;
+          }
+
+          .file-label {
+            display: inline-flex;
+            align-items: center;
+            padding: 5px;
+            font-size: 15px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            border: none;
+
+            &:hover {
+              // background: darken(var(--primary-color), 10%);
+              transform: translateY(-1px);
+            }
+
+            i {
+              margin-right: 0.5rem;
+            }
+          }
+
+          .file-info {
+            color: #6c757d;
+            font-size: 0.9rem;
+            font-style: italic;
+          }
+        }
+
+        .photo-preview {
+          margin-top: 1rem;
+
+          .preview-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 2px solid var(--border-color);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+          }
+        }
+
+        .bank-info {
+          margin-top: 1rem;
+          padding: 1rem;
+          background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+          border-radius: 8px;
+          border-left: 4px solid var(--secondary-color);
+
+          .bank-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+
+            .bank-icon {
+              font-size: 1.5rem;
+              color: var(--secondary-color);
+            }
+
+            .bank-name {
+              font-weight: 600;
+              color: var(--dark-color);
+              font-size: 1rem;
+            }
+          }
+        }
+
+        .error-message {
+          color: var(--danger-color);
+          font-size: 0.875rem;
+          margin-top: 0.25rem;
+          display: flex;
+          align-items: center;
+          gap: 0.25rem;
+
+          i {
+            font-size: 0.8rem;
+          }
+        }
+      }
+    }
+
+    .card-footer {
+      background: #f8f9fa;
+      border-top: 1px solid var(--border-color);
+      padding: 1.5rem;
+
+      .footer-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .edit-actions,
+        .remove-action {
+          display: flex;
+          gap: 0.5rem;
+        }
+
+        .btn {
+          font-weight: 500;
+          padding: 0.5rem 1.25rem;
+          border-radius: 6px;
+          transition: var(--transition);
+
+          &:hover {
+            transform: translateY(-1px);
+          }
+
+          &:disabled {
+            opacity: 0.6;
+            transform: none;
+          }
+
+          i {
+            font-size: 0.9rem;
+          }
+        }
+      }
+    }
+  }
+
+  .action-buttons {
+    margin-top: 2rem;
+    padding: 1rem;
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+
+    .btn {
+      font-weight: 600;
+      font-size: 13px;
+      padding: 10px;
+      border-radius: 8px;
+      transition: var(--transition);
+      border: 2px solid transparent;
+
+      &.btn-outline-primary {
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+
+        &:hover {
+          background: var(--primary-color);
+          color: white;
+          transform: translateY(-2px);
+        }
+      }
+
+      &.btn-primary {
+        background: linear-gradient(135deg, var(--primary-color), #ff8cc5);
+        border: none;
+
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(255, 102, 163, 0.3);
+        }
+      }
+
+      &:disabled {
+        opacity: 0.6;
+        transform: none;
+        cursor: not-allowed;
+      }
+
+      i {
+        font-size: 0.9rem;
+      }
+    }
+  }
+
+  .info-panel {
+    .alert {
+      border: none;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+
+      &.alert-info {
+        background: linear-gradient(135deg, #d1ecf1, #bee5eb);
+        color: #0c5460;
+        border-left: 4px solid var(--info-color);
+      }
+
+      ul {
+        list-style-type: none;
+        padding-left: 0;
+
+        li {
+          padding: 0.25rem 0;
+          position: relative;
+          padding-left: 1.5rem;
+
+          &::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--success-color);
+            font-weight: bold;
+          }
+        }
+      }
+    }
+  }
+
+  // Loading spinner
+  .spinner-border {
+    width: 3rem;
+    height: 3rem;
+    border-width: 0.3em;
+  }
+}
+
+// Responsive Design
+@media (max-width: 1199.98px) {
+  .rekening-container {
+    .account-card {
+      .card-header {
+        .header-content {
+          flex-direction: column;
+          gap: 1rem;
+          text-align: center;
+        }
+
+        .header-actions {
+          justify-content: center;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 991.98px) {
+  .rekening-container {
+    padding: 1rem;
+
+    .account-card {
+      .card-body {
+        padding: 1.5rem;
+      }
+
+      .card-footer {
+        padding: 1rem;
+
+        .footer-actions {
+          flex-direction: column;
+          gap: 1rem;
+        }
+      }
+    }
+
+    .action-buttons {
+      padding: 1.5rem;
+
+      .row > div {
+        margin-bottom: 1rem;
+        text-align: center !important;
+      }
+    }
+  }
+}
+
+@media (max-width: 767.98px) {
+  .rekening-container {
+    padding: 0.5rem;
+
+    .account-card {
+      .card-header {
+        padding: 1rem;
+
+        .card-title {
+          font-size: 1.1rem;
+          color: var(--primary-color);
+        }
+
+        .header-actions {
+          flex-direction: column;
+          gap: 0.5rem;
+          width: 100%;
+
+          .btn {
+            width: 100%;
+            justify-content: center;
+          }
+        }
+      }
+
+      .card-body {
+        padding: 1rem;
+
+        .form-group {
+          .file-upload-wrapper {
+            flex-direction: column;
+            align-items: stretch;
+
+            .file-label {
+              text-align: center;
+              justify-content: center;
+            }
+          }
+
+          .bank-info {
+            .bank-logo {
+              flex-direction: column;
+              text-align: center;
+              gap: 0.5rem;
+            }
+          }
+        }
+      }
+    }
+
+    .action-buttons {
+      padding: 1rem;
+
+      .btn {
+        width: 100%;
+        margin-bottom: 0.5rem;
+      }
+    }
+
+    .info-panel {
+      .alert {
+        padding: 1rem;
+        font-size: 0.9rem;
+      }
+    }
+  }
+}
+
+@media (max-width: 575.98px) {
+  .rekening-container {
+    .account-card {
+      .card-header {
+        .header-content {
+          .card-title {
+            font-size: 1rem;
+            flex-direction: column;
+            gap: 0.5rem;
+            color: var(--primary-color);
+          }
+
+          .account-number {
+            background: var(--primary-color);
+            padding: 0.25rem 0.75rem;
+            font-size: 0.8rem;
+          }
+        }
+      }
+
+      .card-body {
+        .form-group {
+          .form-label {
+            font-size: 0.9rem;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.25rem;
+          }
+
+          .form-control {
+            font-size: 0.9rem;
+            padding: 0.6rem;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Custom ngx-select styling
+::ng-deep {
+  .ngx-select {
+    .ngx-select__selected {
+      border: none !important;
+      padding: 0.75rem !important;
+      font-size: 1rem !important;
+    }
+
+    .ngx-select__toggle {
+      border: none !important;
+    }
+
+    .ngx-select__placeholder {
+      color: #6c757d !important;
+    }
+
+    &.ngx-select_focused {
+      box-shadow: 0 0 0 0.2rem rgba(255, 102, 163, 0.25) !important;
+    }
+  }
+}
+
+// Animation for smooth transitions
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.account-card {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+.account-card:nth-child(even) {
+  animation-delay: 0.1s;
+}
+
+// Print styles
+@media print {
+  .rekening-container {
+    .action-buttons,
+    .card-header .header-actions,
+    .card-footer {
+      display: none !important;
+    }
+
+    .account-card {
+      box-shadow: none !important;
+      border: 1px solid #000 !important;
+      page-break-inside: avoid;
+      margin-bottom: 2rem;
+    }
+  }
+}

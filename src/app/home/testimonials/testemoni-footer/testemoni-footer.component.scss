@@ -1,0 +1,70 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+}
+
+section {
+    display: grid;
+    place-items: center;
+    padding-bottom: 6rem;
+    padding-top: 6rem;
+}
+
+h2 {
+    font-family: Rubik;
+    font-size: 40px;
+    font-weight: 500;
+    line-height: 27px;
+    text-align: center;
+}
+
+.slider {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 80%;
+    overflow: hidden;
+    background: rgb(255, 255, 255);
+}
+
+.slider-items {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    animation: scrolling 20s linear infinite, fadeIn 1s ease forwards; /* Combined animations */
+}
+
+
+/* Define the entrance fade-in animation */
+@keyframes fadeIn {
+    0% {
+        opacity: 0; /* Start completely transparent */
+    }
+    100% {
+        opacity: 1; /* End fully visible */
+    }
+}
+
+.slider-items img {
+    width: 30%;
+    margin: 20px;
+}
+
+@media screen and (max-width: 550px) {
+    h2 {
+        font-size: 30px;
+        font-weight: 500;
+        line-height: 20px;
+    }
+    .slider-items img {
+        max-width: 25%;
+        margin: 10px;
+    }
+}

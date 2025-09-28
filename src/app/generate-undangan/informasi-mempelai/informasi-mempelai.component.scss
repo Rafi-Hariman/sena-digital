@@ -1,0 +1,366 @@
+// InformasiMempelaiComponent - Clean, modern UI matching target design
+.im-container {
+  max-width: 480px;
+  margin: 0 auto;
+  background: #ffffff;
+  min-height: 100vh;
+  padding: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.im-form {
+  padding: 24px;
+  background: white;
+}
+
+// Section Styling
+.im-section {
+  margin-bottom: 40px;
+
+  &:last-of-type:not(.im-button-group) {
+    margin-bottom: 32px;
+  }
+}
+
+.im-section-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #66a3ff;
+  margin: 0 0 24px 0;
+  text-align: left;
+  letter-spacing: -0.01em;
+}
+
+// Profile Upload Section
+.im-profile-section {
+  margin-bottom: 24px;
+}
+
+.im-profile-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  background: #fafafa;
+  border-radius: 12px;
+  border: 1px solid #f0f0f0;
+}
+
+.im-profile-image {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23888888' viewBox='0 0 24 24'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E") no-repeat center;
+    background-size: contain;
+    z-index: 1;
+  }
+}
+
+.im-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  position: relative;
+  z-index: 2;
+}
+
+.im-upload-btn {
+  background: #ffa0ae;
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+
+  &:hover {
+    background: #ff8a9a;
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.im-file-input {
+  display: none;
+}
+
+// Form Fields
+.im-form-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.im-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.im-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.im-input {
+  width: 100%;
+  height: 48px;
+  padding: 0 16px;
+  border: 1.5px solid #e1e5e9;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 400;
+  color: #1a1a1a;
+  background: white;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+
+  &::placeholder {
+    color: #9ca3af;
+    font-weight: 400;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: #66a3ff;
+    box-shadow: 0 0 0 3px rgba(102, 163, 255, 0.1);
+  }
+
+  &:invalid:not(:placeholder-shown) {
+    border-color: #ef4444;
+  }
+}
+
+// Button Group
+.im-button-group {
+  display: flex;
+  gap: 12px;
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.im-btn {
+  flex: 1;
+  height: 48px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+}
+
+.im-btn-secondary {
+  background: white;
+  color: #ffa0ae;
+  border: 1.5px solid #ffa0ae;
+
+  &:hover:not(:disabled) {
+    background: #ffa0ae;
+    color: white;
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+}
+
+.im-btn-primary {
+  background: #ffa0ae;
+  color: white;
+  border: 1.5px solid transparent;
+
+  &:hover:not(:disabled) {
+    background: #ff8a9a;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 160, 174, 0.3);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// Responsive Design
+@media (max-width: 480px) {
+  .im-container {
+    max-width: 100%;
+  }
+
+  .im-form {
+    padding: 20px 16px;
+  }
+
+  .im-section {
+    margin-bottom: 32px;
+  }
+
+  .im-section-title {
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+
+  .im-profile-image {
+    width: 100px;
+    height: 100px;
+
+    &::before {
+      width: 35px;
+      height: 35px;
+    }
+  }
+
+  .im-profile-upload {
+    padding: 16px;
+  }
+
+  .im-upload-btn {
+    padding: 8px 20px;
+    font-size: 13px;
+  }
+
+  .im-form-fields {
+    gap: 16px;
+  }
+
+  .im-input {
+    font-size: 16px; // Prevent zoom on iOS
+  }
+
+  .im-button-group {
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 32px;
+  }
+
+  .im-btn {
+    width: 100%;
+    padding: 7px;
+  }
+}
+
+@media (max-width: 360px) {
+  .im-form {
+    padding: 16px 12px;
+  }
+
+  .im-section {
+    margin-bottom: 28px;
+  }
+
+  .im-profile-image {
+    width: 90px;
+    height: 90px;
+
+    &::before {
+      width: 30px;
+      height: 30px;
+    }
+  }
+
+  .im-upload-btn {
+    padding: 7px 18px;
+    font-size: 12px;
+  }
+
+  .im-button-group {
+    margin-top: 28px;
+  }
+
+  .im-btn {
+    width: 100%;
+    padding: 7px;
+  }
+}
+
+// Dark mode support (future-proofing)
+// @media (prefers-color-scheme: dark) {
+//   .im-container {
+//     background: #1a1a1a;
+//   }
+
+//   .im-form {
+//     background: #1a1a1a;
+//   }
+
+//   .im-section-title {
+//     color: #66a3ff;
+//   }
+
+//   .im-profile-upload {
+//     background: #2a2a2a;
+//     border-color: #333;
+//   }
+
+//   .im-profile-image {
+//     background: #333;
+//   }
+
+//   .im-label {
+//     color: #ffffff;
+//   }
+
+//   .im-input {
+//     background: #2a2a2a;
+//     border-color: #444;
+//     color: #ffffff;
+
+//     &::placeholder {
+//       color: #888;
+//     }
+
+//     &:focus {
+//       border-color: #66a3ff;
+//       box-shadow: 0 0 0 3px rgba(102, 163, 255, 0.2);
+//     }
+//   }
+
+//   .im-button-group {
+//     border-color: #333;
+//   }
+
+//   .im-btn-secondary {
+//     background: #1a1a1a;
+//     border-color: #ffa0ae;
+
+//     &:hover:not(:disabled) {
+//       background: #ffa0ae;
+//       color: white;
+//     }
+//   }
+// }

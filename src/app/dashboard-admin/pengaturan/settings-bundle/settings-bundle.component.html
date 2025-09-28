@@ -1,0 +1,337 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+
+
+    <div *ngIf="dataLoading" class="col-12 text-center mb-4">
+      <div class="spinner-border text-primary" role="status">
+        <span class="sr-only">Memuat data paket...</span>
+      </div>
+      <p class="mt-2">Memuat data paket undangan...</p>
+    </div>
+
+
+    <div class="col-lg-4 col-md-6 mb-4" *ngIf="!dataLoading">
+      <div class="card h-100 shadow-sm">
+        <div class="card-header text-white d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">Paket 1 - Silver</h5>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="silverForm" novalidate>
+
+
+            <div class="mb-3">
+              <label class="form-label fw-bold">
+                Nama Paket Undangan <span class="text-danger">*</span>
+              </label>
+              <input type="text" class="form-control" [class.is-invalid]="isFieldInvalid(silverForm, 'name_paket')"
+                formControlName="name_paket" placeholder="Masukkan nama paket" [disabled]="silverLoading">
+              <div class="invalid-feedback" *ngIf="isFieldInvalid(silverForm, 'name_paket')">
+                {{ getFieldError(silverForm, 'name_paket') }}
+              </div>
+            </div>
+
+
+            <div class="mb-3">
+              <label class="form-label fw-bold">
+                Harga Paket Undangan <span class="text-danger">*</span>
+              </label>
+              <div class="input-group">
+                <span class="input-group-text">Rp</span>
+                <input type="number" class="form-control" [class.is-invalid]="isFieldInvalid(silverForm, 'price')"
+                  formControlName="price" placeholder="0" min="0" [disabled]="silverLoading">
+              </div>
+              <div class="invalid-feedback" *ngIf="isFieldInvalid(silverForm, 'price')">
+                {{ getFieldError(silverForm, 'price') }}
+              </div>
+            </div>
+
+
+            <div class="mb-3">
+              <label class="form-label fw-bold">
+                Masa Aktif Undangan <span class="text-danger">*</span>
+              </label>
+              <div class="input-group">
+                <input type="number" class="form-control" [class.is-invalid]="isFieldInvalid(silverForm, 'masa_aktif')"
+                  formControlName="masa_aktif" placeholder="30" min="1" [disabled]="silverLoading">
+                <span class="input-group-text">hari</span>
+              </div>
+              <div class="invalid-feedback" *ngIf="isFieldInvalid(silverForm, 'masa_aktif')">
+                {{ getFieldError(silverForm, 'masa_aktif') }}
+              </div>
+            </div>
+
+
+            <div class="mb-3">
+              <h6 class="fw-bold mb-3">Fitur Paket:</h6>
+
+              <div class="form-check form-switch mb-2">
+                <input class="form-check-input" type="checkbox" id="silverHalamanBuku" formControlName="halaman_buku"
+                  [disabled]="silverLoading">
+                <label class="form-check-label" for="silverHalamanBuku">
+                  Halaman Buku Tamu
+                </label>
+              </div>
+
+              <div class="form-check form-switch mb-2">
+                <input class="form-check-input" type="checkbox" id="silverKirimWa" formControlName="kirim_wa"
+                  [disabled]="silverLoading">
+                <label class="form-check-label" for="silverKirimWa">
+                  Kirim WhatsApp
+                </label>
+              </div>
+
+              <div class="form-check form-switch mb-2">
+                <input class="form-check-input" type="checkbox" id="silverBebasTema" formControlName="bebas_pilih_tema"
+                  [disabled]="silverLoading">
+                <label class="form-check-label" for="silverBebasTema">
+                  Bebas Pilih Tema
+                </label>
+              </div>
+
+              <div class="form-check form-switch mb-2">
+                <input class="form-check-input" type="checkbox" id="silverKirimHadiah" formControlName="kirim_hadiah"
+                  [disabled]="silverLoading">
+                <label class="form-check-label" for="silverKirimHadiah">
+                  Kirim Hadiah
+                </label>
+              </div>
+
+              <div class="form-check form-switch mb-2">
+                <input class="form-check-input" type="checkbox" id="silverImportData" formControlName="import_data"
+                  [disabled]="silverLoading">
+                <label class="form-check-label" for="silverImportData">
+                  Import Data Tamu (Excel)
+                </label>
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-end">
+              <button class="btn btn-custom mt-3" type="button" (click)="onClickSilver()"
+                [disabled]="silverLoading || !silverForm.valid">
+                <span *ngIf="silverLoading" class="spinner-border spinner-border-sm me-2" role="status"></span>
+                {{ silverLoading ? 'Menyimpan...' : 'Simpan' }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="col-lg-4 col-md-6 mb-4" *ngIf="!dataLoading">
+      <div class="card h-100 shadow-sm">
+        <div class="card-header text-dark d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">Paket 2 - Gold</h5>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="goldForm" novalidate>
+
+
+            <div class="mb-3">
+              <label class="form-label fw-bold">
+                Nama Paket Undangan <span class="text-danger">*</span>
+              </label>
+              <input type="text" class="form-control" [class.is-invalid]="isFieldInvalid(goldForm, 'name_paket')"
+                formControlName="name_paket" placeholder="Masukkan nama paket" [disabled]="goldLoading">
+              <div class="invalid-feedback" *ngIf="isFieldInvalid(goldForm, 'name_paket')">
+                {{ getFieldError(goldForm, 'name_paket') }}
+              </div>
+            </div>
+
+
+            <div class="mb-3">
+              <label class="form-label fw-bold">
+                Harga Paket Undangan <span class="text-danger">*</span>
+              </label>
+              <div class="input-group">
+                <span class="input-group-text">Rp</span>
+                <input type="number" class="form-control" [class.is-invalid]="isFieldInvalid(goldForm, 'price')"
+                  formControlName="price" placeholder="0" min="0" [disabled]="goldLoading">
+              </div>
+              <div class="invalid-feedback" *ngIf="isFieldInvalid(goldForm, 'price')">
+                {{ getFieldError(goldForm, 'price') }}
+              </div>
+            </div>
+
+
+            <div class="mb-3">
+              <label class="form-label fw-bold">
+                Masa Aktif Undangan <span class="text-danger">*</span>
+              </label>
+              <div class="input-group">
+                <input type="number" class="form-control" [class.is-invalid]="isFieldInvalid(goldForm, 'masa_aktif')"
+                  formControlName="masa_aktif" placeholder="60" min="1" [disabled]="goldLoading">
+                <span class="input-group-text">hari</span>
+              </div>
+              <div class="invalid-feedback" *ngIf="isFieldInvalid(goldForm, 'masa_aktif')">
+                {{ getFieldError(goldForm, 'masa_aktif') }}
+              </div>
+            </div>
+
+
+            <div class="mb-3">
+              <h6 class="fw-bold mb-3">Fitur Paket:</h6>
+
+              <div class="form-check form-switch mb-2">
+                <input class="form-check-input" type="checkbox" id="goldHalamanBuku" formControlName="halaman_buku"
+                  [disabled]="goldLoading">
+                <label class="form-check-label" for="goldHalamanBuku">
+                  Halaman Buku Tamu
+                </label>
+              </div>
+
+              <div class="form-check form-switch mb-2">
+                <input class="form-check-input" type="checkbox" id="goldKirimWa" formControlName="kirim_wa"
+                  [disabled]="goldLoading">
+                <label class="form-check-label" for="goldKirimWa">
+                  Kirim WhatsApp
+                </label>
+              </div>
+
+              <div class="form-check form-switch mb-2">
+                <input class="form-check-input" type="checkbox" id="goldBebasTema" formControlName="bebas_pilih_tema"
+                  [disabled]="goldLoading">
+                <label class="form-check-label" for="goldBebasTema">
+                  Bebas Pilih Tema
+                </label>
+              </div>
+
+              <div class="form-check form-switch mb-2">
+                <input class="form-check-input" type="checkbox" id="goldKirimHadiah" formControlName="kirim_hadiah"
+                  [disabled]="goldLoading">
+                <label class="form-check-label" for="goldKirimHadiah">
+                  Kirim Hadiah
+                </label>
+              </div>
+
+              <div class="form-check form-switch mb-2">
+                <input class="form-check-input" type="checkbox" id="goldImportData" formControlName="import_data"
+                  [disabled]="goldLoading">
+                <label class="form-check-label" for="goldImportData">
+                  Import Data Tamu (Excel)
+                </label>
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-end">
+              <button class="btn btn-custom mt-3" type="button" (click)="onClickGold()"
+                [disabled]="goldLoading || !goldForm.valid">
+                <span *ngIf="goldLoading" class="spinner-border spinner-border-sm me-2" role="status"></span>
+                {{ goldLoading ? 'Menyimpan...' : 'Simpan' }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="col-lg-4 col-md-6 mb-4" *ngIf="!dataLoading">
+      <div class="card h-100 shadow-sm">
+        <div class="card-header text-white d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">Paket 3 - Platinum</h5>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="platinumForm" novalidate>
+
+
+            <div class="mb-3">
+              <label class="form-label fw-bold">
+                Nama Paket Undangan <span class="text-danger">*</span>
+              </label>
+              <input type="text" class="form-control" [class.is-invalid]="isFieldInvalid(platinumForm, 'name_paket')"
+                formControlName="name_paket" placeholder="Masukkan nama paket" [disabled]="platinumLoading">
+              <div class="invalid-feedback" *ngIf="isFieldInvalid(platinumForm, 'name_paket')">
+                {{ getFieldError(platinumForm, 'name_paket') }}
+              </div>
+            </div>
+
+
+            <div class="mb-3">
+              <label class="form-label fw-bold">
+                Harga Paket Undangan <span class="text-danger">*</span>
+              </label>
+              <div class="input-group">
+                <span class="input-group-text">Rp</span>
+                <input type="number" class="form-control" [class.is-invalid]="isFieldInvalid(platinumForm, 'price')"
+                  formControlName="price" placeholder="0" min="0" [disabled]="platinumLoading">
+              </div>
+              <div class="invalid-feedback" *ngIf="isFieldInvalid(platinumForm, 'price')">
+                {{ getFieldError(platinumForm, 'price') }}
+              </div>
+            </div>
+
+
+            <div class="mb-3">
+              <label class="form-label fw-bold">
+                Masa Aktif Undangan <span class="text-danger">*</span>
+              </label>
+              <div class="input-group">
+                <input type="number" class="form-control"
+                  [class.is-invalid]="isFieldInvalid(platinumForm, 'masa_aktif')" formControlName="masa_aktif"
+                  placeholder="90" min="1" [disabled]="platinumLoading">
+                <span class="input-group-text">hari</span>
+              </div>
+              <div class="invalid-feedback" *ngIf="isFieldInvalid(platinumForm, 'masa_aktif')">
+                {{ getFieldError(platinumForm, 'masa_aktif') }}
+              </div>
+            </div>
+
+
+            <div class="mb-3">
+              <h6 class="fw-bold mb-3">Fitur Paket:</h6>
+
+              <div class="form-check form-switch mb-2">
+                <input class="form-check-input" type="checkbox" id="platinumHalamanBuku" formControlName="halaman_buku"
+                  [disabled]="platinumLoading">
+                <label class="form-check-label" for="platinumHalamanBuku">
+                  Halaman Buku Tamu
+                </label>
+              </div>
+
+              <div class="form-check form-switch mb-2">
+                <input class="form-check-input" type="checkbox" id="platinumKirimWa" formControlName="kirim_wa"
+                  [disabled]="platinumLoading">
+                <label class="form-check-label" for="platinumKirimWa">
+                  Kirim WhatsApp
+                </label>
+              </div>
+
+              <div class="form-check form-switch mb-2">
+                <input class="form-check-input" type="checkbox" id="platinumBebasTema"
+                  formControlName="bebas_pilih_tema" [disabled]="platinumLoading">
+                <label class="form-check-label" for="platinumBebasTema">
+                  Bebas Pilih Tema
+                </label>
+              </div>
+
+              <div class="form-check form-switch mb-2">
+                <input class="form-check-input" type="checkbox" id="platinumKirimHadiah" formControlName="kirim_hadiah"
+                  [disabled]="platinumLoading">
+                <label class="form-check-label" for="platinumKirimHadiah">
+                  Kirim Hadiah
+                </label>
+              </div>
+
+              <div class="form-check form-switch mb-2">
+                <input class="form-check-input" type="checkbox" id="platinumImportData" formControlName="import_data"
+                  [disabled]="platinumLoading">
+                <label class="form-check-label" for="platinumImportData">
+                  Import Data Tamu (Excel)
+                </label>
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-end">
+              <button class="btn btn-custom mt-3 " type="button" (click)="onClickPlatinum()"
+                [disabled]="platinumLoading || !platinumForm.valid">
+                <span *ngIf="platinumLoading" class="spinner-border spinner-border-sm me-2" role="status"></span>
+                {{ platinumLoading ? 'Menyimpan...' : 'Simpan' }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </div>

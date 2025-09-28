@@ -1,0 +1,29 @@
+/* home.component.scss */
+
+/* Responsive improvement for home sections */
+section {
+  width: 100%;
+  margin: 0 auto 2rem auto;
+  padding: 1.5rem 1rem;
+  box-sizing: border-box;
+}
+
+@media (max-width: 900px) {
+  section {
+    padding: 1.2rem 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+}
+
+@media (max-width: 600px) {
+  section {
+    padding: 1rem 0.2rem;
+    margin-bottom: 1rem;
+  }
+
+}
+
+/* Utility: hide scrollbars on mobile for horizontal overflow */
+::-webkit-scrollbar {
+  display: none;
+}

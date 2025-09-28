@@ -1,0 +1,43 @@
+.modal-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 18px;
+    color: #333;
+    min-height: 100px; /* Adjust this as needed */
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    border-top: none;
+    padding: 20px;
+}
+
+.btn-cancel {
+    background-color: #f8d7da;
+    color: #333;
+    border: none;
+    width: 100px;
+    margin-right: 10px;
+}
+
+.btn-delete {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    width: 100px;
+}
+
+.modal-header {
+    border-bottom: 0px;
+}
+
+.btn-cancel:hover {
+    background-color: #f5c2c7;
+}
+
+.btn-delete:hover {
+    background-color: #5a6268;
+}

@@ -1,0 +1,657 @@
+:host {
+  display: block;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(135deg, #f5f2f0 0%, #ede5e1 100%);
+  background-image: url('../../../assets/bg-wd.jpeg');
+  min-height: 100vh;
+  font-family: "Georgia", "Times New Roman", serif;
+  // padding-bottom: 120px;
+  position: relative;
+  background-repeat: no-repeat;
+  background-size: 100vw 100vh;
+  // background-position: center center;
+  background-attachment: scroll;
+}
+
+.wedding-container {
+  position: relative;
+  // width: 100%;
+  // min-height: 100vh;
+}
+
+/* Side icons container */
+  /* Side icons collapsible container */
+  .side-icons-container {
+    position: fixed;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1002;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Main toggle button */
+  .side-icon-toggle {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.95);
+    color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(10px);
+    position: relative;
+    z-index: 1003;
+
+    &:hover {
+      background: rgba(255, 255, 255, 1);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+      transform: scale(1.05);
+    }
+
+    &.expanded {
+      background: rgba(74, 144, 226, 0.95);
+      color: white;
+
+      .rotated {
+        transform: rotate(90deg);
+      }
+    }
+
+    i {
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+  }
+
+  /* Collapsible icons group */
+  .side-icons-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    opacity: 0;
+    transform: translateY(-10px) scale(0.8);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+
+    &.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  /* Individual side icon buttons */
+  .side-icon-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.9);
+    color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(8px);
+
+    &:hover {
+      background: rgba(255, 255, 255, 1);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+      transform: scale(1.1);
+      color: #4A90E2;
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+
+  /* Responsive design for side icons */
+  @media (max-width: 768px) {
+    .side-icons-container {
+      right: 10px;
+      gap: 6px;
+    }
+
+    .side-icon-toggle {
+      width: 42px;
+      height: 42px;
+      font-size: 16px;
+    }
+
+    .side-icon-btn {
+      width: 38px;
+      height: 38px;
+      font-size: 14px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .side-icons-container {
+      right: 8px;
+      top: 45%;
+    }
+
+    .side-icon-toggle {
+      width: 40px;
+      height: 40px;
+      font-size: 15px;
+    }
+
+    .side-icon-btn {
+      width: 36px;
+      height: 36px;
+      font-size: 13px;
+    }
+  }
+
+/* Floral Background Elements */
+.floral-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: radial-gradient(
+      circle at 15% 20%,
+      rgba(255, 182, 193, 0.3) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 85% 80%,
+      rgba(255, 218, 185, 0.3) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(255, 240, 245, 0.2) 0%,
+      transparent 50%
+    );
+  pointer-events: none;
+}
+
+.content {
+  // padding: 60px 20px;
+  text-align: center;
+  min-height: calc(100vh - 120px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  position: relative;
+  z-index: 1;
+}
+
+.title {
+  font-size: 3.5rem;
+  color: #2c5530;
+  font-family: "Georgia", serif;
+  font-style: italic;
+  margin-bottom: 20px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  color: #666;
+  margin-bottom: 10px;
+  font-weight: 300;
+}
+
+/* Wedding invitation styles */
+.wedding-header {
+  font-size: 1.2rem;
+  color: #2c5530;
+  font-family: "Georgia", serif;
+  margin-bottom: 15px;
+  font-weight: 400;
+  letter-spacing: 2px;
+}
+
+.couple-names {
+  font-size: 4rem;
+  color: #2c5530;
+  font-family: "Dancing Script", cursive;
+  font-style: italic;
+  margin-bottom: 30px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  line-height: 1.1;
+}
+
+.greeting {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 5px;
+  font-weight: 300;
+}
+
+.formal-address {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 15px;
+  font-weight: 300;
+}
+
+.guest-name {
+  font-size: 1.5rem;
+  color: #D06A6A;
+  margin-bottom: 30px;
+  font-weight: 600;
+  font-family: "Georgia", serif;
+}
+
+.open-invitation-btn {
+  background-color: #D06A6A;
+  color: white;
+  border: none;
+  padding: 15px 40px;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-family: "Georgia", serif;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+}
+
+.open-invitation-btn:hover {
+  background-color: #c0392b;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+}
+
+.open-invitation-btn:active {
+  transform: translateY(0);
+}
+
+/* Future Component Views Styling */
+.message-view,
+.calendar-view,
+.birthday-view,
+.chat-view,
+.gallery-view,
+.profile-view,
+.gift-view {
+  text-align: center;
+  padding: 40px 20px;
+  color: #2c5530;
+
+  h2 {
+    font-size: 2.5rem;
+    font-family: "Georgia", serif;
+    margin-bottom: 20px;
+    color: #2c5530;
+  }
+
+  p {
+    font-size: 1.1rem;
+    color: #666;
+    font-weight: 300;
+  }
+}
+
+/* Responsive styling for future views */
+@media (max-width: 768px) {
+  .message-view,
+  .calendar-view,
+  .birthday-view,
+  .chat-view,
+  .gallery-view,
+  .profile-view,
+  .gift-view {
+    padding: 30px 15px;
+
+    h2 {
+      font-size: 2rem;
+    }
+
+    p {
+      font-size: 1rem;
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .message-view,
+  .calendar-view,
+  .birthday-view,
+  .chat-view,
+  .gallery-view,
+  .profile-view,
+  .gift-view {
+    padding: 20px 10px;
+
+    h2 {
+      font-size: 1.8rem;
+    }
+
+    p {
+      font-size: 0.9rem;
+    }
+  }
+}
+
+/* Bottom Navigation Bar */
+.bottom-navbar {
+  position: fixed;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  background: transparent;
+  z-index: 1001;
+  padding: 15px 0 25px 0;
+}
+
+.nav-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 20px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(15px);
+  border-radius: 25px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15), 0 8px 16px rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  // margin: 0 15px;
+  padding: 12px 20px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  margin: 0 8px;
+  border-radius: 12px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  text-decoration: none;
+  position: relative;
+}
+
+.nav-item i {
+  font-size: 24px;
+  color: #2c5530;
+  transition: all 0.3s ease;
+  opacity: 0.8;
+}
+
+.nav-item:hover {
+  transform: translateY(-3px) scale(1.05);
+  background: rgba(44, 85, 48, 0.1);
+}
+
+.nav-item:hover i {
+  color: #2c5530;
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.nav-item:active {
+  transform: translateY(-1px) scale(0.98);
+}
+
+/* Active state for icon color */
+.nav-item.active i {
+  color: #e74c3c !important;
+}
+
+/* Icon specific colors */
+.nav-item:nth-child(1) i {
+  color: #2c5530;
+} /* envelope */
+.nav-item:nth-child(2) i {
+  color: #2c5530;
+} /* heart */
+.nav-item:nth-child(3) i {
+  color: #2c5530;
+} /* calendar */
+.nav-item:nth-child(4) i {
+  color: #2c5530;
+} /* cake */
+.nav-item:nth-child(5) i {
+  color: #2c5530;
+} /* chat */
+.nav-item:nth-child(6) i {
+  color: #2c5530;
+} /* images */
+.nav-item:nth-child(7) i {
+  color: #2c5530;
+} /* user */
+.nav-item:nth-child(8) i {
+  color: #2c5530;
+} /* gift */
+
+/* Responsive design */
+@media (max-width: 768px) {
+  :host {
+    background-size: 120vw 120vh;
+    background-position: center center;
+  }
+
+  .nav-item {
+    width: 45px;
+    height: 45px;
+    margin: 0 6px;
+  }
+
+  .nav-item i {
+    font-size: 22px;
+  }
+
+  .title {
+    font-size: 2.5rem;
+  }
+
+  .couple-names {
+    font-size: 3rem;
+  }
+
+  .wedding-header {
+    font-size: 1.1rem;
+  }
+
+  .guest-name {
+    font-size: 1.2rem;
+  }
+
+  .open-invitation-btn {
+    padding: 12px 35px;
+    font-size: 1rem;
+  }
+
+  .side-icon-btn {
+    width: 70px;
+    height: 70px;
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 576px) {
+  :host {
+    background-size: 150vw 150vh;
+    background-position: center center;
+  }
+
+  .nav-item {
+    width: 40px;
+    height: 40px;
+    margin: 0 4px;
+  }
+
+  .nav-item i {
+    font-size: 20px;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+  }
+
+  .couple-names {
+    font-size: 2.5rem;
+  }
+
+  .wedding-header {
+    font-size: 1rem;
+  }
+
+  .guest-name {
+    font-size: 1.1rem;
+  }
+
+  .open-invitation-btn {
+    padding: 10px 30px;
+    font-size: 0.9rem;
+  }
+
+  .side-icon-btn {
+    width: 60px;
+    height: 60px;
+    font-size: 1.5rem;
+  }
+
+  .side-icons {
+    right: 1rem;
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  :host {
+    background-position: center center;
+  }
+
+  .title {
+    font-size: 1.8rem;
+  }
+
+  .subtitle {
+    font-size: 0.9rem;
+  }
+
+  .couple-names {
+    font-size: 2.2rem;
+  }
+
+  .wedding-header {
+    font-size: 0.9rem;
+  }
+
+  .guest-name {
+    font-size: 1rem;
+  }
+
+  .open-invitation-btn {
+    padding: 8px 25px;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 360px) {
+  :host {
+    background-size: 200vw 200vh;
+    background-position: center center;
+  }
+
+  .title {
+    font-size: 1.6rem;
+  }
+
+  .subtitle {
+    font-size: 0.8rem;
+  }
+
+  .couple-names {
+    font-size: 2rem;
+  }
+
+  .wedding-header {
+    font-size: 0.8rem;
+  }
+
+  .guest-name {
+    font-size: 0.9rem;
+  }
+
+  .open-invitation-btn {
+    padding: 8px 20px;
+    font-size: 0.8rem;
+  }
+}
+
+/* Smooth entrance animation */
+.nav-item {
+  animation: fadeInUp 0.6s ease-out forwards;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.nav-item:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.nav-item:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.nav-item:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.nav-item:nth-child(4) {
+  animation-delay: 0.4s;
+}
+.nav-item:nth-child(5) {
+  animation-delay: 0.5s;
+}
+.nav-item:nth-child(6) {
+  animation-delay: 0.6s;
+}
+.nav-item:nth-child(7) {
+  animation-delay: 0.7s;
+}
+.nav-item:nth-child(8) {
+  animation-delay: 0.8s;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Container entrance animation */
+.nav-container {
+  animation: slideUpContainer 0.8s ease-out 0.2s both;
+}
+
+@keyframes slideUpContainer {
+  from {
+    transform: translateY(100px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

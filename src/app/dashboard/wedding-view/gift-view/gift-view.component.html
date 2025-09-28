@@ -1,0 +1,55 @@
+<div class="invitation-card">
+  <p class="main-text">
+    Merupakan suatu kehormatan bagi kami, apabila<br>
+    Bapak/Ibu/Saudara/i berkenan hadir secara langsung<br>
+    untuk memberikan kami doa dan restu.
+  </p>
+
+  <h1 class="couple-names">{{ getCoupleNames() }}</h1>
+
+  <p class="gift-text">Hadiah dapat dikirimkan melalui:</p>
+
+  <div *ngIf="hasBankAccounts(); else noBankTemplate" class="banks-container">
+    <div
+      class="single-bank-card"
+      *ngFor="let bank of getBankAccounts(); trackBy: trackByBankId"
+    >
+      <div class="bank-header">
+        <span class="bank-name">{{ bank.nama_bank }}</span>
+      </div>
+
+      <div class="bank-details">
+        <div class="account-row">
+          <span class="account-number">{{ bank.nomor_rekening }}</span>
+          <button class="copy-button" (click)="copyToClipboard(bank.nomor_rekening)" title="Copy account number">
+            <span class="copy-icon">📋</span>
+          </button>
+        </div>
+
+        <div class="account-holder">
+          <span>a/n {{ bank.nama_pemilik }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #noBankTemplate>
+    <div class="banks-container">
+      <div class="single-bank-card">
+        <div class="bank-header">
+          <span class="bank-name">Bank</span>
+        </div>
+
+        <div class="bank-details">
+          <div class="account-row">
+            <span class="account-number">Nomor rekening akan diumumkan</span>
+          </div>
+
+          <div class="account-holder">
+            <span>a/n Penerima</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</div>

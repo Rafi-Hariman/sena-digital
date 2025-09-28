@@ -1,0 +1,25 @@
+<div class="akad-container">
+  <h1 class="akad-title">{{ eventType === 'akad' ? 'Akad' : 'Resepsi' }}</h1>
+
+  <div class="event-details" *ngIf="hasValidEvent(); else noEventTemplate">
+    <div class="date">{{ getFormattedDate() }}</div>
+    <div class="time">{{ getFormattedTime() }}</div>
+    <div class="location">di {{ getLocation() }}</div>
+  </div>
+
+  <ng-template #noEventTemplate>
+    <div class="event-details">
+      <div class="date">Tanggal akan diumumkan</div>
+      <div class="time">Waktu akan diumumkan</div>
+      <div class="location">Lokasi akan diumumkan</div>
+    </div>
+  </ng-template>
+
+  <div class="wedding-rings">
+    <img src="assets/ring.png" alt="Wedding Rings" style="width: 130px;">
+  </div>
+
+  <button class="location-button" *ngIf="getMapsLink()" (click)="openMapsLocation()">
+    Petunjuk Lokasi
+  </button>
+</div>

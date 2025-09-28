@@ -1,0 +1,82 @@
+<div class="rc-container" [formGroup]="form">
+  <!-- Story Cards -->
+  <div *ngIf="form && stories" formArrayName="stories">
+    <div *ngFor="let story of stories.controls; let i = index" [formGroupName]="i" class="rc-story-card">
+      <!-- Story Header -->
+      <div class="rc-story-header">
+        <h3 class="rc-story-number">#{{ i + 1 }}</h3>
+        <button *ngIf="stories.length > 1" 
+                class="rc-remove-btn" 
+                (click)="removeStory(i)" 
+                title="Hapus Cerita">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6" 
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M10 11v6M14 11v6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Story Form Fields -->
+      <div class="rc-story-fields">
+        <div class="rc-form-group">
+          <label for="tanggal_{{ i }}" class="rc-label">Tanggal</label>
+          <input type="text" 
+                 class="rc-input" 
+                 id="tanggal_{{ i }}"
+                 [bsConfig]="bsConfig" 
+                 bsDatepicker 
+                 placeholder="contoh 1 januari 2025" 
+                 formControlName="tanggal_cerita">
+        </div>
+
+        <div class="rc-form-group">
+          <label for="judul_{{ i }}" class="rc-label">Judul</label>
+          <input type="text" 
+                 class="rc-input" 
+                 id="judul_{{ i }}"
+                 placeholder="pertama bertemu" 
+                 formControlName="title">
+        </div>
+
+        <div class="rc-form-group">
+          <label for="cerita_{{ i }}" class="rc-label">Isi cerita</label>
+          <textarea class="rc-textarea" 
+                    id="cerita_{{ i }}"
+                    rows="4" 
+                    placeholder="Maximal 500 karakter" 
+                    formControlName="lead_cerita"
+                    maxlength="500"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Story Button -->
+  <div class="rc-add-section" *ngIf="stories.length < 2">
+    <button type="button" class="rc-add-btn" (click)="addStory()">
+      Tambah Cerita
+    </button>
+  </div>
+
+  <!-- Status Checkbox -->
+  <div class="rc-checkbox-section">
+    <input type="checkbox" 
+           id="status" 
+           class="rc-checkbox"
+           formControlName="status">
+    <label for="status" class="rc-checkbox-label">
+      Jangan Aktifkan Fitur ini
+    </label>
+  </div>
+
+  <!-- Navigation Buttons -->
+  <div class="rc-button-group">
+    <button type="button" class="rc-btn rc-btn-secondary" (click)="prev.emit()">
+      Kembali
+    </button>
+    <button type="button" class="rc-btn rc-btn-primary" (click)="submit()">
+      Lanjut
+    </button>
+  </div>
+</div>

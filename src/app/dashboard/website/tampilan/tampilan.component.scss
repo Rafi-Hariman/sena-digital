@@ -1,0 +1,282 @@
+// Base card styling
+.card-custom {
+  border-radius: 1rem;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  position: relative;
+  overflow: hidden;
+  background-color: white;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  min-height: 320px;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+
+  // Responsive padding
+  @media (min-width: 576px) {
+    padding: 1.25rem;
+    min-height: 350px;
+  }
+
+  @media (min-width: 768px) {
+    padding: 1.5rem 1.5rem 2rem 1.5rem;
+    min-height: 380px;
+  }
+
+  @media (min-width: 992px) {
+    min-height: 400px;
+  }
+
+  // Hover effect
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 8px 24px;
+  }
+}
+
+// Side bar indicator
+.card-custom .side-bar {
+  position: absolute;
+  top: 1rem;
+  left: 0;
+  width: 4px;
+  height: 2rem;
+  border-top-right-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+  background-color: #f97316; /* orange-400 */
+
+  @media (min-width: 576px) {
+    top: 1.25rem;
+    width: 5px;
+    height: 2.25rem;
+  }
+
+  @media (min-width: 768px) {
+    top: 1.5rem;
+    width: 6px;
+    height: 2.5rem;
+  }
+}
+
+// Card header
+.card-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+
+  @media (min-width: 576px) {
+    margin-bottom: 1rem;
+  }
+}
+
+::ng-deep.card-header {
+  background-color: #00000000 !important;
+  border-bottom: none !important;
+}
+
+.card-header h3 {
+  color: #f97316;
+  font-weight: 600;
+  font-size: 1rem;
+  margin: 0;
+
+  @media (min-width: 576px) {
+    font-size: 1.125rem;
+  }
+}
+
+.card-header i {
+  font-size: 1.125rem;
+  cursor: pointer;
+  color: black;
+  transition: color 0.2s ease-in-out;
+
+  @media (min-width: 576px) {
+    font-size: 1.25rem;
+  }
+
+  &:hover {
+    color: #dc2626; /* red-600 */
+  }
+}
+
+// Image container
+.card-img-container {
+  width: 100%;
+  max-width: 160px;
+  height: 180px;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  @media (min-width: 576px) {
+    max-width: 180px;
+    height: 200px;
+    margin-bottom: 1.125rem;
+  }
+
+  @media (min-width: 768px) {
+    max-width: 200px;
+    height: 220px;
+    margin-bottom: 1.25rem;
+  }
+
+  @media (min-width: 992px) {
+    height: 240px;
+  }
+}
+
+.card-img-container img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 0.5rem;
+  transition: transform 0.2s ease-in-out;
+
+  &:hover {
+    transform: scale(1.02);
+  }
+}
+
+// Card title
+.card-title {
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  color: black;
+  text-align: center;
+
+  @media (min-width: 576px) {
+    font-size: 1.125rem;
+    margin-bottom: 1.125rem;
+  }
+
+  @media (min-width: 768px) {
+    margin-bottom: 1.25rem;
+  }
+}
+
+// Button container
+.card-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  width: 100%;
+  margin-top: auto;
+
+  @media (min-width: 576px) {
+    gap: 0.75rem;
+  }
+
+  @media (min-width: 768px) {
+    gap: 1rem;
+  }
+}
+
+// Demo button
+.btn-demo {
+  border: 1.5px solid #22d3ee; /* cyan-400 */
+  color: black;
+  font-weight: 500;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
+  background-color: transparent;
+  transition: all 0.2s ease-in-out;
+  min-width: fit-content;
+  flex: 1;
+  justify-content: center;
+  max-width: 120px;
+
+  @media (min-width: 576px) {
+    font-size: 0.925rem;
+    padding: 0.5rem 1rem;
+    gap: 0.5rem;
+    max-width: 140px;
+  }
+
+  @media (min-width: 768px) {
+    font-size: 1rem;
+    padding: 0.625rem 1.25rem;
+    max-width: none;
+    flex: none;
+  }
+
+  &:hover {
+    background-color: #cffafe; /* cyan-50 */
+    color: black;
+    transform: translateY(-1px);
+  }
+
+  .btn-text {
+    @media (max-width: 359.98px) {
+      display: none;
+    }
+  }
+}
+
+// Nonaktifkan button
+.btn-nonaktifkan {
+  background-color: #166534; /* green-700 */
+  color: white;
+  font-weight: 500;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
+  border: none;
+  transition: all 0.2s ease-in-out;
+  min-width: fit-content;
+  flex: 1;
+  justify-content: center;
+  max-width: 120px;
+
+  @media (min-width: 576px) {
+    font-size: 0.925rem;
+    padding: 0.5rem 1rem;
+    gap: 0.5rem;
+    max-width: 140px;
+  }
+
+  @media (min-width: 768px) {
+    font-size: 1rem;
+    padding: 0.625rem 1.25rem;
+    max-width: none;
+    flex: none;
+  }
+
+  &:hover {
+    background-color: #14532d; /* green-800 */
+    color: white;
+    transform: translateY(-1px);
+  }
+
+  .btn-text {
+    @media (max-width: 359.98px) {
+      display: none;
+    }
+  }
+}
+
+/* Background gradients for each card */
+.bg-scroll {
+  background: radial-gradient(circle at bottom right, #ffe59259, #ffffff);
+}
+
+.bg-slide {
+  background: radial-gradient(circle at bottom left, #f9e9ff, #ffffff);
+}
+
+.bg-mobile {
+  background: radial-gradient(circle at bottom right, #ffe9f0, #ffffff);
+}

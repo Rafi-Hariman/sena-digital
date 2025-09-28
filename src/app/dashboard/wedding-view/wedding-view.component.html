@@ -1,0 +1,176 @@
+<div class="wedding-container">
+  <!-- Loading State -->
+  <div class="wedding-loading" *ngIf="isLoading">
+    <div class="loading-spinner">
+      <i class="fas fa-heart fa-beat" style="color: #e91e63; font-size: 2rem;"></i>
+    </div>
+    <h3 style="margin-top: 1rem; color: #666;">Loading Wedding Invitation...</h3>
+    <p style="color: #888;">Please wait while we prepare your special moment</p>
+  </div>
+
+  <!-- Error State -->
+  <div class="wedding-error" *ngIf="errorMessage && !isLoading">
+    <div class="error-icon" style="font-size: 3rem; color: #dc3545; margin-bottom: 1rem;">
+      <i class="fas fa-exclamation-triangle"></i>
+    </div>
+    <h3 style="color: #dc3545; margin-bottom: 1rem;">Oops! Something went wrong</h3>
+    <p class="error-message">{{ errorMessage }}</p>
+    <button class="retry-button" (click)="retryLoadData()">
+      <i class="fas fa-redo-alt" style="margin-right: 0.5rem;"></i>
+      Try Again
+    </button>
+    <p style="margin-top: 1rem; color: #666; font-size: 0.9rem;">
+      If the problem persists, please contact support or
+      <a href="/" style="color: #007bff; text-decoration: none;">return to homepage</a>
+    </p>
+  </div>
+
+  <!-- Main Wedding Content - only show when data is loaded -->
+  <div *ngIf="hasWeddingData() && !isLoading && !errorMessage">
+    <div class="floral-bg"></div>
+
+    <!-- Gallery view - properly isolated -->
+    <wc-gallery-view
+      *ngIf="isCurrentView(ContentView.GALLERY)"
+      [galleryItems]="weddingData?.gallery">
+    </wc-gallery-view>
+
+    <!-- Main content - hidden when gallery is active -->
+    <div class="content" *ngIf="!isCurrentView(ContentView.GALLERY)">
+      <div class="wrap" *ngIf="isCurrentView(ContentView.MAIN)">
+        <p class="wedding-header">The Wedding Of</p>
+        <h1 class="couple-names">{{ getCoupleDisplayName() }}</h1>
+        <p class="greeting">Kepada Yth.</p>
+        <p class="formal-address">Bapak/Ibu/Saudara/i</p>
+        <p class="guest-name">Nama Tamu</p>
+        <button class="open-invitation-btn" (click)="openInvitation()">Buka Undangan</button>
+      </div>
+
+      <wc-couple-view
+        *ngIf="isCurrentView(ContentView.COUPLE)"
+        [weddingData]="weddingData">
+      </wc-couple-view>
+
+      <wc-message-view
+        *ngIf="isCurrentView(ContentView.MESSAGE)"
+        [guestWishes]="weddingData?.guest_wishes">
+      </wc-message-view>
+
+      <wc-akad-view
+        *ngIf="isCurrentView(ContentView.CALENDAR)"
+        [events]="weddingData?.events"
+        [eventType]="'akad'">
+      </wc-akad-view>
+
+      <wc-resepsi-view
+        *ngIf="isCurrentView(ContentView.BIRTHDAY)"
+        [events]="weddingData?.events"
+        [eventType]="'resepsi'">
+      </wc-resepsi-view>
+
+      <wc-story-view
+        *ngIf="isCurrentView(ContentView.CHAT)"
+        [stories]="weddingData?.stories">
+      </wc-story-view>
+
+      <wc-presence-view
+        *ngIf="isCurrentView(ContentView.PROFILE)"
+        [weddingData]="weddingData || undefined">
+      </wc-presence-view>
+
+      <wc-gift-view
+        *ngIf="isCurrentView(ContentView.GIFT)"
+        [weddingData]="weddingData || undefined">
+      </wc-gift-view>
+    </div>
+
+    <!-- Side icons - collapsible group (hidden until invitation opened) -->
+    <div
+      class="side-icons-container"
+      *ngIf="invitationOpened"
+      role="complementary"
+      aria-label="Side icon controls">
+      <!-- Main toggle button - always visible -->
+      <button
+        class="side-icon-toggle"
+        (click)="toggleSideIcons()"
+        [attr.aria-expanded]="sideIconsVisible"
+        [attr.aria-label]="sideIconsVisible ? 'Hide control options' : 'Show control options'"
+        [class.expanded]="sideIconsVisible">
+        <i class="fas fa-ellipsis-v" [class.rotated]="sideIconsVisible"></i>
+      </button>
+
+      <!-- Collapsible icons group -->
+      <div class="side-icons-group" [class.visible]="sideIconsVisible" *ngIf="sideIconsVisible">
+        <button class="side-icon-btn" aria-label="QR code" (click)="openQRCodeModal()">
+          <i class="fas fa-qrcode"></i>
+        </button>
+
+        <button
+          class="side-icon-btn"
+          *ngIf="isMuted"
+          (click)="toggleMute()"
+          aria-label="Unmute audio">
+          <i class="fas fa-volume-mute"></i>
+        </button>
+
+        <button
+          class="side-icon-btn"
+          *ngIf="!isMuted"
+          (click)="toggleMute()"
+          aria-label="Mute audio">
+          <i class="fas fa-volume-up"></i>
+        </button>
+
+        <button
+          class="side-icon-btn"
+          *ngIf="!isPlaying"
+          (click)="togglePlay()"
+          aria-label="Play audio">
+          <i class="fas fa-play"></i>
+        </button>
+
+        <button
+          class="side-icon-btn"
+          *ngIf="isPlaying"
+          (click)="togglePlay()"
+          aria-label="Pause audio">
+          <i class="fas fa-pause"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Bottom navbar - hidden until invitation opened -->
+    <nav class="bottom-navbar" *ngIf="invitationOpened">
+      <div class="nav-container">
+        <button class="nav-item" *ngIf="isMessagesVisible()" (click)="showMessages()" data-bs-toggle="tooltip" data-bs-placement="top" title="Pesan">
+          <i class="fas fa-envelope"></i>
+        </button>
+        <button class="nav-item" *ngIf="isFavoriteVisible()" (click)="toggleFavorite($event)" data-bs-toggle="tooltip" data-bs-placement="top"
+          title="Favorit">
+          <i class="fas fa-heart"></i>
+        </button>
+        <button class="nav-item" *ngIf="isCalendarVisible()" (click)="showCalendar()" data-bs-toggle="tooltip" data-bs-placement="top"
+          title="Kalender">
+          <i class="fas fa-calendar"></i>
+        </button>
+        <button class="nav-item" *ngIf="isBirthdayVisible()" (click)="showBirthday()" data-bs-toggle="tooltip" data-bs-placement="top"
+          title="Ulang Tahun">
+          <i class="fas fa-birthday-cake"></i>
+        </button>
+        <button class="nav-item" *ngIf="isChatVisible()" (click)="showChat()" data-bs-toggle="tooltip" data-bs-placement="top" title="Chat">
+          <i class="fas fa-comment"></i>
+        </button>
+        <button class="nav-item" *ngIf="isGalleryVisible()" (click)="showGallery()" data-bs-toggle="tooltip" data-bs-placement="top" title="Galeri">
+          <i class="fas fa-images"></i>
+        </button>
+        <button class="nav-item" *ngIf="isProfileVisible()" (click)="showProfile()" data-bs-toggle="tooltip" data-bs-placement="top" title="Profil">
+          <i class="fas fa-user-check"></i>
+        </button>
+        <button class="nav-item" *ngIf="isGiftsVisible()" (click)="showGifts()" data-bs-toggle="tooltip" data-bs-placement="top" title="Hadiah">
+          <i class="fas fa-gift"></i>
+        </button>
+      </div>
+    </nav>
+  </div>
+</div>

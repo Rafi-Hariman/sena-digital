@@ -1,0 +1,42 @@
+<body>
+  <div class="modal-custom" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <button type="button" class="close-btn" aria-label="Close" (click)="closeModal()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
+        stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="bi bi-x" viewBox="0 0 24 24">
+        <line x1="18" y1="6" x2="6" y2="18" />
+        <line x1="6" y1="6" x2="18" y2="18" />
+      </svg>
+    </button>
+
+    <div class="success-icon-wrapper">
+      <div class="success-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
+          stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M20 6L9 17l-5-5" />
+        </svg>
+      </div>
+    </div>
+
+    <h2 id="modalTitle" class="fw-semibold fs-5 text-dark text-center text-sm-start mb-3">
+      Hapus Semua Kategori ?
+    </h2>
+
+    <form [formGroup]="categoryForm">
+      <label for="name" class="form-label fw-semibold text-dark fs-6 mb-3 d-block">
+        Konfirmasi Hapus Kategori
+      </label>
+      <div class="input-group mb-5">
+        <input type="text" id="name" class="form-control" placeholder="-- Ketik yes --" formControlName="confirm" />
+      </div>
+    </form>
+
+    <div class="d-flex gap-3">
+      <button type="button" class="btn btn-outline-gray flex-fill py-2 fs-6" (click)="closeModal()">
+        Cancel
+      </button>
+      <button type="button" class="btn btn-purple flex-fill py-2 fs-6" (click)="onDeleteAllCategory()">
+        Confirm
+      </button>
+    </div>
+  </div>
+</body>

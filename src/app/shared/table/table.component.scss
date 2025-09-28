@@ -1,0 +1,116 @@
+.table-container {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: #333;
+  }
+  
+  .custom-table {
+    border: 1px solid #ffb6c1;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: white;
+  
+    th {
+      text-transform: uppercase;
+      font-weight: bold;
+      background-color: #e2e2e2;
+      color: rgb(0, 0, 0);
+      text-align: center;
+      padding: 12px;
+    }
+  
+    td {
+      vertical-align: middle;
+      text-align: center;
+      padding: 10px;
+    }
+  
+    // tbody tr:nth-child(even) {
+    //   background-color: #ffe4e1;
+    // }
+  
+    // tbody tr:hover {
+    //   background-color: #ffb6c1;
+    //   color: white;
+    //   transition: 0.3s;
+    // }
+  }
+  
+  /* Pagination Styling */
+  .pagination-container {
+    border-top: 1px solid #ced4da;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    padding: 0.5rem 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  
+  .pagination {
+    background-color: #ffffff;
+    border-radius: 20px;
+    padding: 0.5rem 1rem;
+  }
+  
+  .page-item .page-link {
+    background-color: #ffffff;
+    color: #ff69b4;
+    border: 1px solid #ff69b4;
+    border-radius: 5px;
+    font-size: 0.85rem;
+    padding: 0.4rem 0.75rem;
+    transition: all 0.3s ease;
+  
+    &:hover {
+      background-color: #ffb6c1;
+      color: white;
+    }
+  }
+  
+  .page-item.active .page-link {
+    background-color: #ff69b4;
+    color: white;
+    border: 1px solid #ff69b4;
+  }
+  
+  .page-item.disabled .page-link {
+    background-color: #f8f9fa;
+    color: #ced4da;
+    border: 1px solid #ced4da;
+  }
+  
+  /* Custom Styling for Buttons */
+  .action-btn {
+    margin: 5px;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 6px 10px;
+    border-radius: 6px;
+    transition: all 0.3s ease-in-out;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  
+    i {
+      font-size: 16px;
+    }
+  
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+    }
+  }
+  
+  /* Custom Pink Buttons */
+  .btn-outline-pink {
+    color: #ff69b4;
+    border: 1px solid #ff69b4;
+  
+    &:hover {
+      background-color: #ff69b4;
+      color: white;
+    }
+  }
+  

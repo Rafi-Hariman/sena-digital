@@ -1,0 +1,149 @@
+  <!-- Invoice Section -->
+    <section class="invoice-section" aria-label="Invoice management">
+      <div class="invoice-container" role="region" aria-label="Invoice table container">
+        <div class="invoice-header">
+          <h2>Invoice</h2>
+        </div>
+
+        <!-- Desktop Table -->
+        <div class="table-responsive d-none d-md-block">
+          <table class="invoice-table" role="table" aria-label="Invoice data table">
+            <thead>
+              <tr>
+                <th scope="col">No Invoice</th>
+                <th scope="col">Pengguna</th>
+                <th scope="col">Domain</th>
+                <th scope="col">Status</th>
+                <th scope="col">Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of rows;">
+                <td>{{ row.invoice }}</td>
+                <td>{{ row.pengguna }}</td>
+                <td>
+                  <a href="/wedding/{{ row.domain }}" tabindex="-1" [attr.aria-label]="'Domain ' + row.domain">{{ row.domain }}</a>
+                </td>
+                <td>
+                  <span class="status-badge"
+                        [ngClass]="row.statusData.class"
+                        [attr.aria-label]="row.statusData.ariaLabel">
+                    <span class="dot" aria-hidden="true"></span>
+                    {{ row.statusData.text }}
+                  </span>
+                </td>
+                <td>
+                  <button class="btn-konfirmasi" [disabled]="!row.konfirmasiAktif"
+                    [attr.aria-disabled]="!row.konfirmasiAktif" [ngClass]="{ 'active': row.konfirmasiAktif }"
+                    [attr.aria-pressed]="row.konfirmasiAktif ? 'true' : null"
+                    (click)="onConfirmClicked(row, confirmPaymentModal)">
+                    Konfirmasi
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Mobile Cards -->
+        <div class="mobile-cards d-block d-md-none">
+          <div class="invoice-card" *ngFor="let row of rows; ">
+            <div class="invoice-card-header">
+              <span class="invoice-number">{{ row.invoice }}</span>
+              <span class="status-badge"
+                    [ngClass]="row.statusData.class"
+                    [attr.aria-label]="row.statusData.ariaLabel">
+                <span class="dot" aria-hidden="true"></span>
+                {{ row.statusData.text }}
+              </span>
+            </div>
+            <div class="invoice-card-body">
+              <div class="invoice-detail">
+                <span class="label">Pengguna:</span>
+                <span class="value">{{ row.pengguna }}</span>
+              </div>
+              <div class="invoice-detail">
+                <span class="label">Domain:</span>
+                <span class="value">
+                  <a href="#" [attr.aria-label]="'Domain ' + row.domain">{{ row.domain }}</a>
+                </span>
+              </div>
+            </div>
+            <div class="invoice-card-footer">
+              <button class="btn-konfirmasi mobile" [disabled]="!row.konfirmasiAktif"
+                [attr.aria-disabled]="!row.konfirmasiAktif" [ngClass]="{ 'active': row.konfirmasiAktif }"
+                [attr.aria-pressed]="row.konfirmasiAktif ? 'true' : null"
+                (click)="onConfirmClicked(row, confirmPaymentModal)">
+                Konfirmasi
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+      <!-- Payment Confirmation Modal -->
+  <ng-template #confirmPaymentModal>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Konfirmasi Pembayaran</h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="onCancelModal()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="confirmPaymentForm" (ngSubmit)="onSubmitPaymentConfirmation()">
+        <div class="row">
+          <div class="col-12 mb-3">
+            <div class="user-info-card">
+              <h6 class="mb-2">Informasi Pengguna</h6>
+              <p class="mb-1"><strong>Email:</strong> {{ selectedUser?.pengguna }}</p>
+              <p class="mb-1"><strong>Domain:</strong> {{ selectedUser?.domain || 'Belum ada domain' }}</p>
+              <p class="mb-0"><strong>Kode Invoice:</strong> {{ selectedUser?.invoice }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="user_id" class="form-label">User ID <span class="text-danger">*</span></label>
+            <input type="number" id="user_id" class="form-control" formControlName="user_id" readonly
+              placeholder="User ID">
+            <div class="invalid-feedback"
+              *ngIf="confirmPaymentForm.get('user_id')?.invalid && confirmPaymentForm.get('user_id')?.touched">
+              User ID wajib diisi
+            </div>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label for="kode_pemesanan" class="form-label">Kode Pemesanan <span class="text-danger">*</span></label>
+            <input type="text" id="kode_pemesanan" class="form-control" formControlName="kode_pemesanan"
+              placeholder="Masukkan kode pemesanan">
+            <div class="invalid-feedback"
+              *ngIf="confirmPaymentForm.get('kode_pemesanan')?.invalid && confirmPaymentForm.get('kode_pemesanan')?.touched">
+              Kode pemesanan wajib diisi
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-12">
+            <div class="form-check mb-3">
+              <input class="form-check-input" type="checkbox" id="confirmCheck" required>
+              <label class="form-check-label" for="confirmCheck">
+                Saya yakin ingin mengkonfirmasi pembayaran untuk pengguna ini
+              </label>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="onCancelModal()">
+        <i class="fas fa-times me-1"></i> Batal
+      </button>
+      <button type="button" class="btn btn-primary" [disabled]="confirmPaymentForm.invalid"
+        (click)="onSubmitPaymentConfirmation()">
+        <i class="fas fa-check me-1"></i> Konfirmasi Pembayaran
+      </button>
+    </div>
+  </ng-template>

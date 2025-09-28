@@ -1,0 +1,18 @@
+<svg width="2006" height="725" viewBox="0 0 2006 725" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background rectangle -->
+  <rect x="-4" width="2012" height="725" fill="#FAFCFF"/>
+  
+  <!-- Round shape with a hole in the middle, positioned according to the specifications -->
+  <g transform="rotate(-49.39 52.06 -45)"> <!-- Rotate around center of the circle -->
+    <circle cx="52.06" cy="-45" r="119.075" fill="url(#ringGradient)" /> <!-- Outer circle -->
+    <circle cx="52.06" cy="-45" r="79.34" fill="#FAFCFF"/> <!-- Inner circle, acts as the hole -->
+  </g>
+  
+  <defs>
+    <!-- Gradient for the ring -->
+    <linearGradient id="ringGradient" x1="0" y1="0" x2="1" y2="1" gradientUnits="userSpaceOnUse" gradientTransform="rotate(54.42)">
+      <stop offset="41.21%" stop-color="rgba(103, 250, 255, 0.3)"/>
+      <stop offset="65.61%" stop-color="rgba(98, 205, 231, 0.3)"/>
+    </linearGradient>
+  </defs>
+</svg>

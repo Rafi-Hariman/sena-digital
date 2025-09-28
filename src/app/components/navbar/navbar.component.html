@@ -1,0 +1,55 @@
+<section class="section">
+  <div class="container">
+    <nav class="wc__nav">
+      <div class="wc__nav-brand">
+        <img src='/assets/logo.svg' style="width: 100%; height: 120%;" alt="Brand Logo">
+      </div>
+      <div class="wc__nav-links">
+        <ul>
+          <li>
+            <a (click)="navigate('')">Beranda</a>
+          </li>
+          <li>
+            <a (click)="navigate('fitur')">Fitur</a>
+          </li>
+          <li>
+            <a (click)="navigate('undangan_website')">Undangan website</a>
+          </li>
+          <li>
+            <a (click)="navigate('undangan_video')">Undangan video</a>
+          </li>
+        </ul>
+      </div>
+      <div class="wc__nav-cta">
+        <button (click)="clickButton()" type="button"><i class="fa fa-user"></i>&nbsp; Login</button>
+        <!-- Mobile Menu -->
+        <div [ngClass]="Cssclass ? 'wc__nav-menu header__toggle' : 'wc__nav-menu'" (click)="onClick()">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    </nav>
+    <!-- Mobile Menu -->
+    <div [ngClass]="Cssclass ? 'overlay fade-in' : 'overlay fade-out'" [hidden]="!Cssclass"></div>
+    <div class="wc__nav-mobile" [ngClass]="Cssclass ? 'fade-in' : 'fade-out'" [hidden]="!Cssclass">
+      <ul>
+        <li>
+          <a (click)="navigate('')">Beranda</a>
+        </li>
+        <li>
+          <a (click)="navigate('fitur')">Fitur</a>
+        </li>
+        <li>
+          <a (click)="navigate('undangan_website')">Undangan website</a>
+        </li>
+        <li>
+          <a (click)="navigate('undangan_video')">Undangan video</a>
+        </li>
+      </ul>
+      <div class="wc__nav-mobile_cta">
+        <button (click)="clickButton()" type="button"><i class="fas fa-user"></i>&nbsp; Login</button>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,149 @@
+/* Existing CSS remains unchanged above this line */
+
+/* Fade-in animation */
+@keyframes fadeIn {
+  0% {
+      opacity: 0;
+      transform: translateY(20px);
+  }
+  100% {
+      opacity: 1;
+      transform: translateY(0);
+  }
+}
+
+/* Add animation to the section */
+.section {
+  animation: fadeIn 1s ease-in-out;
+  animation-fill-mode: forwards;
+}
+
+/* Footer hero animation */
+.wc__footer-hero {
+  opacity: 0; /* Initially hidden */
+  animation: fadeIn 1.5s ease-in-out forwards;
+  animation-delay: 0.5s; /* Delay to show after section */
+}
+
+/* Cards fade-in animation */
+.cards {
+  opacity: 0; /* Initially hidden */
+  animation: fadeIn 2s ease-in-out forwards;
+  animation-delay: 1s; /* Delay for the cards to appear */
+}
+
+/* Individual card animations with staggered appearance */
+.card {
+  opacity: 0; /* Initially hidden */
+  animation: fadeIn 0.8s ease-in-out forwards;
+  animation-delay: calc(1.5s + var(--card-index) * 0.2s); /* Staggered appearance */
+}
+
+/* Existing CSS continues unchanged below this line */
+
+
+.section {
+    background-image: url('/assets/bg-feature2.svg');
+    background-repeat: no-repeat;
+    min-height: 100vh; 
+    background-size: cover;
+  }
+  
+  .wc__footer-hero {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    padding-top: 7.0625rem;
+    justify-content: center;
+    align-items: center;
+    h2 {
+      font-weight: 700;
+      font-size: 2rem;
+      line-height: 2.5rem;
+      max-width: 30rem;
+      text-align: center;
+    }
+    b {
+      color: black;
+      font-weight: 700;
+      font-size: 2rem;
+      line-height: 2.5rem;
+      max-width: 30rem;
+      text-align: center;
+    }
+  }
+  
+  html, body {
+    background-color: lightgray;
+    height: 100%;
+    width: 100vw;
+  }
+  
+  .container {
+    width: 100%;
+    padding-left: 5rem;
+    padding-right: 5rem;
+    background-color: inherit;
+  
+    display: grid;
+    grid-template-columns: 1fr;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .feature {
+    display: grid;
+    padding: 1rem;
+    grid-template-rows: repeat(2, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+    column-gap: 0.5rem;
+  }
+  
+  .item {
+    margin: 0.5rem;
+    padding: 6rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all .2s;
+    background-size: contain; /* Ensure the entire image is visible without cropping */
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+  
+  .item--1 {
+    background-image: url('/assets/feature-box.svg');
+  }
+  
+  .item--2 {
+    background-image: url('/assets/feature-box2.svg');
+  }
+  
+  .item--3 {
+    background-image: url('/assets/feature-box3.svg');
+  }
+  
+  .item--4 {
+    background-image: url('/assets/feature-box4.svg');
+  }
+  
+  .item--5 {
+    background-image: url('/assets/feature-box5.svg');
+  }
+  
+  .item--6 {
+    background-image: url('/assets/feature-box6.svg');
+  }
+  
+  .item:hover {
+    transform: translate(0, -0.3rem);
+  }
+  
+  
+  .item:hover {
+    // background-color: lightgray;
+    // color: gray;
+    transform: translate(0,-0.3rem);
+    // box-shadow: 0 1rem 3rem rgba(0,0,0,.50);
+  }
+  

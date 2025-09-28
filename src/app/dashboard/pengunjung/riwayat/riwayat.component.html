@@ -1,0 +1,274 @@
+<body>
+  <main class="container py-4">
+    <div class="row g-4">
+      <div class="col-lg-8">
+        <div class="bg-white rounded-3 p-4">
+          <svg
+            class="chart-svg"
+            viewBox="0 0 720 240"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-label="Line chart showing visitor data from 9 Sep 2024 to 10 Okt 2024"
+            role="img"
+          >
+            <path
+              d="M0 230L30 225L60 220L90 180L120 180L150 180L180 120L210 120L240 120L270 60L300 30L330 60L360 90L390 60L420 90L450 120L480 90L510 120L540 90L570 120L600 150L630 180L660 150L690 180L720 150"
+              stroke="#7ED6F6"
+              stroke-width="2"
+              fill="none"
+            />
+            <text
+              x="0"
+              y="20"
+              fill="#000"
+              font-size="12"
+              font-family="Poppins, sans-serif"
+              opacity="0.7"
+            >
+              25
+            </text>
+            <text
+              x="0"
+              y="230"
+              fill="#000"
+              font-size="12"
+              font-family="Poppins, sans-serif"
+              opacity="0.7"
+            >
+              0
+            </text>
+            <text
+              x="30"
+              y="255"
+              fill="#000"
+              font-size="12"
+              font-family="Poppins, sans-serif"
+              opacity="0.7"
+            >
+              9 Sep 2024
+            </text>
+            <text
+              x="150"
+              y="255"
+              fill="#000"
+              font-size="12"
+              font-family="Poppins, sans-serif"
+              opacity="0.7"
+            >
+              16 Sep 2024
+            </text>
+            <text
+              x="270"
+              y="255"
+              fill="#000"
+              font-size="12"
+              font-family="Poppins, sans-serif"
+              opacity="0.7"
+            >
+              23 Sep 2024
+            </text>
+            <text
+              x="420"
+              y="255"
+              fill="#000"
+              font-size="12"
+              font-family="Poppins, sans-serif"
+              opacity="0.7"
+            >
+              4 Okt 2024
+            </text>
+            <text
+              x="600"
+              y="255"
+              fill="#000"
+              font-size="12"
+              font-family="Poppins, sans-serif"
+              opacity="0.7"
+            >
+              10 Okt 2024
+            </text>
+          </svg>
+        </div>
+      </div>
+      <div class="col-lg-4 d-flex flex-column gap-3">
+        <div
+          class="bg-white rounded-3 p-3 d-flex justify-content-between align-items-center border-left-4 border-primary"
+        >
+          <div>
+            <p class="mb-1 fw-semibold small text-black">Pengunjung Hari Ini</p>
+            <p class="mb-0 display-6 fw-bold text-primary">0</p>
+          </div>
+          <i
+            class="fas fa-user-circle text-black fs-4"
+            aria-hidden="true"
+            title="User icon"
+          ></i>
+        </div>
+        <div
+          class="bg-white rounded-3 p-3 d-flex justify-content-between align-items-center border-left-4 border-success"
+        >
+          <div>
+            <p class="mb-1 fw-semibold small text-black">Total Pengunjung</p>
+            <p class="mb-0 display-6 fw-bold text-success">29</p>
+            <p class="mb-0 small text-black">Orang</p>
+          </div>
+          <i
+            class="fas fa-user-circle text-success fs-4"
+            aria-hidden="true"
+            title="User icon"
+          ></i>
+        </div>
+      </div>
+    </div>
+
+    <section
+      class="bg-white rounded-3 p-4 mt-4"
+      aria-label="Visitor data table and controls"
+    >
+      <div
+        class="d-flex flex-column flex-sm-row justify-content-between align-items-center mb-3 gap-3"
+      >
+        <h2
+          class="text-pink-500 fw-semibold fs-5 border-start border-2 border-pink-400 ps-2 mb-0"
+        >
+          Data Pengunjung
+        </h2>
+        <div class="d-flex align-items-center gap-3 w-100 w-sm-auto">
+          <button type="button" class="btn btn-pink d-flex align-items-center gap-2">
+            <i class="fas fa-trash-alt"></i> Hapus Semua
+          </button>
+          <label for="search" class="fw-semibold small mb-0">Cari</label>
+          <input
+            id="search"
+            type="text"
+            class="form-control form-control-sm"
+            style="max-width: 180px"
+            aria-label="Search visitor data"
+          />
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table align-middle text-black mb-0" style="border-spacing: 0 0.25rem; border-collapse: separate;">
+          <thead>
+            <tr>
+              <th style="width: 40px;">No.</th>
+              <th style="width: 180px;">Tanggal</th>
+              <th>Nama</th>
+              <th style="width: 100px;" class="text-center">Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>8 Oktober 2024</td>
+              <td>Tamu Undangan</td>
+              <td class="text-center">
+                <button type="button" class="btn btn-outline-pink">Hapus</button>
+              </td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>8 Oktober 2024</td>
+              <td>Tamu Undangan</td>
+              <td class="text-center">
+                <button type="button" class="btn btn-outline-pink">Hapus</button>
+              </td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>8 Oktober 2024</td>
+              <td>Tamu Undangan</td>
+              <td class="text-center">
+                <button type="button" class="btn btn-outline-pink">Hapus</button>
+              </td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td>8 Oktober 2024</td>
+              <td>Tamu Undangan</td>
+              <td class="text-center">
+                <button type="button" class="btn btn-outline-pink">Hapus</button>
+              </td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td>8 Oktober 2024</td>
+              <td>Tamu Undangan</td>
+              <td class="text-center">
+                <button type="button" class="btn btn-outline-pink">Hapus</button>
+              </td>
+            </tr>
+            <tr>
+              <td>6</td>
+              <td>8 Oktober 2024</td>
+              <td>Tamu Undangan</td>
+              <td class="text-center">
+                <button type="button" class="btn btn-outline-pink">Hapus</button>
+              </td>
+            </tr>
+            <tr>
+              <td>7</td>
+              <td>8 Oktober 2024</td>
+              <td>Tamu Undangan</td>
+              <td class="text-center">
+                <button type="button" class="btn btn-outline-pink">Hapus</button>
+              </td>
+            </tr>
+            <tr>
+              <td>8</td>
+              <td>8 Oktober 2024</td>
+              <td>Tamu Undangan</td>
+              <td class="text-center">
+                <button type="button" class="btn btn-outline-pink">Hapus</button>
+              </td>
+            </tr>
+            <tr>
+              <td>9</td>
+              <td>8 Oktober 2024</td>
+              <td>Tamu Undangan</td>
+              <td class="text-center">
+                <button type="button" class="btn btn-outline-pink">Hapus</button>
+              </td>
+            </tr>
+            <tr>
+              <td>10</td>
+              <td>8 Oktober 2024</td>
+              <td>Tamu Undangan</td>
+              <td class="text-center">
+                <button type="button" class="btn btn-outline-pink">Hapus</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div
+        class="d-flex flex-column flex-sm-row justify-content-between align-items-center mt-4 gap-3 text-black-50 small"
+      >
+        <div class="d-flex align-items-center gap-1">
+          <span>Menampilkan</span>
+          <select
+            aria-label="Select number of data to display"
+            class="form-select form-select-sm"
+            style="width: 70px"
+          >
+            <option>10</option>
+            <option>20</option>
+            <option>50</option>
+          </select>
+          <span>Data</span>
+        </div>
+        <div class="d-flex align-items-center gap-2 pagination-controls">
+          <span>bx:...</span>
+          <button aria-label="Previous page" type="button" title="Previous page">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <button aria-label="Next page" type="button" title="Next page">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>

@@ -1,0 +1,25 @@
+/* src/app/toast/toast.component.css */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 10px 20px;
+  border-radius: 5px;
+  color: white;
+  font-weight: bold;
+  z-index: 1000;
+  transition: opacity 0.3s ease;
+}
+.success {
+  background-color: #28a745;
+}
+.error {
+  background-color: #dc3545;
+}
+.info {
+  background-color: #17a2b8;
+}
+.warning {
+  background-color: #ffc107;
+  color: black;
+}

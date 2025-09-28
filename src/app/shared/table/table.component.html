@@ -1,0 +1,54 @@
+<div class="table-container">
+  <table class="table custom-table">
+    <thead>
+      <tr>
+        <th *ngFor="let column of columns">
+          {{ column.name }}
+        </th>
+        <th *ngIf="actionTitle">{{ actionTitle }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Jika tidak ada data -->
+      <tr *ngIf="!paginatedRows || paginatedRows.length === 0">
+        <td [attr.colspan]="columns.length + (actionTitle ? 1 : 0)" class="no-data">
+          Tidak ada data tersedia
+        </td>
+      </tr>
+
+      <!-- Jika ada data -->
+      <tr *ngFor="let row of paginatedRows; let i = index">
+        <td *ngFor="let column of columns">
+          <ng-container [ngSwitch]="column.type">
+            <!-- Jika tipe HTML -->
+            <span *ngSwitchCase="'html'" [innerHTML]="row[column.prop]"></span>
+
+            <!-- Jika tipe boolean -->
+            <span *ngSwitchCase="'boolean'">
+              {{ row[column.prop] ? 'Aktif' : 'Nonaktif' }}
+            </span>
+
+            <!-- Default: Teks biasa -->
+            <span *ngSwitchDefault>
+              {{ column.prop === 'number' ? (i + 1 + (currentPage - 1) * rowsPerPage) : row[column.prop] }}
+            </span>
+          </ng-container>
+        </td>
+        <td *ngIf="actionTitle" class="text-center">
+          <button *ngIf="row.auth?.canConfirm" class="btn btn-outline-pink btn-sm me-1 action-btn" 
+                  (click)="confirmClicked.emit(row)" title="Confirm">
+            <i class="fas fa-check-circle"></i> Confirm
+          </button>
+          <button *ngIf="row.auth?.canUpdate" class="btn btn-outline-warning btn-sm me-1 action-btn" 
+                  (click)="editClicked.emit(row)" title="Edit">
+            <i class="fas fa-edit"></i> Edit
+          </button>
+          <button *ngIf="row.auth?.canDelete" class="btn btn-outline-danger btn-sm action-btn" 
+                  (click)="deleteClicked.emit(row)" title="Delete">
+            <i class="fas fa-trash"></i> Delete
+          </button>
+        </td>          
+      </tr>
+    </tbody>
+  </table>
+</div>

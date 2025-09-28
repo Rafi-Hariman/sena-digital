@@ -1,0 +1,29 @@
+<div class="login-container">
+  <div class="login-card">
+    <!-- Left Section with Image -->
+    <div class="login-image">
+      <img src="/assets/login.svg" alt="Beach" />
+    </div>
+
+    <!-- Right Section with Form -->
+    <div class="login-form">
+      <h1>MASUK KE AKUN</h1>
+
+      <!-- Error Message Section -->
+      <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
+
+      <input type="email" placeholder="Email" [(ngModel)]="email" />
+      <input type="password" placeholder="Password" [(ngModel)]="password" />
+
+      <div class="login-actions">
+        <p>Belum punya akun? <a href="/register"><b>Daftar sekarang.</b></a></p>
+      </div>
+
+      <div class="login-actions">
+        <button (click)="onLogin()" type="button">Masuk</button>
+      </div>
+    </div>
+  </div>
+</div>

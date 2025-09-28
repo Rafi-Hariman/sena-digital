@@ -1,0 +1,122 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Slab:ital,wght@1,300&display=swap");
+body {
+  background: #fff;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  padding: 2rem 0 4rem
+}
+.title-container {
+  text-align: center;
+  margin-top: 2rem;
+  margin-bottom: 3rem;
+}
+.title-container h2 {
+  font-weight: 700;
+  font-size: 1.75rem;
+  color: #222222;
+}
+.title-container h2 span {
+  font-weight: 400;
+  color: #f9a9c0;
+  font-size: 1.5rem;
+}
+.underline-container {
+  position: relative;
+  width: 100px;
+  margin: 0.5rem auto 0 auto;
+}
+.underline-container hr {
+  border: none;
+  border-top: 1.5px solid #f9a9c0;
+  margin: 0;
+}
+.underline-container .heart {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #f9a9c0;
+  font-size: 1rem;
+}
+.card-custom {
+  border-radius: 15px;
+  background: #d3d2ce;
+  position: relative;
+  overflow: visible;
+}
+.card-custom img {
+  border-radius: 15px;
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  padding: 2rem;
+}
+.star-rating {
+  position: absolute;
+  top: 12px;
+  right: 15px;
+  font-size: 1.25rem;
+  color: black;
+  font-weight: 600;
+  user-select: none;
+}
+.star-rating i {
+  margin-right: 4px;
+  color: #f9c846;
+}
+.label-bottom-left {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background: rgba(68, 68, 68, 0.8);
+  color: #fff;
+  font-style: italic;
+  font-weight: 700;
+  font-family: "Roboto Slab", serif;
+  font-size: 1.25rem;
+  line-height: 1.1;
+  padding: 0.3rem 1rem 0.3rem 1rem;
+  border-top-right-radius: 30px;
+  user-select: none;
+  white-space: nowrap;
+}
+.label-bottom-left span {
+  display: block;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 1.1rem;
+  color: #e9d9d7;
+  line-height: 1.1;
+  margin-top: -0.3rem;
+}
+.label-bottom-left.ellipsis {
+  font-style: normal;
+  font-weight: 700;
+  font-size: 1.5rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  letter-spacing: 0.15em;
+  color: #444444;
+}
+.label-purple {
+  background: #5a2a7a;
+}
+.label-purple span {
+  color: #f3e6e9;
+}
+.row-gap-4 {
+  row-gap: 2.5rem;
+}
+@media (max-width: 575.98px) {
+  .label-bottom-left {
+    font-size: 1rem;
+  }
+  .label-bottom-left span {
+    font-size: 0.9rem;
+  }
+  .star-rating {
+    font-size: 1rem;
+    top: 8px;
+    right: 10px;
+  }
+}

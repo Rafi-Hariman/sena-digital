@@ -1,0 +1,156 @@
+// body {
+//   background: #fff;
+//   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+//     Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+// }
+
+.rekening-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding-right: 30px;
+}
+
+.copy-icon {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 24px;
+  color: #bbc5bf;
+  transition: color 0.2s ease;
+}
+
+.copy-icon:hover {
+  color: #007bff;
+}
+
+.container-box {
+  max-width: 420px;
+  margin: 40px auto;
+  background: #f9f9fb;
+  border-radius: 20px;
+  padding: 30px 30px 40px 30px;
+  box-sizing: border-box;
+  text-align: center;
+}
+.title {
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 22px;
+  color: #6a9edc;
+  margin-bottom: 8px;
+}
+.subtitle {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20px;
+  color: #000;
+  margin-bottom: 30px;
+}
+.icon-wrapper {
+  background-color: #6ab64a;
+  width: 90px;
+  height: 50px;
+  margin: 0 auto 30px auto;
+  border-radius: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.icon-wrapper svg {
+  width: 28px;
+  height: 28px;
+  fill: #fff;
+}
+label {
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 18px;
+  color: #000;
+  display: block;
+  text-align: left;
+  margin-bottom: 8px;
+}
+input.form-control {
+  background: #f7f8fc;
+  border: none;
+  border-radius: 10px;
+  height: 44px;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+  color: #8a8a8a;
+  padding-left: 15px;
+}
+.info-text {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: #000;
+  margin: 30px 0 20px 0;
+}
+.code-text {
+  font-weight: 700;
+  font-size: 22px;
+}
+
+.button-group {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-cancel {
+  background: #e0e0e0;
+  border: none;
+  border-radius: 15px;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 22px;
+  color: #666;
+  padding: 10px 30px;
+  box-shadow: 0 6px 10px rgb(224 224 224 / 0.5);
+  transition: all 0.3s ease;
+}
+
+.btn-cancel:hover,
+.btn-cancel:focus {
+  background: #c0c0c0;
+  color: #333;
+}
+
+.btn-confirm {
+  background: #ec9ca4;
+  border: none;
+  border-radius: 15px;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 22px;
+  color: #fff;
+  padding: 10px 50px;
+  box-shadow: 0 6px 10px rgb(236 156 164 / 0.5);
+  transition: background-color 0.3s ease;
+}
+.btn-confirm:hover,
+.btn-confirm:focus {
+  background: #d87a85;
+  color: #fff;
+}
+@media (max-width: 480px) {
+  .container-box {
+    margin: 20px 15px;
+    padding: 25px 20px 30px 20px;
+  }
+  .button-group {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .btn-confirm, .btn-cancel {
+    padding: 10px 30px;
+    font-size: 16px;
+    width: 100%;
+  }
+}

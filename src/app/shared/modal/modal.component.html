@@ -1,0 +1,10 @@
+<div class="modal-header">
+
+</div>
+<div class="modal-body">
+  <p>{{ message }}</p>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary btn-cancel" (click)="cancelDelete()">Batal</button>
+  <button type="button" class="btn btn-danger btn-delete" (click)="confirmDelete()">{{ submitMessage || 'Hapus'}}</button>
+</div>

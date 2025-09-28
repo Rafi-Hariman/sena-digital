@@ -1,0 +1,405 @@
+// RegisCeritaComponent - Clean, modern UI matching target design
+.rc-container {
+  max-width: 480px;
+  margin: 0 auto;
+  background: #ffffff;
+  padding: 24px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+// Story Card Styling
+.rc-story-card {
+  background: #ffffff;
+  border: 1px solid #f0f0f0;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+// Story Header
+.rc-story-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: #ffffff;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.rc-story-number {
+  font-size: 20px;
+  font-weight: 700;
+  color: #4ea0e4;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.rc-remove-btn {
+  background: none;
+  border: none;
+  color: #ef4444;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background: #fef2f2;
+    color: #dc2626;
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+// Story Form Fields
+.rc-story-fields {
+  padding: 20px;
+}
+
+.rc-form-group {
+  margin-bottom: 20px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.rc-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+// Input Fields
+.rc-input,
+.rc-textarea {
+  width: 100%;
+  border: 1.5px solid #e1e5e9;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 400;
+  color: #1a1a1a;
+  background: white;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+
+  &::placeholder {
+    color: #9ca3af;
+    font-weight: 400;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: #4ea0e4;
+    box-shadow: 0 0 0 3px rgba(78, 160, 228, 0.1);
+  }
+
+  &:invalid:not(:placeholder-shown) {
+    border-color: #ef4444;
+  }
+}
+
+.rc-input {
+  height: 48px;
+  padding: 0 16px;
+}
+
+.rc-textarea {
+  padding: 12px 16px;
+  resize: vertical;
+  min-height: 96px;
+  line-height: 1.5;
+}
+
+// Add Story Section
+.rc-add-section {
+  margin-bottom: 24px;
+}
+
+.rc-add-btn {
+  width: 100%;
+  height: 48px;
+  background: linear-gradient(135deg, #4ea0e4 0%, #357abd 100%);
+  color: white;
+  border: none;
+  border-radius: 24px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: linear-gradient(135deg, #3d8bcd 0%, #2c6ba3 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(78, 160, 228, 0.3);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// Checkbox Section
+.rc-checkbox-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 32px;
+  padding: 16px 0;
+}
+
+.rc-checkbox {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #d1d5db;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+  position: relative;
+
+  &:checked {
+    background: #4ea0e4;
+    border-color: #4ea0e4;
+
+    &::after {
+      content: '✓';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 12px;
+      font-weight: bold;
+    }
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(78, 160, 228, 0.1);
+  }
+}
+
+.rc-checkbox-label {
+  font-size: 14px;
+  font-weight: 400;
+  color: #374151;
+  cursor: pointer;
+  user-select: none;
+}
+
+// Button Group
+.rc-button-group {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.rc-btn {
+  flex: 1;
+  height: 48px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+}
+
+.rc-btn-secondary {
+  background: white;
+  color: #ffa0ae;
+  border: 1.5px solid #ffa0ae;
+
+  &:hover:not(:disabled) {
+    background: #ffa0ae;
+    color: white;
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+}
+
+.rc-btn-primary {
+  background: #ffa0ae;
+  color: white;
+  border: 1.5px solid transparent;
+
+  &:hover:not(:disabled) {
+    background: #ff8a9a;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 160, 174, 0.3);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// DatePicker Styling (Bootstrap DatePicker)
+::ng-deep {
+  .bs-datepicker {
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e1e5e9;
+
+    .bs-datepicker-head {
+      background: #4ea0e4;
+      border-radius: 8px 8px 0 0;
+    }
+
+    .bs-datepicker-body {
+      padding: 8px;
+    }
+
+    .bs-datepicker-day {
+      border-radius: 4px;
+
+      &.selected {
+        background: #4ea0e4;
+        color: white;
+      }
+
+      &:hover {
+        background: #f0f8ff;
+        color: #4ea0e4;
+      }
+    }
+  }
+}
+
+// Responsive Design
+@media (max-width: 480px) {
+  .rc-container {
+    padding: 20px 16px;
+  }
+
+  .rc-story-header {
+    padding: 12px 16px;
+  }
+
+  .rc-story-number {
+    font-size: 18px;
+  }
+
+  .rc-story-fields {
+    padding: 16px;
+  }
+
+  .rc-form-group {
+    margin-bottom: 16px;
+  }
+
+  .rc-input {
+    font-size: 16px; // Prevent zoom on iOS
+  }
+
+  .rc-textarea {
+    min-height: 80px;
+  }
+
+  .rc-add-btn {
+    height: 44px;
+    font-size: 15px;
+  }
+
+  .rc-button-group {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .rc-btn {
+    width: 100%;
+    height: 44px;
+    padding: 7px;
+  }
+}
+
+@media (max-width: 360px) {
+  .rc-container {
+    padding: 16px 12px;
+  }
+
+  .rc-story-header {
+    padding: 10px 12px;
+  }
+
+  .rc-story-number {
+    font-size: 16px;
+  }
+
+  .rc-story-fields {
+    padding: 12px;
+  }
+
+  .rc-form-group {
+    margin-bottom: 14px;
+  }
+
+  .rc-add-btn {
+    height: 42px;
+    font-size: 14px;
+  }
+
+  .rc-btn {
+    height: 42px;
+    font-size: 15px;
+    padding: 7px;
+  }
+}
+
+// Form Validation States
+.rc-input.ng-invalid.ng-touched,
+.rc-textarea.ng-invalid.ng-touched {
+  border-color: #ef4444;
+}
+
+.rc-input.ng-valid.ng-touched,
+.rc-textarea.ng-valid.ng-touched {
+  border-color: #10b981;
+}
+
+// Focus states for accessibility
+.rc-add-btn:focus,
+.rc-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(78, 160, 228, 0.3);
+}
+
+.rc-checkbox:focus + .rc-checkbox-label {
+  color: #4ea0e4;
+}
+
+// Animation for story removal
+.rc-story-card {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

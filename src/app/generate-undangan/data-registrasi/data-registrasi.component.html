@@ -1,0 +1,110 @@
+<div class="dr-container">
+  <!-- Header Section -->
+  <!-- <div class="dr-header">
+    <h1 class="dr-greeting">Hallo!</h1>
+    <p class="dr-subtitle">Hai kak isi dulu datanya</p>
+
+
+    <div class="dr-progress-container">
+      <div class="dr-progress-bar">
+        <div class="dr-progress-fill" style="width: 30%;">
+          <span class="dr-progress-text">30%</span>
+        </div>
+      </div>
+    </div>
+  </div> -->
+
+  <!-- Form Section -->
+  <form [formGroup]="formRegis" (ngSubmit)="submit()" class="dr-form">
+    <div class="dr-form-group">
+      <label for="paket_undangan_id" class="dr-label">Paket Undangan</label>
+      <div class="dr-select-wrapper">
+        <ngx-select
+          id="paket_undangan_id"
+          [items]="paketOptions"
+          [optionTextField]="'name_paket'"
+          [optionValueField]="'id'"
+          formControlName="paket_undangan_id"
+          placeholder="-Paket Undangan-"
+          (select)="onPaketSelect($event)"
+          class="dr-select">
+        </ngx-select>
+      </div>
+      <div class="dr-error-message"
+        *ngIf="formRegis.get('paket_undangan_id')?.invalid && formRegis.get('paket_undangan_id')?.touched">
+        Paket undangan wajib dipilih.
+      </div>
+    </div>
+
+    <div class="dr-form-group">
+      <label for="domain" class="dr-label">Nama Domain / URL Undangan</label>
+      <div class="dr-domain-wrapper">
+        <div class="dr-domain-prefix">
+          <span class="dr-prefix-text">horuzt.com/</span>
+        </div>
+        <input
+          type="text"
+          class="dr-domain-input"
+          id="domain"
+          formControlName="domain"
+          placeholder="akudandia">
+      </div>
+      <div class="dr-error-message"
+        *ngIf="formRegis.get('domain')?.invalid && formRegis.get('domain')?.touched">
+        Nama domain minimal 3 karakter.
+      </div>
+    </div>
+
+    <div class="dr-form-group">
+      <label for="email" class="dr-label">Email</label>
+      <input
+        type="email"
+        class="dr-input"
+        id="email"
+        formControlName="email"
+        placeholder="Email">
+      <div class="dr-error-message"
+        *ngIf="formRegis.get('email')?.invalid && formRegis.get('email')?.touched">
+        Masukkan email yang valid.
+      </div>
+    </div>
+
+    <div class="dr-form-group">
+      <label for="password" class="dr-label">Password</label>
+      <input
+        type="password"
+        class="dr-input"
+        id="password"
+        formControlName="password"
+        placeholder="Password">
+      <div class="dr-error-message"
+        *ngIf="formRegis.get('password')?.invalid && formRegis.get('password')?.touched">
+        Password minimal 6 karakter.
+      </div>
+    </div>
+
+    <div class="dr-form-group">
+      <label for="phone" class="dr-label">Nomor Hp/WA</label>
+      <input
+        type="text"
+        class="dr-input"
+        id="phone"
+        formControlName="phone"
+        placeholder="08xxxxxxx">
+      <div class="dr-error-message"
+        *ngIf="formRegis.get('phone')?.invalid && formRegis.get('phone')?.touched">
+        Masukkan nomor HP yang valid.
+      </div>
+    </div>
+
+    <!-- Button Group -->
+    <div class="dr-button-group">
+      <button type="button" class="dr-btn dr-btn-secondary" (click)="onCancel()">
+        Batal
+      </button>
+      <button type="submit" class="dr-btn dr-btn-primary" [disabled]="formRegis.invalid">
+        Lanjut
+      </button>
+    </div>
+  </form>
+</div>

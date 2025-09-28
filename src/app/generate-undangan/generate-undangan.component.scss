@@ -1,0 +1,98 @@
+
+.gu-container {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 24px 16px 16px 16px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.gu-title {
+  color: #FFA0AE;
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.gu-subtitle {
+  text-align: center;
+  color: #6c757d;
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+}
+
+.gu-progress {
+  width: 100%;
+  background: #e9ecef;
+  border-radius: 8px;
+  height: 16px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+.gu-progress-bar {
+  background: linear-gradient(90deg, #3a66c0 60%, #66a3ff 100%);
+  height: 100%;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-align: right;
+  padding-right: 8px;
+  border-radius: 8px 0 0 8px;
+  transition: width 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.gu-step-content {
+  margin-top: 1.5rem;
+}
+
+@media (max-width: 600px) {
+  .gu-container {
+    padding: 10px 2vw 8vw 2vw !important;
+    max-width: 100vw !important;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .gu-title {
+    font-size: 1.1rem !important;
+  }
+  .gu-subtitle {
+    font-size: 0.95rem !important;
+  }
+  .gu-progress {
+    height: 12px !important;
+  }
+  .gu-progress-bar {
+    font-size: 0.8rem !important;
+    padding-right: 4px;
+  }
+  .gu-step-content {
+    margin-top: 1rem;
+  }
+}
+//       display: flex;
+//       justify-content: space-between;
+
+//       button {
+//         padding: 10px 20px;
+//         font-size: 1rem;
+//         border-radius: 5px;
+//         cursor: pointer;
+//         border: none;
+
+//         &:nth-child(1) {
+//           background-color: #f8f9fa;
+//           color: #333;
+//         }
+
+//         &:nth-child(2) {
+//           background-color: #3a66c0;
+//           color: #fff;
+//         }
+//       }
+//     }
+//   }

@@ -1,0 +1,385 @@
+// RegisPembayaranComponent - Clean, modern UI matching target design
+.rp-container {
+  max-width: 480px;
+  margin: 0 auto;
+  background: #ffffff;
+  padding: 24px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+// Form Group Styling
+.rp-form-group {
+  margin-bottom: 20px;
+
+  &:last-of-type {
+    margin-bottom: 0;
+  }
+}
+
+.rp-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+// Select Field Wrapper
+.rp-select-wrapper {
+  position: relative;
+
+  .rp-select {
+    width: 100%;
+    height: 48px;
+
+    ::ng-deep {
+      .ui-select-container {
+        border: 1.5px solid #e1e5e9;
+        border-radius: 8px;
+        height: 48px;
+
+        .ui-select-placeholder {
+          padding: 0 16px;
+          line-height: 45px;
+          font-size: 16px;
+          color: #9ca3af;
+          font-weight: 400;
+        }
+
+        .ui-select-match-text {
+          padding: 0 16px;
+          line-height: 45px;
+          font-size: 16px;
+          color: #1a1a1a;
+          font-weight: 400;
+        }
+
+        &.open,
+        &:focus-within {
+          border-color: #4ea0e4;
+          box-shadow: 0 0 0 3px rgba(78, 160, 228, 0.1);
+        }
+      }
+
+      .ui-select-dropdown {
+        border: 1px solid #e1e5e9;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        margin-top: 4px;
+
+        .ui-select-choices-row {
+          padding: 12px 16px;
+          font-size: 16px;
+
+          &:hover {
+            background: #f8fafc;
+          }
+
+          &.active {
+            background: #4ea0e4;
+            color: white;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Payment Section
+.rp-payment-section {
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #f0f0f0;
+
+  &:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+  }
+}
+
+.rp-section-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 20px 0;
+}
+
+// Readonly Field Styling
+.rp-readonly-field {
+  width: 100%;
+  height: 48px;
+  padding: 0 16px;
+  border: 1.5px solid #e1e5e9;
+  border-radius: 8px;
+  background: #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 16px;
+  color: #374151;
+  box-sizing: border-box;
+
+  &.rp-copyable {
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      border-color: #4ea0e4;
+      background: #f0f8ff;
+
+      .rp-copy-icon {
+        color: #4ea0e4;
+      }
+    }
+  }
+}
+
+.rp-copy-icon {
+  color: #9ca3af;
+  transition: color 0.2s ease;
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+
+// Link Styling
+.rp-link {
+  color: #4ea0e4;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+// Amount Section
+.rp-amount-section {
+  margin: 24px 0;
+  padding: 16px 0;
+  border-top: 1px solid #f0f0f0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.rp-amount-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.rp-amount-label {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.rp-amount-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+// Instructions
+.rp-instructions {
+  margin-top: 16px;
+
+  p {
+    font-size: 14px;
+    color: #6b7280;
+    line-height: 1.5;
+    margin: 0;
+  }
+}
+
+// Trial Section
+.rp-trial-section {
+  text-align: center;
+  padding: 24px;
+  background: #f8fafc;
+  border-radius: 8px;
+  margin-bottom: 24px;
+}
+
+.rp-trial-text {
+  font-size: 14px;
+  color: #374151;
+  line-height: 1.6;
+  margin: 0;
+}
+
+// Button Group
+.rp-button-group {
+  display: flex;
+  gap: 12px;
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.rp-btn {
+  flex: 1;
+  height: 48px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 7px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+}
+
+.rp-btn-secondary {
+  background: white;
+  color: #ffa0ae;
+  border: 1.5px solid #ffa0ae;
+
+  &:hover:not(:disabled) {
+    background: #ffa0ae;
+    color: white;
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+}
+
+.rp-btn-primary {
+  background: #ffa0ae;
+  color: white;
+  border: 1.5px solid transparent;
+
+  &:hover:not(:disabled) {
+    background: #ff8a9a;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 160, 174, 0.3);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// Responsive Design
+@media (max-width: 480px) {
+  .rp-container {
+    padding: 20px 16px;
+  }
+
+  .rp-form-group {
+    margin-bottom: 16px;
+  }
+
+  .rp-readonly-field {
+    font-size: 15px;
+    padding: 0 12px;
+  }
+
+  .rp-amount-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .rp-amount-label,
+  .rp-amount-value {
+    font-size: 16px;
+  }
+
+  .rp-trial-section {
+    padding: 20px 16px;
+  }
+
+  .rp-button-group {
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 24px;
+  }
+
+  .rp-btn {
+    width: 100%;
+    height: 44px;
+  }
+}
+
+@media (max-width: 360px) {
+  .rp-container {
+    padding: 16px 12px;
+  }
+
+  .rp-form-group {
+    margin-bottom: 14px;
+  }
+
+  .rp-readonly-field {
+    height: 44px;
+    font-size: 14px;
+    padding: 0 10px;
+  }
+
+  .rp-amount-label,
+  .rp-amount-value {
+    font-size: 15px;
+  }
+
+  .rp-trial-section {
+    padding: 16px 12px;
+  }
+
+  .rp-trial-text {
+    font-size: 13px;
+  }
+
+  .rp-btn {
+    height: 42px;
+    font-size: 15px;
+  }
+}
+
+// Focus states for accessibility
+.rp-readonly-field.rp-copyable:focus,
+.rp-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(78, 160, 228, 0.3);
+}
+
+// Copy animation
+.rp-readonly-field.rp-copyable:active {
+  transform: scale(0.98);
+}
+
+// Hover states for better UX
+.rp-readonly-field:not(.rp-copyable) {
+  cursor: default;
+}
+
+// Text overflow handling
+.rp-readonly-field span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  margin-right: 8px;
+}
+
+// Link hover states
+.rp-link {
+  transition: color 0.2s ease;
+
+  &:focus {
+    outline: 2px solid rgba(78, 160, 228, 0.5);
+    outline-offset: 2px;
+  }
+}
+
+// Payment section spacing
+.rp-payment-section:first-of-type {
+  margin-top: 8px;
+}

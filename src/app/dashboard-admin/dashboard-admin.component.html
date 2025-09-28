@@ -1,0 +1,218 @@
+<div class="dashboard-container">
+  <!-- Overlay for mobile -->
+  <div class="sidebar-overlay"
+       [class.active]="isSidebarOpen"
+       (click)="closeSidebar()"
+       [@sidebarSlide]="isSidebarOpen ? 'open' : 'closed'"></div>
+
+  <!-- Enhanced Toggle Button for Mobile -->
+  <button class="menu-toggle"
+          (click)="toggleSidebar()"
+          [class.active]="isSidebarOpen"
+          aria-label="Toggle sidebar menu">
+    <span class="hamburger-line"></span>
+    <span class="hamburger-line"></span>
+    <span class="hamburger-line"></span>
+  </button>
+
+  <!-- Sidebar with Animation -->
+  <div class="sidebar"
+       [class.open]="isSidebarOpen">
+
+    <!-- Logo Section -->
+    <div class="logo-section">
+      <div class="logo-container">
+        <img src="assets/logos.png" alt="Horuzt Digital Invitation Logo" />
+        <div class="logo-text">
+          <h1>Horuzt</h1>
+          <h2>Invitation</h2>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Menu -->
+    <nav class="navigation-menu" role="navigation" aria-label="Main navigation">
+      <!-- Dashboard -->
+      <div class="menu-section">
+        <a class="menu-item"
+           routerLink="dashboard"
+           routerLinkActive="active"
+           (click)="onMenuItemClick()"
+           tabindex="0">
+          <i class="fas fa-th-large" aria-hidden="true"></i>
+          <span>Dashboard</span>
+        </a>
+      </div>
+
+      <!-- Data Pengguna -->
+      <div class="menu-section">
+        <a class="menu-item"
+           routerLink="pengguna"
+           routerLinkActive="active"
+           (click)="onMenuItemClick()"
+           tabindex="0">
+          <i class="fas fa-users" aria-hidden="true"></i>
+          <span>Data Pengguna</span>
+        </a>
+      </div>
+
+      <!-- Data Pembayaran -->
+      <div class="menu-section">
+        <a class="menu-item"
+           routerLink="pembayaran"
+           routerLinkActive="active"
+           (click)="onMenuItemClick()"
+           tabindex="0">
+          <i class="fas fa-credit-card" aria-hidden="true"></i>
+          <span>Data Pembayaran</span>
+        </a>
+      </div>
+
+      <!-- WhatsApp Gateway -->
+      <div class="menu-section">
+        <a class="menu-item"
+           routerLink="gateway"
+           routerLinkActive="active"
+           (click)="onMenuItemClick()"
+           tabindex="0">
+          <i class="fab fa-whatsapp" aria-hidden="true"></i>
+          <span>What'sApp Gateway</span>
+        </a>
+      </div>
+
+      <!-- Testimoni -->
+      <div class="menu-section">
+        <a class="menu-item"
+           routerLink="testimoni"
+           routerLinkActive="active"
+           (click)="onMenuItemClick()"
+           tabindex="0">
+          <i class="fas fa-comments" aria-hidden="true"></i>
+          <span>Testimoni</span>
+        </a>
+      </div>
+
+      <!-- Undangan Website -->
+      <div class="menu-section">
+        <a class="menu-item"
+           routerLink="website"
+           routerLinkActive="active"
+           (click)="onMenuItemClick()"
+           tabindex="0">
+          <i class="fas fa-desktop" aria-hidden="true"></i>
+          <span>Undangan Website</span>
+        </a>
+      </div>
+
+      <!-- Undangan Video -->
+      <div class="menu-section">
+        <a class="menu-item"
+           routerLink="video"
+           routerLinkActive="active"
+           (click)="onMenuItemClick()"
+           tabindex="0">
+          <i class="fas fa-video" aria-hidden="true"></i>
+          <span>Undangan Video</span>
+        </a>
+      </div>
+
+      <!-- Divider -->
+      <div class="menu-divider"></div>
+
+      <!-- Pengaturan with Dropdown -->
+      <div class="menu-section">
+        <div class="menu-item dropdown-toggle"
+             [class.active]="isActiveRoute('pengaturan')"
+             (click)="toggleWebsiteSubmenu()"
+             tabindex="0"
+             role="button"
+             [attr.aria-expanded]="isWebsiteSubmenuOpen"
+             aria-label="Pengaturan menu">
+          <div class="menu-item-content">
+            <i class="fas fa-cog" aria-hidden="true"></i>
+            <span>Pengaturan</span>
+          </div>
+          <i class="fas fa-chevron-right dropdown-icon"
+             [class.rotated]="isWebsiteSubmenuOpen"
+             aria-hidden="true"></i>
+        </div>
+
+        <!-- Submenu with Animation -->
+        <div class="submenu"
+             [@submenuExpand]="isWebsiteSubmenuOpen ? 'expanded' : 'collapsed'">
+          <a class="submenu-item"
+             routerLink="pengaturan/aplikasi"
+             routerLinkActive="active"
+             (click)="onMenuItemClick()"
+             tabindex="0">
+            <span>Aplikasi</span>
+          </a>
+          <a class="submenu-item"
+             routerLink="pengaturan/paket"
+             routerLinkActive="active"
+             (click)="onMenuItemClick()"
+             tabindex="0">
+            <span>Paket</span>
+          </a>
+          <a class="submenu-item"
+             routerLink="pengaturan/pembayaran"
+             routerLinkActive="active"
+             (click)="onMenuItemClick()"
+             tabindex="0">
+            <span>Pembayaran</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Bottom Divider -->
+      <div class="menu-divider"></div>
+    </nav>
+  </div>
+
+  <!-- Main Content -->
+  <div class="content">
+    <!-- Header -->
+    <header class="header" role="banner">
+      <div class="breadcrumbs">
+        <h1 class="route-name">{{ currentRouteName }}</h1>
+        <span class="route-path">{{ routePath }}</span>
+      </div>
+
+      <!-- User Profile Section -->
+      <div class="user-profile" (click)="toggleDropdown($event)" tabindex="0" role="button">
+        <img class="user-avatar"
+             [src]="getProfilePhotoUrl()"
+             [alt]="getAdminDisplayName() + ' Avatar'"
+             onerror="this.src='assets/logos.png'" />
+        <span class="user-name">{{ getAdminDisplayName() }}</span>
+        <i class="fas fa-caret-down" aria-hidden="true"></i>
+
+        <!-- Dropdown Menu -->
+        <div class="dropdown-menu" *ngIf="isDropdownOpen" role="menu">
+          <a class="dropdown-item"
+             routerLink="profile"
+             (click)="selectMenu()"
+             role="menuitem"
+             tabindex="0">Profile</a>
+          <a class="dropdown-item"
+             (click)="logout()"
+             role="menuitem"
+             tabindex="0">Logout</a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Content Area -->
+    <main class="well" role="main">
+      <router-outlet></router-outlet>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+      <p>Copyright &#64; Horuzt Invitation {{ getCurrentYear() }}</p>
+    </footer>
+  </div>
+</div>
+
+<!-- Toast Notifications -->
+<wc-toast></wc-toast>

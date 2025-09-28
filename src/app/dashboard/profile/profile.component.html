@@ -1,0 +1,184 @@
+<div class="profile-card">
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-2">Memuat data profil...</p>
+  </div>
+
+  <!-- Profile Content -->
+  <div *ngIf="!isLoading">
+    <div class="d-flex align-items-center mb-4">
+      <div class="pink-bar me-3"></div>
+      <h1 class="text-pink-400 fw-semibold fs-4" style="color:#f472b6;">Data Profil</h1>
+    </div>
+
+    <!-- Photo Section -->
+    <div class="d-flex flex-column flex-sm-row align-items-center gap-3 gap-sm-4 mb-4">
+      <div class="profile-photo flex-shrink-0 position-relative">
+        <img [src]="getPhotoUrl()" alt="Profile photo"
+             [class.uploading]="isUploadingPhoto" />
+        <div *ngIf="isUploadingPhoto" class="upload-overlay">
+          <div class="spinner-border spinner-border-sm text-light" role="status">
+            <span class="visually-hidden">Uploading...</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Photo Upload Controls -->
+      <div class="d-flex flex-column gap-2">
+        <input type="file" #fileInput (change)="onFileSelected($event)"
+               accept=".jpeg,.png,.jpg,.webp" class="d-none" />
+
+        <button type="button" class="btn btn-pink shadow px-4 py-2 fs-6"
+                (click)="fileInput.click()" [disabled]="isUploadingPhoto">
+          <i class="fas fa-upload me-2"></i>
+          {{ selectedFile ? 'Ganti Foto' : 'Unggah Foto' }}
+        </button>
+
+        <button *ngIf="selectedFile" type="button" class="btn btn-success px-4 py-2 fs-6"
+                (click)="uploadPhoto()" [disabled]="isUploadingPhoto">
+          <i class="fas fa-check me-2"></i>
+          Simpan Foto
+        </button>
+
+        <button *ngIf="profileData?.profile_photo_url && !selectedFile"
+                type="button" class="btn btn-outline-danger px-4 py-2 fs-6"
+                (click)="deletePhoto()">
+          <i class="fas fa-trash me-2"></i>
+          Hapus Foto
+        </button>
+      </div>
+    </div>
+
+    <!-- Profile Form -->
+    <form [formGroup]="profileForm" (ngSubmit)="onSubmitProfile()">
+      <div class="row g-3">
+        <div class="col-12 col-sm-6">
+          <label for="name" class="form-label">Nama <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" id="name" formControlName="name"
+                 [class.is-invalid]="profileForm.get('name')?.touched && profileForm.get('name')?.invalid"
+                 placeholder="Masukkan nama lengkap" />
+          <div class="invalid-feedback">
+            {{ getErrorMessage('name') }}
+          </div>
+        </div>
+
+        <div class="col-12 col-sm-6">
+          <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+          <input type="email" class="form-control fw-semibold" id="email" formControlName="email"
+                 [class.is-invalid]="profileForm.get('email')?.touched && profileForm.get('email')?.invalid"
+                 placeholder="contoh@email.com" />
+          <div class="invalid-feedback">
+            {{ getErrorMessage('email') }}
+          </div>
+        </div>
+
+        <div class="col-12 col-sm-6">
+          <label for="phone" class="form-label">Nomor HP <span class="text-danger">*</span></label>
+          <input type="tel" class="form-control" id="phone" formControlName="phone"
+                 [class.is-invalid]="profileForm.get('phone')?.touched && profileForm.get('phone')?.invalid"
+                 placeholder="085123456789" />
+          <div class="invalid-feedback">
+            {{ getErrorMessage('phone') }}
+          </div>
+        </div>
+
+        <div class="col-12 col-sm-6">
+          <label for="package" class="form-label">Paket</label>
+          <input type="text" class="form-control fw-semibold" id="package"
+                 [value]="profileData?.package_info?.name || 'Belum ada paket'"
+                 readonly />
+        </div>
+
+        <div class="col-12 col-sm-6">
+          <label for="kode_pemesanan" class="form-label">Kode Pemesanan</label>
+          <input type="text" class="form-control fw-semibold" id="kode_pemesanan"
+                 [value]="profileData?.kode_pemesanan || 'Belum ada kode'"
+                 readonly />
+        </div>
+
+        <div class="col-12 col-sm-6">
+          <label for="domain" class="form-label">Domain</label>
+          <input type="text" class="form-control fw-semibold" id="domain"
+                 [value]="profileData?.domain_info?.domain || 'Belum ada domain'"
+                 readonly />
+        </div>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="form-actions mt-4">
+        <button type="submit" class="btn btn-cyan shadow me-3"
+                [disabled]="profileForm.invalid || isSubmitting">
+          <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2" role="status"></span>
+          <i *ngIf="!isSubmitting" class="fas fa-save me-2"></i>
+          {{ isSubmitting ? 'Menyimpan...' : 'Simpan Profil' }}
+        </button>
+
+        <button type="button" class="btn btn-outline-secondary"
+                (click)="togglePasswordForm()">
+          <i class="fas fa-key me-2"></i>
+          {{ showPasswordForm ? 'Batal Ubah Password' : 'Ubah Password' }}
+        </button>
+      </div>
+    </form>
+
+    <!-- Password Change Form -->
+    <div *ngIf="showPasswordForm" class="password-form mt-4 p-4 border rounded">
+      <h5 class="mb-3">
+        <i class="fas fa-key me-2"></i>
+        Ubah Kata Sandi
+      </h5>
+
+      <form [formGroup]="passwordForm" (ngSubmit)="onSubmitPassword()">
+        <div class="row g-3">
+          <div class="col-12">
+            <label for="current_password" class="form-label">Kata Sandi Saat Ini <span class="text-danger">*</span></label>
+            <input type="password" class="form-control" id="current_password" formControlName="current_password"
+                   [class.is-invalid]="passwordForm.get('current_password')?.touched && passwordForm.get('current_password')?.invalid"
+                   placeholder="Masukkan kata sandi saat ini" />
+            <div class="invalid-feedback">
+              {{ getErrorMessage('current_password', passwordForm) }}
+            </div>
+          </div>
+
+          <div class="col-12 col-sm-6">
+            <label for="new_password" class="form-label">Kata Sandi Baru <span class="text-danger">*</span></label>
+            <input type="password" class="form-control" id="new_password" formControlName="new_password"
+                   [class.is-invalid]="passwordForm.get('new_password')?.touched && passwordForm.get('new_password')?.invalid"
+                   placeholder="Minimal 8 karakter" />
+            <div class="invalid-feedback">
+              {{ getErrorMessage('new_password', passwordForm) }}
+            </div>
+          </div>
+
+          <div class="col-12 col-sm-6">
+            <label for="new_password_confirmation" class="form-label">Konfirmasi Kata Sandi Baru <span class="text-danger">*</span></label>
+            <input type="password" class="form-control" id="new_password_confirmation" formControlName="new_password_confirmation"
+                   [class.is-invalid]="passwordForm.get('new_password_confirmation')?.touched && passwordForm.get('new_password_confirmation')?.invalid"
+                   placeholder="Ulangi kata sandi baru" />
+            <div class="invalid-feedback">
+              {{ getErrorMessage('new_password_confirmation', passwordForm) }}
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-3">
+          <button type="submit" class="btn btn-success me-2"
+                  [disabled]="passwordForm.invalid || isPasswordSubmitting">
+            <span *ngIf="isPasswordSubmitting" class="spinner-border spinner-border-sm me-2" role="status"></span>
+            <i *ngIf="!isPasswordSubmitting" class="fas fa-check me-2"></i>
+            {{ isPasswordSubmitting ? 'Mengubah...' : 'Ubah Password' }}
+          </button>
+
+          <button type="button" class="btn btn-outline-secondary"
+                  (click)="togglePasswordForm()">
+            <i class="fas fa-times me-2"></i>
+            Batal
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

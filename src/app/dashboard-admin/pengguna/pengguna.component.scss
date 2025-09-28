@@ -1,0 +1,102 @@
+// body {
+//   font-family: "Poppins", sans-serif;
+//   background-color: white;
+//   padding: 1rem;
+// }
+// h1 {
+//   border-left: 4px solid #f472b6; /* pink-400 */
+//   padding-left: 0.5rem;
+//   color: #f472b6;
+//   font-weight: 600;
+// }
+// .status-active {
+//   background-color: #16a34a; /* green-600 */
+//   color: white;
+//   border-radius: 9999px;
+//   padding: 0.25rem 1rem;
+//   font-weight: 500;
+//   font-size: 0.875rem;
+//   display: inline-flex;
+//   align-items: center;
+//   gap: 0.5rem;
+//   white-space: nowrap;
+// }
+// .status-inactive {
+//   background-color: #db2777; /* pink-600 */
+//   color: white;
+//   border-radius: 9999px;
+//   padding: 0.25rem 1rem;
+//   font-weight: 500;
+//   font-size: 0.875rem;
+//   display: inline-flex;
+//   align-items: center;
+//   gap: 0.5rem;
+//   white-space: nowrap;
+// }
+// .status-dot {
+//   width: 0.75rem;
+//   height: 0.75rem;
+//   background-color: white;
+//   border-radius: 9999px;
+//   display: inline-block;
+// }
+// .btn-edit {
+//   background-color: #7dd3fc; /* sky-300 */
+//   border-radius: 0.75rem;
+//   padding: 0.375rem 0.5rem;
+//   box-shadow: 0 4px 6px rgb(0 0 0 / 0.1);
+//   border: none;
+//   color: white;
+//   transition: background-color 0.2s ease;
+// }
+// .btn-edit:hover {
+//   background-color: #38bdf8; /* sky-400 */
+//   color: white;
+// }
+// .btn-delete {
+//   background-color: #ec4899; /* pink-400 */
+//   border-radius: 0.75rem;
+//   padding: 0.375rem 0.5rem;
+//   box-shadow: 0 4px 6px rgb(0 0 0 / 0.1);
+//   border: none;
+//   color: white;
+//   transition: background-color 0.2s ease;
+// }
+// .btn-delete:hover {
+//   background-color: #db2777; /* pink-500 */
+//   color: white;
+// }
+// .table thead th {
+//   background-color: #f3f4f6; /* gray-100 */
+//   font-weight: 600;
+//   font-size: 1.125rem;
+//   color: #2a0f0f;
+// }
+// .table tbody td {
+//   font-size: 1.125rem;
+//   color: #2a0f0f;
+//   vertical-align: middle;
+// }
+// @media (max-width: 575.98px) {
+//   h1 {
+//     font-size: 1.25rem;
+//   }
+//   .table thead th,
+//   .table tbody td {
+//     font-size: 0.875rem;
+//   }
+//   .status-active,
+//   .status-inactive {
+//     font-size: 0.75rem;
+//     padding: 0.2rem 0.75rem;
+//   }
+//   .btn-edit,
+//   .btn-delete {
+//     padding: 0.25rem 0.4rem;
+//   }
+//   .btn-edit i,
+//   .btn-delete i {
+//     font-size: 0.875rem;
+//   }
+// }
+

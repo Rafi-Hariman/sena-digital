@@ -1,0 +1,116 @@
+.main-container {
+    width: 90%;
+    margin: auto;
+    font-family: 'Arial, sans-serif';
+  }
+  
+  .section {
+    background-color: #f9f9f9;
+    border: 1px solid #eaeaea;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+  
+    .title {
+      font-size: 18px;
+      font-weight: bold;
+      color: #ff69b4;
+      margin-bottom: 15px;
+    }
+  
+    .photo-upload {
+      margin-bottom: 15px;
+  
+      .photo-placeholder {
+        width: 120px;
+        height: 120px;
+        border: 2px dashed #ccc;
+        border-radius: 50%;
+        margin: auto;
+      }
+  
+      .upload-button {
+        background-color: #ff69b4;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        margin-top: 10px;
+      }
+    }
+  
+    .dropdown {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin: 15px 0;
+    }
+  
+    .save-button {
+      background-color: #00aced;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+  }
+  
+  .dual-section {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  
+  .form-section {
+    flex: 1;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #eaeaea;
+    border-radius: 15px;
+  
+    .title {
+      font-size: 18px;
+      font-weight: bold;
+      color: #ff69b4;
+      margin-bottom: 20px;
+    }
+  
+    .photo-upload {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+  
+    form {
+      display: flex;
+      flex-direction: column;
+  
+      label {
+        margin-top: 10px;
+        font-size: 14px;
+      }
+  
+      input {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-top: 5px;
+      }
+  
+      .save-button {
+        background-color: #00aced;
+        color: white;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        margin-top: 20px;
+        cursor: pointer;
+      }
+    }
+  }
+  

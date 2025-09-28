@@ -1,0 +1,29 @@
+<svg width="2001" height="905" viewBox="0 0 2001 905" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <g filter="url(#filter0_b_2972_1686)">
+    <path d="M-5 0H2001V905H-5V0Z" fill="url(#paint0_linear_2972_1686)" fill-opacity="0.24"/>
+  </g>
+  <!-- Added ellipse -->
+  <ellipse cx="139.54" cy="-292.51" rx="294" ry="426" fill="url(#ellipseGradient)" filter="url(#blurEffect)" transform="rotate(23.04 139.54 -292.51)"/>
+  
+  <defs>
+    <filter id="filter0_b_2972_1686" x="-385" y="-380" width="2766" height="1665" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feGaussianBlur in="BackgroundImageFix" stdDeviation="190"/>
+      <feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_2972_1686"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_backgroundBlur_2972_1686" result="shape"/>
+    </filter>
+    <linearGradient id="paint0_linear_2972_1686" x1="310" y1="53.9772" x2="1005.35" y2="898.952" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FBFBFB"/>
+      <stop offset="0.413324" stop-color="#FFD5D5" stop-opacity="0.4"/>
+    </linearGradient>
+    <!-- Gradient for the ellipse -->
+    <linearGradient id="ellipseGradient" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="34.56%" stop-color="rgba(255, 180, 191, 0.35)"/>
+      <stop offset="70.71%" stop-color="rgba(217, 61, 27, 0.2905)"/>
+    </linearGradient>
+    <!-- Filter for the blur effect -->
+    <filter id="blurEffect">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="30"/>
+    </filter>
+  </defs>
+</svg>

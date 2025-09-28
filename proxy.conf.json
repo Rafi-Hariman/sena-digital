@@ -1,0 +1,7 @@
+{
+  "/api": {
+    "target": "https://sena-digital.com/api",
+    "secure": false,
+    "changeOrigin": true
+  }
+}

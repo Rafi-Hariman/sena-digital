@@ -1,0 +1,63 @@
+<div class="main-container">
+    <!-- Section: Data Mempelai Wanita -->
+    <div class="section">
+      <h3 class="title">Data Mempelai Wanita</h3>
+      <div class="photo-upload">
+        <div class="photo-placeholder"></div>
+        <button class="upload-button" (click)="uploadPhoto('wanita')">Unggah Foto</button>
+      </div>
+      <div class="form-group">
+        <label for="order">Urutan Mempelai</label>
+        <select id="order" class="dropdown">
+          <option value="" disabled selected>Pilih urutan</option>
+          <option value="1">Urutan 1</option>
+          <option value="2">Urutan 2</option>
+        </select>
+      </div>
+      <button class="save-button" (click)="saveData('wanita')">Simpan</button>
+    </div>
+  
+    <!-- Section: Data Mempelai Pria & Wanita Forms -->
+    <div class="dual-section">
+      <!-- Mempelai Pria -->
+      <div class="form-section">
+        <h3 class="title">Data Mempelai Pria</h3>
+        <div class="photo-upload">
+          <div class="photo-placeholder"></div>
+          <button class="upload-button" (click)="uploadPhoto('pria')">Unggah Foto</button>
+        </div>
+        <form>
+          <label>Nama Lengkap</label>
+          <input type="text" placeholder="Masukkan nama lengkap" [(ngModel)]="groomData.fullName" />
+          <label>Nama Panggilan</label>
+          <input type="text" placeholder="Masukkan nama pendek" [(ngModel)]="groomData.nickname" />
+          <label>Nama Ayah</label>
+          <input type="text" placeholder="Masukkan nama ayah" [(ngModel)]="groomData.fatherName" />
+          <label>Nama Ibu</label>
+          <input type="text" placeholder="Masukkan nama ibu" [(ngModel)]="groomData.motherName" />
+          <button class="save-button" type="button" (click)="saveData('pria')">Simpan</button>
+        </form>
+      </div>
+  
+      <!-- Mempelai Wanita -->
+      <div class="form-section">
+        <h3 class="title">Data Mempelai Wanita</h3>
+        <div class="photo-upload">
+          <div class="photo-placeholder"></div>
+          <button class="upload-button" (click)="uploadPhoto('wanita')">Unggah Foto</button>
+        </div>
+        <form>
+          <label>Nama Lengkap</label>
+          <input type="text" placeholder="Masukkan nama lengkap" [(ngModel)]="brideData.fullName" />
+          <label>Nama Panggilan</label>
+          <input type="text" placeholder="Masukkan nama pendek" [(ngModel)]="brideData.nickname" />
+          <label>Nama Ayah</label>
+          <input type="text" placeholder="Masukkan nama ayah" [(ngModel)]="brideData.fatherName" />
+          <label>Nama Ibu</label>
+          <input type="text" placeholder="Masukkan nama ibu" [(ngModel)]="brideData.motherName" />
+          <button class="save-button" type="button" (click)="saveData('wanita')">Simpan</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  

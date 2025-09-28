@@ -1,0 +1,272 @@
+@media (max-width: 900px) {
+  .wc__hero {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2rem;
+  }
+  .wc__hero-content {
+    width: 100%;
+    margin-right: 0;
+    h1 {
+      font-size: 48px;
+      line-height: 60px;
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .wc__hero {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.2rem;
+    margin-top: 1rem;
+  }
+  .wc__hero-content {
+    width: 100%;
+    margin-right: 0;
+    h1 {
+      font-size: 32px;
+      line-height: 40px;
+    }
+    p {
+      font-size: 15px;
+    }
+  }
+}
+@import "../../../styles/variable";
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+button{
+  background: linear-gradient(69.44deg, #599FE6 0%, #52ECF0 70%);
+}
+
+.wc__hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2rem;
+  opacity: 0; /* Initial state for animation */
+  animation: fadeIn 1s forwards ease-in-out; /* Applying fadeIn animation */
+  animation-delay: 0.5s;
+
+  &-content {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-right: 2rem;
+    opacity: 0;
+    animation: fadeInUp 1s forwards ease-in-out;
+    animation-delay: 0.8s;
+
+    h1 {
+      font-family: Poppins;
+      font-size: 90px;
+      font-weight: 700;
+      line-height: 115px;
+      letter-spacing: 0.8px;
+      text-align: left;
+    }
+
+    p {
+      font-size: 18px;
+      font-weight: 400;
+      color: black;
+      font-family: Poppins;
+      line-height: 25px;
+      margin: 1.8125rem 0 1.9375rem;
+    }
+
+    &_cta {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      button {
+        padding: 0.7rem 1.5rem;
+        background-color: $main-color;
+        border: 0;
+        outline: none;
+        border-radius: 3.75rem;
+        color: white;
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 21px;
+        margin-right: 12px;
+      }
+
+      p {
+        margin: 0;
+        padding: 0;
+
+        span {
+          font-family: $main-font;
+          font-weight: 500;
+          font-size: 18px;
+          line-height: 25px;
+          color: $main-color;
+          letter-spacing: 1px;
+        }
+      }
+    }
+  }
+
+  &-image {
+    width: 50%;
+    display: flex;
+    background-position: left center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    position: relative;
+    min-height: 650px;
+    z-index: 0;
+    opacity: 0; /* Initial state for animation */
+    animation: fadeInUp 1s forwards ease-in-out;
+    animation-delay: 1s; /* Staggering the delay */
+
+    img {
+      width: 100%;
+      height: auto;
+      opacity: 1;
+      top: 0%;
+      right: -6%;
+    }
+  }
+}
+
+/*
+******************
+Responsive
+******************
+*/
+
+@media screen and (max-width: 1200px) {
+  .wc__hero {
+    &-image {
+      min-height: 500px;
+    }
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .wc__hero {
+    &-content {
+      h1 {
+        font-size: 35px;
+        line-height: 40px;
+      }
+
+      &_cta {
+        align-items: center;
+
+        button {
+          padding: 0.5rem 0.9rem;
+        }
+
+        p {
+          span {
+            font-size: 16px;
+          }
+        }
+      }
+    }
+
+    &-image {
+      min-height: 300px;
+    }
+  }
+}
+
+@media screen and (max-width: 780px) {
+  .wc__hero {
+    &-content {
+      &_cta {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 650px) {
+  .wc__hero {
+    flex-direction: column;
+
+    &-content {
+      width: 100%;
+
+      h1 {
+        font-size: 45px;
+        line-height: 50px;
+      }
+
+      &_cta {
+        flex-direction: row;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+    }
+
+    &-image {
+      width: 100%;
+      margin-top: 2rem;
+      min-height: 500px;
+    }
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .wc__hero {
+    &-image {
+      min-height: 350px;
+    }
+  }
+}
+
+@media screen and (max-width: 350px) {
+  .wc__hero {
+    &-content {
+      h1 {
+        font-size: 32px;
+        line-height: 40px;
+      }
+
+      p {
+        font-size: 16px;
+        margin-bottom: 1rem;
+      }
+
+      &_cta {
+        justify-content: flex-start;
+
+        p {
+          margin-top: 0.5rem;
+        }
+      }
+    }
+
+    &-image {
+      min-height: 250px;
+    }
+  }
+}

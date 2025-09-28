@@ -1,0 +1,362 @@
+// PaymentConfirmComponent - Clean, modern success page matching target design
+.pc-container {
+  max-width: 480px;
+  margin: 0 auto;
+  background: #ffffff;
+  padding: 40px 24px;
+  text-align: center;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  // min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+// Header Section
+.pc-header {
+  margin-bottom: 40px;
+}
+
+.pc-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #66a3ff;
+  margin: 0 0 12px 0;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.pc-subtitle {
+  font-size: 18px;
+  font-weight: 400;
+  color: #1a1a1a;
+  margin: 0 0 32px 0;
+  line-height: 1.4;
+}
+
+// Success Icon
+.pc-icon-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  background: #52c41a;
+  border-radius: 50%;
+  margin-bottom: 32px;
+}
+
+.pc-icon {
+  width: 40px;
+  height: 40px;
+  fill: white;
+}
+
+// Form Section
+.pc-form-section {
+  margin-bottom: 32px;
+  text-align: left;
+}
+
+.pc-label {
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 8px;
+}
+
+.pc-input {
+  width: 100%;
+  height: 48px;
+  padding: 0 16px;
+  border: 1.5px solid #e1e5e9;
+  border-radius: 8px;
+  background: #f8fafc;
+  font-size: 16px;
+  color: #6b7280;
+  box-sizing: border-box;
+
+  &:focus {
+    outline: none;
+    border-color: #66a3ff;
+    box-shadow: 0 0 0 3px rgba(102, 163, 255, 0.1);
+  }
+}
+
+// Instructions Section
+.pc-instructions {
+  margin-bottom: 32px;
+  text-align: center;
+
+  p {
+    font-size: 14px;
+    color: #374151;
+    line-height: 1.6;
+    margin: 0 0 16px 0;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+// Payment Code Section
+.pc-code-section {
+  margin-bottom: 40px;
+}
+
+.pc-code-label {
+  font-size: 16px;
+  font-weight: 500;
+  color: #374151;
+  margin: 0 0 16px 0;
+}
+
+.pc-code-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 16px;
+  background: #f8fafc;
+  border: 1.5px solid #e1e5e9;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: #66a3ff;
+    background: #f0f8ff;
+
+    .pc-copy-icon {
+      color: #66a3ff;
+    }
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.pc-code-value {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1a1a1a;
+  letter-spacing: 0.5px;
+}
+
+.pc-copy-icon {
+  color: #9ca3af;
+  transition: color 0.2s ease;
+  flex-shrink: 0;
+}
+
+// Button Section
+.pc-button-section {
+  margin-top: auto;
+  padding-top: 20px;
+}
+
+.pc-confirm-btn {
+  background: #ffa0ae;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 600;
+  padding: 14px 48px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(255, 160, 174, 0.3);
+
+  &:hover {
+    background: #ff8a9a;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(255, 160, 174, 0.4);
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(255, 160, 174, 0.3);
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 160, 174, 0.3);
+  }
+}
+
+// Responsive Design
+@media (max-width: 480px) {
+  .pc-container {
+    padding: 32px 20px;
+    min-height: auto;
+  }
+
+  .pc-title {
+    font-size: 20px;
+  }
+
+  .pc-subtitle {
+    font-size: 16px;
+    margin-bottom: 28px;
+  }
+
+  .pc-icon-wrapper {
+    width: 70px;
+    height: 70px;
+    margin-bottom: 28px;
+  }
+
+  .pc-icon {
+    width: 35px;
+    height: 35px;
+  }
+
+  .pc-header {
+    margin-bottom: 32px;
+  }
+
+  .pc-form-section,
+  .pc-instructions,
+  .pc-code-section {
+    margin-bottom: 24px;
+  }
+
+  .pc-input {
+    font-size: 16px; // Prevent zoom on iOS
+  }
+
+  .pc-code-value {
+    font-size: 18px;
+  }
+
+  .pc-confirm-btn {
+    width: 100%;
+    padding: 12px 24px;
+    font-size: 16px;
+  }
+
+  .pc-instructions p {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 360px) {
+  .pc-container {
+    padding: 28px 16px;
+  }
+
+  .pc-title {
+    font-size: 18px;
+  }
+
+  .pc-subtitle {
+    font-size: 15px;
+  }
+
+  .pc-icon-wrapper {
+    width: 60px;
+    height: 60px;
+  }
+
+  .pc-icon {
+    width: 30px;
+    height: 30px;
+  }
+
+  .pc-code-value {
+    font-size: 16px;
+  }
+
+  .pc-confirm-btn {
+    padding: 11px 20px;
+    font-size: 15px;
+  }
+}
+
+// Animation for success state
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.pc-container {
+  animation: slideUp 0.5s ease-out;
+}
+
+// Copy feedback animation
+@keyframes copyFeedback {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.pc-code-container.copied {
+  animation: copyFeedback 0.3s ease-out;
+}
+
+// Accessibility improvements
+.pc-confirm-btn:focus-visible {
+  outline: 2px solid #ffa0ae;
+  outline-offset: 2px;
+}
+
+.pc-code-container:focus-visible {
+  outline: 2px solid #66a3ff;
+  outline-offset: 2px;
+}
+
+// Dark mode support (future-proofing)
+// @media (prefers-color-scheme: dark) {
+//   .pc-container {
+//     background: #1a1a1a;
+//   }
+
+//   .pc-title {
+//     color: #66a3ff;
+//   }
+
+//   .pc-subtitle {
+//     color: #ffffff;
+//   }
+
+//   .pc-label {
+//     color: #ffffff;
+//   }
+
+//   .pc-input {
+//     background: #2a2a2a;
+//     border-color: #444;
+//     color: #ffffff;
+//   }
+
+//   .pc-instructions p {
+//     color: #d1d5db;
+//   }
+
+//   .pc-code-label {
+//     color: #d1d5db;
+//   }
+
+//   .pc-code-container {
+//     background: #2a2a2a;
+//     border-color: #444;
+
+//     &:hover {
+//       background: #374151;
+//       border-color: #66a3ff;
+//     }
+//   }
+
+//   .pc-code-value {
+//     color: #ffffff;
+//   }
+// }

@@ -1,0 +1,81 @@
+<div class="login-container">
+    <div class="login-card">
+      <!-- Left Section with Wedding Image -->
+      <div class="login-image">
+        <img src="/assets/login.svg" alt="Beach" />
+      </div>
+  
+      <!-- Right Section with Form -->
+      <div class="login-form">
+        <h1>DAFTAR AKUN</h1>
+  
+        <!-- Error Message Section -->
+        <div *ngIf="errorMessage" class="error-message">
+          {{ errorMessage }}
+        </div>
+  
+        <form [formGroup]="loginForm" (ngSubmit)="onRegister()">
+          <!-- Email Input -->
+          <div class="form-group">
+            <input
+              type="email"
+              formControlName="email"
+              placeholder="Email"
+            />
+            <span *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid">
+              Email is required and must be valid.
+            </span>
+          </div>
+  
+          <!-- Password Input -->
+          <div class="form-group">
+            <input
+              type="password"
+              formControlName="password"
+              placeholder="Password"
+            />
+            <span *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid">
+              Password is required and must be at least 6 characters.
+            </span>
+          </div>
+  
+          <!-- Password Confirmation Input -->
+          <div class="form-group">
+            <input
+              type="password"
+              formControlName="password_confirmation"
+              placeholder="Repeat Password"
+            />
+            <span
+              *ngIf="
+                loginForm.get('password_confirmation')?.touched &&
+                loginForm.get('password_confirmation')?.value !== loginForm.get('password')?.value
+              "
+            >
+              Passwords must match.
+            </span>
+          </div>
+  
+          <!-- Phone Input -->
+          <div class="form-group">
+            <input
+              type="text"
+              formControlName="phone"
+              placeholder="Phone"
+            />
+            <span *ngIf="loginForm.get('phone')?.touched && loginForm.get('phone')?.invalid">
+              Phone is required.
+            </span>
+          </div>
+  
+          <!-- Submit Button -->
+          <div class="login-actions">
+            <button type="submit" [disabled]="loginForm.invalid">Daftar</button>
+          </div>
+        </form>
+  
+        <p>Sudah punya akun? <a href="/login"><b>Login.</b></a></p>
+      </div>
+    </div>
+  </div>
+  

@@ -1,0 +1,350 @@
+<div class="testimonials-admin-container">
+  <div class="content-card">
+    <!-- Header -->
+    <div class="header-section">
+      <div class="title-group">
+        <div class="pink-bar"></div>
+        <h2 class="page-title">Testimoni</h2>
+      </div>
+
+      <!-- Action Bar -->
+      <div class="action-bar">
+        <!-- Status Filter -->
+        <div class="filter-group">
+          <label for="statusFilter" class="filter-label">Filter Status:</label>
+          <select
+            id="statusFilter"
+            class="form-select filter-select"
+            [(ngModel)]="selectedStatus"
+            (change)="onStatusFilterChange(selectedStatus)"
+          >
+            <option value="all">Semua Status</option>
+            <option value="published">Dipublikasi</option>
+            <option value="unpublished">Disembunyikan</option>
+          </select>
+        </div>
+
+        <!-- Search -->
+        <div class="search-group">
+          <label for="search" class="search-label">Cari:</label>
+          <input
+            id="search"
+            type="text"
+            class="form-control search-input"
+            placeholder="Cari nama, kota, provinsi, atau ulasan..."
+            [formControl]="searchControl"
+          />
+          <i class="fas fa-search search-icon"></i>
+        </div>
+      </div>
+
+      <!-- Bulk Actions (shown when items are selected) -->
+      <div class="bulk-actions" *ngIf="selectedTestimonials.length > 0">
+        <div class="selection-info">
+          <span class="selected-count">{{ selectedTestimonials.length }} item dipilih</span>
+        </div>
+        <div class="bulk-buttons">
+          <button
+            type="button"
+            class="btn btn-success btn-sm"
+            (click)="bulkUpdateStatus(true)"
+          >
+            <i class="fas fa-eye"></i> Publikasikan
+          </button>
+          <button
+            type="button"
+            class="btn btn-secondary btn-sm"
+            (click)="bulkUpdateStatus(false)"
+          >
+            <i class="fas fa-eye-slash"></i> Sembunyikan
+          </button>
+        </div>
+      </div>
+
+      <!-- Delete All Button -->
+      <div class="danger-actions">
+        <button
+          type="button"
+          class="btn btn-danger btn-delete-all"
+          (click)="deleteAllTestimonials()"
+          [disabled]="testimonials.length === 0"
+        >
+          <i class="fas fa-trash-alt"></i> Hapus Semua
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-state">
+      <div class="loading-spinner"></div>
+      <p>Memuat data testimoni...</p>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="hasError && !isLoading" class="error-state">
+      <div class="error-content">
+        <i class="fas fa-exclamation-triangle"></i>
+        <h3>Gagal Memuat Data</h3>
+        <p>Terjadi kesalahan saat memuat data testimoni.</p>
+        <button class="btn btn-primary" (click)="loadTestimonials()">
+          <i class="fas fa-refresh"></i> Coba Lagi
+        </button>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div *ngIf="!isLoading && !hasError" class="content-section">
+      <!-- Desktop Table -->
+      <div class="table-responsive desktop-table">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th class="checkbox-column">
+                <div class="checkbox-wrapper">
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    [checked]="selectAll"
+                    (change)="onSelectAll($event)"
+                    [disabled]="testimonials.length === 0"
+                  />
+                </div>
+              </th>
+              <th>Nama</th>
+              <th>Lokasi</th>
+              <th>Ulasan</th>
+              <th>Status</th>
+              <th>Tanggal</th>
+              <th style="width: 120px;">Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let testimonial of testimonials; trackBy: trackByTestimonialId">
+              <td class="checkbox-column">
+                <div class="checkbox-wrapper">
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    [checked]="isSelected(testimonial.id)"
+                    (change)="onTestimonialSelect(testimonial.id, $event)"
+                  />
+                </div>
+              </td>
+              <td>
+                <div class="user-info">
+                  <strong>{{ testimonial.user.name || 'Nama tidak tersedia' }}</strong>
+                  <small class="text-muted d-block">{{ testimonial.user.email }}</small>
+                </div>
+              </td>
+              <td>
+                <span class="location">{{ testimonial.kota }}, {{ testimonial.provinsi }}</span>
+              </td>
+              <td>
+                <span
+                  class="review-text"
+                  [title]="testimonial.ulasan"
+                >
+                  {{ truncateText(testimonial.ulasan, 80) }}
+                </span>
+              </td>
+              <td>
+                <span
+                  class="status-badge"
+                  [class.status-published]="testimonial.status === 1"
+                  [class.status-unpublished]="testimonial.status === 0"
+                >
+                  {{ testimonial.status === 1 ? 'Dipublikasi' : 'Disembunyikan' }}
+                </span>
+              </td>
+              <td>
+                <small class="text-muted">{{ formatDate(testimonial.created_at) }}</small>
+              </td>
+              <td>
+                <div class="action-buttons">
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-outline-primary"
+                    (click)="toggleTestimonialStatus(testimonial)"
+                    [title]="testimonial.status === 1 ? 'Sembunyikan' : 'Publikasikan'"
+                  >
+                    <i class="fas" [class.fa-eye-slash]="testimonial.status === 1" [class.fa-eye]="testimonial.status === 0"></i>
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-outline-danger"
+                    (click)="deleteTestimonial(testimonial)"
+                    title="Hapus"
+                  >
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Empty State -->
+            <tr *ngIf="testimonials.length === 0">
+              <td colspan="7" class="text-center py-5">
+                <div class="empty-state">
+                  <i class="fas fa-comments"></i>
+                  <h4>Tidak Ada Testimoni</h4>
+                  <p class="text-muted">
+                    {{ searchControl.value || selectedStatus !== 'all' ?
+                       'Tidak ada testimoni yang sesuai dengan filter.' :
+                       'Belum ada testimoni yang tersedia.' }}
+                  </p>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Mobile Cards -->
+      <div class="mobile-cards">
+        <div class="mobile-card" *ngFor="let testimonial of testimonials; trackBy: trackByTestimonialId">
+          <div class="card-header">
+            <div class="checkbox-wrapper">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                [checked]="isSelected(testimonial.id)"
+                (change)="onTestimonialSelect(testimonial.id, $event)"
+              />
+            </div>
+            <div class="user-details">
+              <h6 class="user-name">{{ testimonial.user.name || 'Nama tidak tersedia' }}</h6>
+              <small class="user-email">{{ testimonial.user.email }}</small>
+            </div>
+            <span
+              class="status-badge mobile-status"
+              [class.status-published]="testimonial.status === 1"
+              [class.status-unpublished]="testimonial.status === 0"
+            >
+              {{ testimonial.status === 1 ? 'Dipublikasi' : 'Disembunyikan' }}
+            </span>
+          </div>
+
+          <div class="card-body">
+            <div class="location-info">
+              <i class="fas fa-map-marker-alt"></i>
+              <span>{{ testimonial.kota }}, {{ testimonial.provinsi }}</span>
+            </div>
+            <div class="review-content">
+              <p>{{ testimonial.ulasan }}</p>
+            </div>
+            <div class="date-info">
+              <i class="fas fa-calendar"></i>
+              <span>{{ formatDate(testimonial.created_at) }}</span>
+            </div>
+          </div>
+
+          <div class="card-actions">
+            <button
+              type="button"
+              class="btn btn-sm btn-outline-primary"
+              (click)="toggleTestimonialStatus(testimonial)"
+            >
+              <i class="fas" [class.fa-eye-slash]="testimonial.status === 1" [class.fa-eye]="testimonial.status === 0"></i>
+              {{ testimonial.status === 1 ? 'Sembunyikan' : 'Publikasikan' }}
+            </button>
+            <button
+              type="button"
+              class="btn btn-sm btn-outline-danger"
+              (click)="deleteTestimonial(testimonial)"
+            >
+              <i class="fas fa-trash"></i> Hapus
+            </button>
+          </div>
+        </div>
+
+        <!-- Mobile Empty State -->
+        <div class="mobile-empty-state" *ngIf="testimonials.length === 0">
+          <i class="fas fa-comments"></i>
+          <h4>Tidak Ada Testimoni</h4>
+          <p>
+            {{ searchControl.value || selectedStatus !== 'all' ?
+               'Tidak ada testimoni yang sesuai dengan filter.' :
+               'Belum ada testimoni yang tersedia.' }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination-section" *ngIf="totalPages > 1">
+        <div class="pagination-info">
+          <div class="items-per-page">
+            <label for="itemsPerPage">Tampilkan:</label>
+            <select
+              id="itemsPerPage"
+              class="form-select items-select"
+              [value]="itemsPerPage"
+              (change)="onItemsPerPageChange($event)"
+            >
+              <option value="5">5</option>
+              <option value="10">10</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+            </select>
+            <span>data</span>
+          </div>
+
+          <div class="total-info">
+            Menampilkan {{ (currentPage - 1) * itemsPerPage + 1 }} -
+            {{ Math.min(currentPage * itemsPerPage, totalItems) }} dari {{ totalItems }} data
+          </div>
+        </div>
+
+        <nav class="pagination-nav">
+          <ul class="pagination">
+            <!-- Previous Button -->
+            <li class="page-item" [class.disabled]="currentPage === 1">
+              <button
+                class="page-link"
+                (click)="onPageChange(currentPage - 1)"
+                [disabled]="currentPage === 1"
+              >
+                <i class="fas fa-chevron-left"></i>
+              </button>
+            </li>
+
+            <!-- First Page -->
+            <li class="page-item" *ngIf="currentPage > 3">
+              <button class="page-link" (click)="onPageChange(1)">1</button>
+            </li>
+            <li class="page-item disabled" *ngIf="currentPage > 4">
+              <span class="page-link">...</span>
+            </li>
+
+            <!-- Page Numbers -->
+            <li
+              class="page-item"
+              *ngFor="let page of getPageNumbers()"
+              [class.active]="page === currentPage"
+            >
+              <button class="page-link" (click)="onPageChange(page)">{{ page }}</button>
+            </li>
+
+            <!-- Last Page -->
+            <li class="page-item disabled" *ngIf="currentPage < totalPages - 3">
+              <span class="page-link">...</span>
+            </li>
+            <li class="page-item" *ngIf="currentPage < totalPages - 2">
+              <button class="page-link" (click)="onPageChange(totalPages)">{{ totalPages }}</button>
+            </li>
+
+            <!-- Next Button -->
+            <li class="page-item" [class.disabled]="currentPage === totalPages">
+              <button
+                class="page-link"
+                (click)="onPageChange(currentPage + 1)"
+                [disabled]="currentPage === totalPages"
+              >
+                <i class="fas fa-chevron-right"></i>
+              </button>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,59 @@
+<div class="presence-container">
+  <div class="form-container">
+    <h1 class="form-title">Konfirmasi Kehadiran</h1>
+
+    <form class="confirmation-form" (ngSubmit)="onSubmit()" #presenceForm="ngForm">
+      <div class="form-group">
+        <label for="nama" class="form-label">Nama</label>
+        <input
+          type="text"
+          id="nama"
+          name="nama"
+          class="form-input"
+          placeholder="Masukkan nama lengkap Anda"
+          [(ngModel)]="formData.nama"
+          required
+          #namaField="ngModel"
+          [class.invalid]="namaField.invalid && namaField.touched">
+      </div>
+
+      <div class="form-group">
+        <label for="kehadiran" class="form-label">Apakah akan hadir?</label>
+        <select
+          id="kehadiran"
+          name="kehadiran"
+          class="form-select"
+          [(ngModel)]="formData.kehadiran"
+          required
+          #kehadiranField="ngModel"
+          [class.invalid]="kehadiranField.invalid && kehadiranField.touched">
+          <option value="">Select...</option>
+          <option value="ya">Ya, saya akan hadir</option>
+          <option value="tidak">Tidak bisa hadir</option>
+          <option value="belum_pasti">Belum pasti</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="ucapan" class="form-label">Ucapan</label>
+        <textarea
+          id="ucapan"
+          name="ucapan"
+          class="form-textarea"
+          placeholder="Tuliskan ucapan dan doa terbaik untuk pengantin..."
+          [(ngModel)]="formData.ucapan"
+          required
+          #ucapanField="ngModel"
+          [class.invalid]="ucapanField.invalid && ucapanField.touched">
+        </textarea>
+      </div>
+
+      <button
+        type="submit"
+        class="submit-button"
+        [disabled]="presenceForm.invalid || isSubmitting">
+        {{ isSubmitting ? 'Mengirim Konfirmasi...' : 'Kirim Konfirmasi Kehadiran' }}
+      </button>
+    </form>
+  </div>
+</div>
