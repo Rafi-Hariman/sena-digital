@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Notyf } from 'notyf';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { catchError, of, forkJoin } from 'rxjs';
@@ -21,7 +21,7 @@ import { ModalComponent } from '../../shared/modal/modal.component';
 })
 export class TestimoniComponent implements OnInit {
   // Form properties
-  reviewForm!: UntypedFormGroup;
+  reviewForm!: FormGroup;
 
   // Data properties
   dataList: TestimoniItem[] = [];
@@ -59,16 +59,16 @@ export class TestimoniComponent implements OnInit {
    * Initialize reactive form with validation
    */
   private initializeForm(): void {
-    this.reviewForm = new UntypedFormGroup({
-      provinsi: new UntypedFormControl('', [
+    this.reviewForm = new FormGroup({
+      provinsi: new FormControl('', [
         Validators.required,
         Validators.minLength(3)
       ]),
-      kota: new UntypedFormControl('', [
+      kota: new FormControl('', [
         Validators.required,
         Validators.minLength(3)
       ]),
-      ulasan: new UntypedFormControl('', [
+      ulasan: new FormControl('', [
         Validators.required,
         Validators.minLength(3),
         Validators.maxLength(500)

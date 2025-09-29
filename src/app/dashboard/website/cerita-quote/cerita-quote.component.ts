@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, UntypedFormArray, Validators, AbstractControl } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, Validators, AbstractControl } from '@angular/forms';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Notyf } from 'notyf';
@@ -13,16 +13,16 @@ import { ModalComponent } from 'src/app/shared/modal/modal.component';
 })
 
 export class CeritaQuoteComponent implements OnInit {
-  ceritaForm!: UntypedFormGroup;
-  quoteForm!: UntypedFormGroup;
+  ceritaForm!: FormGroup;
+  quoteForm!: FormGroup;
   bsConfig: Partial<BsDatepickerConfig>;
   ceritaData: any[] = [];
   editingCeritaId: number | null = null;
-  editCeritaForm: UntypedFormGroup | null = null;
+  editCeritaForm: FormGroup | null = null;
 
   quoteData: any[] = [];
   editingQuoteId: number | null = null;
-  editQuoteForm: UntypedFormGroup | null = null;
+  editQuoteForm: FormGroup | null = null;
 
   // Loading states for better UX
   isLoadingCeritaData = false;
@@ -38,7 +38,7 @@ export class CeritaQuoteComponent implements OnInit {
   private modalRef? : BsModalRef
 
   constructor(
-    private fb: UntypedFormBuilder,
+    private fb: FormBuilder,
     private dashboardSvc: DashboardService,
     private modalSvc: BsModalService
   ) {
@@ -186,12 +186,12 @@ export class CeritaQuoteComponent implements OnInit {
     });
   }
 
-  get ceritaFormArray(): UntypedFormArray {
-    return this.ceritaForm.get('ceritaList') as UntypedFormArray;
+  get ceritaFormArray(): FormArray {
+    return this.ceritaForm.get('ceritaList') as FormArray;
   }
 
-  getCeritaFormGroup(index: number): UntypedFormGroup {
-    return this.ceritaFormArray.at(index) as UntypedFormGroup;
+  getCeritaFormGroup(index: number): FormGroup {
+    return this.ceritaFormArray.at(index) as FormGroup;
   }
 
   // Helper methods for template tracking
@@ -203,7 +203,7 @@ export class CeritaQuoteComponent implements OnInit {
     return item.id || index;
   }
 
-  createCerita(): UntypedFormGroup {
+  createCerita(): FormGroup {
     return this.fb.group({
       tanggal: ['', Validators.required],
       judul: ['', Validators.required],
@@ -238,7 +238,7 @@ export class CeritaQuoteComponent implements OnInit {
     const formData = new FormData();
 
     this.ceritaFormArray.controls.forEach((control: AbstractControl, index: number) => {
-      const group = control as UntypedFormGroup;
+      const group = control as FormGroup;
       const ceritaData = group.value;
 
       const formattedDate = this.formatDate(ceritaData.tanggal) || '';

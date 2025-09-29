@@ -2,7 +2,7 @@ import {
   Component, Input, OnInit, Output, EventEmitter, ViewChild, ElementRef
 } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DashboardService, DashboardServiceType } from '../../dashboard.service';
 import { Notyf } from 'notyf';
 
@@ -16,7 +16,7 @@ export class ModalUploadGaleriComponent implements OnInit {
   @Output() formDataChange = new EventEmitter<any>();
   @Output() next = new EventEmitter<any>();
 
-  uploadForm!: UntypedFormGroup;
+  uploadForm!: FormGroup;
   imagePreviews: { [key: string]: string } = {};
   private notyf: Notyf;
 
@@ -24,7 +24,7 @@ export class ModalUploadGaleriComponent implements OnInit {
 
   constructor(
     public bsModalRef: BsModalRef,
-    private fb: UntypedFormBuilder,
+    private fb: FormBuilder,
     private dashboardSvc: DashboardService
   ) {
     this.notyf = new Notyf({

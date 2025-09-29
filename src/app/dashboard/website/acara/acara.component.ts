@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, UntypedFormArray, Validators, AbstractControl } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, Validators, AbstractControl } from '@angular/forms';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Notyf } from 'notyf';
@@ -28,8 +28,8 @@ interface Countdown {
   styleUrls: ['./acara.component.scss'],
 })
 export class AcaraComponent implements OnInit {
-  staticEventForm!: UntypedFormGroup;
-  dynamicEventForm!: UntypedFormGroup;
+  staticEventForm!: FormGroup;
+  dynamicEventForm!: FormGroup;
 
   events: ReadonlyArray<{ id: string | null; name: string }> = [];
   bsConfig!: Partial<BsDatepickerConfig>;
@@ -44,7 +44,7 @@ export class AcaraComponent implements OnInit {
   userID: any;
 
   constructor(
-    private readonly fb: UntypedFormBuilder,
+    private readonly fb: FormBuilder,
     private readonly dashboardSvc: DashboardService,
     private readonly modalSvc: BsModalService
   ) {
@@ -73,11 +73,11 @@ export class AcaraComponent implements OnInit {
     };
   }
 
-  get dynamicEvents(): UntypedFormArray {
-    return this.dynamicEventForm.get('dynamicEvents') as UntypedFormArray;
+  get dynamicEvents(): FormArray {
+    return this.dynamicEventForm.get('dynamicEvents') as FormArray;
   }
 
-  private createDynamicEventForm(eventData?: Partial<Acara>): UntypedFormGroup {
+  private createDynamicEventForm(eventData?: Partial<Acara>): FormGroup {
     return this.fb.group({
       id: [eventData?.id ?? null],
       nama_acara: [eventData?.nama_acara ?? '', Validators.required],

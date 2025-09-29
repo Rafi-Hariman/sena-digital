@@ -3,7 +3,7 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Notyf } from 'notyf';
 import { Subject } from 'rxjs';
 import { takeUntil, debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { UntypedFormControl } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import {
   DashboardService,
   TestimonialService,
@@ -32,7 +32,7 @@ export class TestimoniesComponent implements OnInit, OnDestroy {
   totalPages = 0;
 
   // Search and filters
-  searchControl = new UntypedFormControl('');
+  searchControl = new FormControl('');
   selectedStatus = 'all'; // 'all', 'published', 'unpublished'
 
   // Selection

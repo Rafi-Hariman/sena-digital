@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Notyf } from 'notyf';
 import { DashboardService, DashboardServiceType } from 'src/app/dashboard.service';
@@ -12,8 +12,8 @@ import { ModalComponent } from 'src/app/shared/modal/modal.component';
 })
 export class MempelaiComponent implements OnInit {
 
-  coverPhotoForm!: UntypedFormGroup;
-  dualSectionForm!: UntypedFormGroup;
+  coverPhotoForm!: FormGroup;
+  dualSectionForm!: FormGroup;
 
   coverPhotoPreview: string = '';
   groomPhotoPreview: string = '';
@@ -32,7 +32,7 @@ export class MempelaiComponent implements OnInit {
   isUpdating: boolean = false;
 
   constructor(
-    private fb: UntypedFormBuilder,
+    private fb: FormBuilder,
     private dashboardSvc: DashboardService,
     private modalSvc: BsModalService
   ) {
@@ -212,7 +212,7 @@ export class MempelaiComponent implements OnInit {
     this.handleModalResponse();
   }
 
-  private markFormGroupTouched(formGroup: UntypedFormGroup): void {
+  private markFormGroupTouched(formGroup: FormGroup): void {
     Object.keys(formGroup.controls).forEach(key => {
       const control = formGroup.get(key);
       control?.markAsTouched();

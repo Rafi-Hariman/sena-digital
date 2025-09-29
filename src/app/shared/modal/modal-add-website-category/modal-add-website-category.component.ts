@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { WebsiteCategoryService } from '../../../services/website-category.service';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Notyf } from 'notyf';
 import { Subject } from 'rxjs';
 import { CategoryCreateRequest } from '../../../interfaces/admin-category.interfaces';
@@ -14,7 +14,7 @@ import { CategoryCreateRequest } from '../../../interfaces/admin-category.interf
 export class ModalAddWebsiteCategoryComponent implements OnInit {
 
   @Input() initialState: any;
-  categoryForm!: UntypedFormGroup;
+  categoryForm!: FormGroup;
   selectedImage: File | null = null;
   imagePreview: string | null = null;
   uploading: boolean = false;
@@ -24,7 +24,7 @@ export class ModalAddWebsiteCategoryComponent implements OnInit {
   constructor(
     private modalSvc: BsModalService,
     private websiteCategoryService: WebsiteCategoryService,
-    private formSvc: UntypedFormBuilder
+    private formSvc: FormBuilder
   ) {
     this.notyf = new Notyf({
       duration: 3000,

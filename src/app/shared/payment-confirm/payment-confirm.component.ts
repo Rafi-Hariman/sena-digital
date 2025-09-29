@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { Notyf } from 'notyf';
 import { DashboardService, DashboardServiceType } from '../../dashboard.service';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { SuccessConfirmPaymentComponent } from '../success-confirm-payment/success-confirm-payment.component';
 
 @Component({
@@ -16,10 +16,10 @@ export class PaymentConfirmComponent implements OnInit {
   kodePayment: any;
   inputKodePayment: string = '';
   @Input() userId!: number;
-  form!: UntypedFormGroup;
+  form!: FormGroup;
 
   constructor(
-    private fb: UntypedFormBuilder,
+    private fb: FormBuilder,
     private dashboardSvc: DashboardService,
     private modalService: BsModalService,
   ) {

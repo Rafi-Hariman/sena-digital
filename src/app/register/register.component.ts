@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { DashboardService, DashboardServiceType } from '../dashboard.service';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'wc-register',
@@ -9,11 +9,11 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
   styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent implements OnInit {
-  loginForm: UntypedFormGroup;
+  loginForm: FormGroup;
   errorMessage: string = '';
 
   constructor(
-    private fb: UntypedFormBuilder,
+    private fb: FormBuilder,
     private router: Router,
     private dashboardService: DashboardService
   ) {
