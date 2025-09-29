@@ -1,6 +1,10 @@
 {
   "name": "woocommerce",
   "version": "0.0.0",
+  "engines": {
+    "node": ">=20.19.5",
+    "npm": ">=10.0.0"
+  },
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -21,11 +25,12 @@
     "@angular/platform-browser": "~13.0.0",
     "@angular/platform-browser-dynamic": "~13.0.0",
     "@angular/router": "~13.0.0",
-    "@fortawesome/fontawesome-free": "^6.6.0",
-    "@fortawesome/fontawesome-svg-core": "^6.6.0",
-    "@fortawesome/free-brands-svg-icons": "^6.6.0",
-    "@fortawesome/free-regular-svg-icons": "^6.6.0",
-    "@fortawesome/free-solid-svg-icons": "^6.6.0",
+
+    "@fortawesome/angular-fontawesome": "^0.13.0",
+    "@fortawesome/fontawesome-svg-core": "^6.5.2",
+    "@fortawesome/free-brands-svg-icons": "^6.5.2",
+    "@fortawesome/free-regular-svg-icons": "^6.5.2",
+    "@fortawesome/free-solid-svg-icons": "^6.5.2",
     "@google/gemini-cli": "^0.1.14",
     "@ngx-translate/core": "^13.0.0",
     "@types/qrcode": "^1.5.5",
@@ -34,7 +39,7 @@
     "font-awesome": "^4.7.0",
     "jwt-decode": "^3.1.2",
     "lodash.isequal": "^4.5.0",
-    "ng2-charts": "^6.0.1",
+    "ng2-charts": "^3.1.2",
     "ngx-bootstrap": "^6.2.0",
     "ngx-select-ex": "^8.0.1",
     "notyf": "^3.10.0",
@@ -53,7 +58,7 @@
     "@angular/cli": "~13.0.3",
     "@angular/compiler-cli": "~13.0.0",
     "@types/jasmine": "~3.10.0",
-    "@types/node": "^12.11.1",
+    "@types/node": "^20.10.0",
     "@typescript-eslint/eslint-plugin": "5.3.0",
     "@typescript-eslint/parser": "5.3.0",
     "eslint": "^8.2.0",

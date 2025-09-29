@@ -1,3 +1,4 @@
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
@@ -181,6 +182,7 @@ import { ProfileAdminComponent } from './dashboard-admin/pengaturan/profile-admi
     NgxSelectModule,
     BsDatepickerModule.forRoot(), // Use forRoot() on BsDatepickerModule
     ModalModule.forRoot(),
+    FontAwesomeModule,
   ],
   providers: [
     Title,
