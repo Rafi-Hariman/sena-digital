@@ -1,7 +1,8 @@
 {
   "/api": {
-    "target": "https://sena-digital.com/api",
-    "secure": false,
-    "changeOrigin": true
+    "target": "https://www.sena-digital.com/api",
+    "secure": true,
+    "changeOrigin": true,
+    "logLevel": "debug"
   }
 }
