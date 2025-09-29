@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DashboardService, DashboardServiceType } from '../../../dashboard.service';
-import { FormBuilder, FormControl, FormGroup, FormArray, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, FormArray, Validators } from '@angular/forms';
 import { Notyf } from 'notyf';
 import { BankAccount } from '../../../services/wedding-data.service';
 
@@ -102,8 +102,8 @@ export class SettingsPaymentComponent implements OnInit {
   bankList: Bank[] = [];
 
   // Forms
-  paymentForm!: FormGroup;
-  editPaymentForm?: FormGroup;
+  paymentForm!: UntypedFormGroup;
+  editPaymentForm?: UntypedFormGroup;
 
   // Data display
   paymentDetails: PaymentMethodDetail[] = [];
@@ -121,7 +121,7 @@ export class SettingsPaymentComponent implements OnInit {
   private notyf: Notyf;
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private dashboardSvc: DashboardService
   ) {
     this.notyf = new Notyf({
@@ -215,31 +215,31 @@ export class SettingsPaymentComponent implements OnInit {
     switch (this.selectedPaymentMethod.id) {
       case 1: // Manual - According to API contract
         this.paymentForm = this.fb.group({
-          kode_bank: new FormControl('', [Validators.required]),
-          nomor_rekening: new FormControl('', [Validators.required]),
-          nama_pemilik: new FormControl('', [Validators.required, Validators.minLength(2)])
+          kode_bank: new UntypedFormControl('', [Validators.required]),
+          nomor_rekening: new UntypedFormControl('', [Validators.required]),
+          nama_pemilik: new UntypedFormControl('', [Validators.required, Validators.minLength(2)])
         });
         break;
 
       case 2: // Tripay
         this.paymentForm = this.fb.group({
-          url_tripay: new FormControl('', [Validators.required]),
-          private_key: new FormControl('', [Validators.required]),
-          api_key: new FormControl('', [Validators.required]),
-          kode_merchant: new FormControl('', [Validators.required]),
-          methode_pembayaran: new FormControl('Tripay', [Validators.required]),
-          id_methode_pembayaran: new FormControl('2', [Validators.required])
+          url_tripay: new UntypedFormControl('', [Validators.required]),
+          private_key: new UntypedFormControl('', [Validators.required]),
+          api_key: new UntypedFormControl('', [Validators.required]),
+          kode_merchant: new UntypedFormControl('', [Validators.required]),
+          methode_pembayaran: new UntypedFormControl('Tripay', [Validators.required]),
+          id_methode_pembayaran: new UntypedFormControl('2', [Validators.required])
         });
         break;
 
       case 3: // Midtrans
         this.paymentForm = this.fb.group({
-          url: new FormControl('', [Validators.required]),
-          server_key: new FormControl('', [Validators.required]),
-          client_key: new FormControl('', [Validators.required]),
-          metode_production: new FormControl('', [Validators.required]),
-          methode_pembayaran: new FormControl('Midtrans', [Validators.required]),
-          id_methode_pembayaran: new FormControl('3', [Validators.required])
+          url: new UntypedFormControl('', [Validators.required]),
+          server_key: new UntypedFormControl('', [Validators.required]),
+          client_key: new UntypedFormControl('', [Validators.required]),
+          metode_production: new UntypedFormControl('', [Validators.required]),
+          methode_pembayaran: new UntypedFormControl('Midtrans', [Validators.required]),
+          id_methode_pembayaran: new UntypedFormControl('3', [Validators.required])
         });
         break;
 

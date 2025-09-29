@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Notyf } from 'notyf';
 import { DashboardService, DashboardServiceType } from 'src/app/dashboard.service';
@@ -11,11 +11,11 @@ import { ModalComponent } from 'src/app/shared/modal/modal.component';
   styleUrls: ['./pengaturan.component.scss'],
 })
 export class PengaturanComponent implements OnInit {
-  domainTokenForm!: FormGroup;
-  salamForm!: FormGroup;
-  filterForm!: FormGroup;
+  domainTokenForm!: UntypedFormGroup;
+  salamForm!: UntypedFormGroup;
+  filterForm!: UntypedFormGroup;
   formData?: FormData;
-  musicForm!: FormGroup;
+  musicForm!: UntypedFormGroup;
 
   currentMusicUrl = '';
   currentMusicName = '';
@@ -42,7 +42,7 @@ export class PengaturanComponent implements OnInit {
   isFilterExisting = false;
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private dashboardSvc: DashboardService,
     private modalSvc: BsModalService
   ) {

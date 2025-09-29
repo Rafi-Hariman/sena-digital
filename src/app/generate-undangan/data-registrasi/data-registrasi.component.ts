@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges, OnChanges } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Notyf } from 'notyf';
@@ -17,14 +17,14 @@ export class DataRegistrasiComponent implements OnInit {
   @Output() next = new EventEmitter<any>();
   @Output() prev = new EventEmitter<void>();
 
-  formRegis!: FormGroup;
+  formRegis!: UntypedFormGroup;
   private notyf: Notyf;
   modalRef?: BsModalRef;
   paketOptions: any;
   selectedPrice: string = '';
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private modalSvc: BsModalService,
     private dashboardSvc: DashboardService,
     private router: Router

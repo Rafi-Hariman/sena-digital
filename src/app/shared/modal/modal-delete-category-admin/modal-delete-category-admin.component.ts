@@ -5,7 +5,7 @@ import { WebsiteCategoryService } from '../../../services/website-category.servi
 import { VideoCategoryService } from '../../../services/video-category.service';
 import { WebsiteThemeService } from '../../../services/website-theme.service';
 import { VideoThemeService } from '../../../services/video-theme.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Notyf } from 'notyf';
 import { Subject } from 'rxjs';
 
@@ -21,7 +21,7 @@ export class ModalDeleteCategoryAdminComponent implements OnInit {
   @Input() item: any;
   @Input() categoryType: 'website' | 'video' | 'website-theme' | 'video-theme' = 'website'; // Extended to support themes
 
-  categoryForm!: FormGroup;
+  categoryForm!: UntypedFormGroup;
   onClose!: Subject<boolean>;
 
   constructor(
@@ -31,7 +31,7 @@ export class ModalDeleteCategoryAdminComponent implements OnInit {
     private videoCategoryService: VideoCategoryService,
     private websiteThemeService: WebsiteThemeService,
     private videoThemeService: VideoThemeService,
-    private formSvc: FormBuilder
+    private formSvc: UntypedFormBuilder
   ) {
     this.notyf = new Notyf({
       duration: 3000,

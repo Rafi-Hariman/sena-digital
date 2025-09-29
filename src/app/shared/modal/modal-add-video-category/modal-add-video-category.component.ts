@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { VideoCategoryService } from '../../../services/video-category.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Notyf } from 'notyf';
 import { Subject } from 'rxjs';
 import { CategoryCreateRequest } from '../../../interfaces/admin-category.interfaces';
@@ -14,7 +14,7 @@ import { CategoryCreateRequest } from '../../../interfaces/admin-category.interf
 export class ModalAddVideoCategoryComponent implements OnInit {
 
   @Input() initialState: any;
-  categoryForm!: FormGroup;
+  categoryForm!: UntypedFormGroup;
   selectedImage: File | null = null;
   imagePreview: string | null = null;
   uploading: boolean = false;
@@ -24,7 +24,7 @@ export class ModalAddVideoCategoryComponent implements OnInit {
   constructor(
     private modalSvc: BsModalService,
     private videoCategoryService: VideoCategoryService,
-    private formSvc: FormBuilder
+    private formSvc: UntypedFormBuilder
   ) {
     this.notyf = new Notyf({
       duration: 3000,

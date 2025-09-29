@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ModalUploadGaleriComponent } from '../modal-upload-galeri/modal-upload-galeri.component';
 import { DashboardService, DashboardServiceType } from '../../dashboard.service';
@@ -15,7 +15,7 @@ export class InformasiMempelaiComponent implements OnInit {
   @Output() next = new EventEmitter<any>();
   @Output() prev = new EventEmitter<void>();
 
-  formGroup!: FormGroup;
+  formGroup!: UntypedFormGroup;
   modalRef?: BsModalRef;
   private notyf: Notyf;
 
@@ -28,7 +28,7 @@ export class InformasiMempelaiComponent implements OnInit {
   userId: any;
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private modalSvc: BsModalService,
     private dashboardSvc: DashboardService
   ) {

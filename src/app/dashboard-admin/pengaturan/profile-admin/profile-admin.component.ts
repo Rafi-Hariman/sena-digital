@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Notyf } from 'notyf';
 import {
   DashboardService,
@@ -14,8 +14,8 @@ import {
   styleUrls: ['./profile-admin.component.scss']
 })
 export class ProfileAdminComponent implements OnInit {
-  profileForm: FormGroup;
-  passwordForm: FormGroup;
+  profileForm: UntypedFormGroup;
+  passwordForm: UntypedFormGroup;
   profileData: ProfileData | null = null;
   isLoading = false;
   isSubmitting = false;
@@ -28,7 +28,7 @@ export class ProfileAdminComponent implements OnInit {
   private notyf: Notyf;
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private dashboardService: DashboardService,
     private cdr: ChangeDetectorRef
   ) {
@@ -273,7 +273,7 @@ export class ProfileAdminComponent implements OnInit {
   /**
    * Mark all form controls as touched to show validation errors
    */
-  private markFormGroupTouched(formGroup: FormGroup): void {
+  private markFormGroupTouched(formGroup: UntypedFormGroup): void {
     Object.keys(formGroup.controls).forEach(key => {
       const control = formGroup.get(key);
       control?.markAsTouched();
@@ -283,7 +283,7 @@ export class ProfileAdminComponent implements OnInit {
   /**
    * Get form control error message
    */
-  getErrorMessage(controlName: string, formGroup: FormGroup = this.profileForm): string {
+  getErrorMessage(controlName: string, formGroup: UntypedFormGroup = this.profileForm): string {
     const control = formGroup.get(controlName);
 
     if (control?.errors && control.touched) {

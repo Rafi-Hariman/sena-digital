@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Notyf } from 'notyf';
 import { Subject, takeUntil, finalize } from 'rxjs';
@@ -28,9 +28,9 @@ interface PackageData {
 })
 export class SettingsBundleComponent implements OnInit, OnDestroy {
 
-  silverForm!: FormGroup;
-  goldForm!: FormGroup;
-  platinumForm!: FormGroup;
+  silverForm!: UntypedFormGroup;
+  goldForm!: UntypedFormGroup;
+  platinumForm!: UntypedFormGroup;
 
 
   silverLoading = false;
@@ -46,7 +46,7 @@ export class SettingsBundleComponent implements OnInit, OnDestroy {
   private originalData: PackageData[] = [];
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private dashboardSvc: DashboardService,
     private modalSvc: BsModalService
   ) {
@@ -204,7 +204,7 @@ export class SettingsBundleComponent implements OnInit, OnDestroy {
     return Math.floor(parseFloat(price.toString())).toString();
   }
 
-  private prepareFormData(form: FormGroup): any {
+  private prepareFormData(form: UntypedFormGroup): any {
     const formValue = form.value;
     return {
       ...formValue,
@@ -278,7 +278,7 @@ export class SettingsBundleComponent implements OnInit, OnDestroy {
     }
   }
 
-  private markFormGroupTouched(formGroup: FormGroup): void {
+  private markFormGroupTouched(formGroup: UntypedFormGroup): void {
     Object.keys(formGroup.controls).forEach(key => {
       const control = formGroup.get(key);
       control?.markAsTouched();
@@ -366,7 +366,7 @@ export class SettingsBundleComponent implements OnInit, OnDestroy {
       });
   }
 
-  private refreshSinglePackage(packageId: number, form: FormGroup): void {
+  private refreshSinglePackage(packageId: number, form: UntypedFormGroup): void {
 
     this.dashboardSvc.list(DashboardServiceType.ST_BUNDLE_ADMIN)
       .pipe(takeUntil(this.destroy$))
@@ -385,7 +385,7 @@ export class SettingsBundleComponent implements OnInit, OnDestroy {
       });
   }
 
-  private updateSingleForm(form: FormGroup, packageData: PackageData): void {
+  private updateSingleForm(form: UntypedFormGroup, packageData: PackageData): void {
     form.patchValue({
       id: packageData.id,
       name_paket: packageData.name_paket,
@@ -400,12 +400,12 @@ export class SettingsBundleComponent implements OnInit, OnDestroy {
   }
 
 
-  isFieldInvalid(form: FormGroup, fieldName: string): boolean {
+  isFieldInvalid(form: UntypedFormGroup, fieldName: string): boolean {
     const field = form.get(fieldName);
     return !!(field && field.invalid && (field.dirty || field.touched));
   }
 
-  getFieldError(form: FormGroup, fieldName: string): string {
+  getFieldError(form: UntypedFormGroup, fieldName: string): string {
     const field = form.get(fieldName);
     if (field?.errors) {
       if (field.errors['required']) return `${fieldName} wajib diisi`;

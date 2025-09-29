@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { Notyf } from 'notyf';
 import { DashboardService, DashboardServiceType } from 'src/app/dashboard.service';
 import { BsModalService } from 'ngx-bootstrap/modal';
@@ -28,7 +28,7 @@ export class RegisPembayaranComponent implements OnInit {
     payment: {
       items: [],
       defaultValue: [],
-      FormControl: new FormControl(),
+      FormControl: new UntypedFormControl(),
     }
   };
   userId: any;

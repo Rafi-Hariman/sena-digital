@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Notyf } from 'notyf';
 import { DashboardService, DashboardServiceType } from '../../dashboard.service';
@@ -15,7 +15,7 @@ export class RegisCeritaComponent implements OnInit {
   @Output() prev = new EventEmitter<void>();
   @Output() next = new EventEmitter<any>();
 
-  form!: FormGroup;
+  form!: UntypedFormGroup;
 
   bsConfig = {
     dateInputFormat: 'DD MMMM YYYY',
@@ -31,7 +31,7 @@ export class RegisCeritaComponent implements OnInit {
   private modalRef?: BsModalRef
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private modalSvc: BsModalService,
     private dashboardSvc: DashboardService
   ) {
@@ -54,7 +54,7 @@ export class RegisCeritaComponent implements OnInit {
     this.form = this.fb.group({
       stories: this.fb.array([]),
       user_id: ['',Validators.required],
-      status: new FormControl(this.formData?.status || false)
+      status: new UntypedFormControl(this.formData?.status || false)
     });
     const step1LocalStorage = localStorage.getItem('formData');
     if (step1LocalStorage) {
@@ -125,8 +125,8 @@ export class RegisCeritaComponent implements OnInit {
     localStorage.setItem('formData', JSON.stringify(data));
   }
 
-  get stories(): FormArray {
-    return (this.form?.get('stories') as FormArray) || this.fb.array([]);
+  get stories(): UntypedFormArray {
+    return (this.form?.get('stories') as UntypedFormArray) || this.fb.array([]);
   }
 
   addStory(data: any = { title: '', lead_cerita: '', tanggal_cerita: '' }): void {

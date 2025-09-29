@@ -1,5 +1,5 @@
 import { Component, HostListener, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, UntypedFormArray, Validators } from '@angular/forms';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Notyf } from 'notyf';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
@@ -30,7 +30,7 @@ interface BankAccountFormData {
   encapsulation: ViewEncapsulation.None
 })
 export class RekeningComponent implements OnInit, OnDestroy {
-  rekeningForm!: FormGroup;
+  rekeningForm!: UntypedFormGroup;
   listBank: Bank[] = [];
   bankAccounts: BankAccount[] = [];
   private notyf: Notyf;
@@ -43,7 +43,7 @@ export class RekeningComponent implements OnInit, OnDestroy {
   pendingDeleteIndex: number | null = null;
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private dashboardSvc: DashboardService,
     private modalService: BsModalService,
     private sanitizer: DomSanitizer
@@ -66,11 +66,11 @@ export class RekeningComponent implements OnInit, OnDestroy {
     });
   }
 
-  get accounts(): FormArray {
-    return this.rekeningForm.get('accounts') as FormArray;
+  get accounts(): UntypedFormArray {
+    return this.rekeningForm.get('accounts') as UntypedFormArray;
   }
 
-  private createAccountFormGroup(data?: BankAccount): FormGroup {
+  private createAccountFormGroup(data?: BankAccount): UntypedFormGroup {
     return this.fb.group({
       id: [data?.id || null],
       kode_bank: [data?.kode_bank || '', Validators.required],
@@ -332,7 +332,7 @@ export class RekeningComponent implements OnInit, OnDestroy {
   onUpdate(index: number): void {
     const accountForm = this.accounts.at(index);
     if (accountForm.invalid) {
-      this.markFormGroupTouched(accountForm as FormGroup);
+      this.markFormGroupTouched(accountForm as UntypedFormGroup);
       this.notyf.error('Harap lengkapi semua field yang wajib diisi');
       return;
     }
@@ -469,7 +469,7 @@ export class RekeningComponent implements OnInit, OnDestroy {
     });
   }
 
-  private markFormGroupTouched(formGroup: FormGroup): void {
+  private markFormGroupTouched(formGroup: UntypedFormGroup): void {
     Object.keys(formGroup.controls).forEach(key => {
       const control = formGroup.get(key);
       control?.markAsTouched();

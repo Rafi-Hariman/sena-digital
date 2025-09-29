@@ -3,7 +3,7 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { DashboardService, DashboardServiceType } from '../../../dashboard.service';
 import { WebsiteCategoryService } from '../../../services/website-category.service';
 import { VideoCategoryService } from '../../../services/video-category.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Notyf } from 'notyf';
 import { Subject } from 'rxjs';
 
@@ -16,7 +16,7 @@ export class ModalDeleteAllCategoryComponent implements OnInit {
 
   @Input() initialState: any;
   @Input() categoryType: 'website' | 'video' = 'website'; // Type of category to determine refresh strategy
-  categoryForm!: FormGroup;
+  categoryForm!: UntypedFormGroup;
   private notyf: Notyf
   onClose!: Subject<boolean>;
 
@@ -25,7 +25,7 @@ export class ModalDeleteAllCategoryComponent implements OnInit {
     private dasboardSvc: DashboardService,
     private websiteCategoryService: WebsiteCategoryService,
     private videoCategoryService: VideoCategoryService,
-    private formSvc: FormBuilder
+    private formSvc: UntypedFormBuilder
   ) {
     this.notyf = new Notyf({
       duration: 3000,

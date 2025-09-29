@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Notyf } from 'notyf';
 import { DashboardService, DashboardServiceType } from 'src/app/dashboard.service';
@@ -12,7 +12,7 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./gallery.component.scss']
 })
 export class GalleryComponent implements OnInit {
-  galleryForm: FormGroup;
+  galleryForm: UntypedFormGroup;
   uploadStatus: string | null = null;
   isDraggingOver = false;
   uploadedFiles: { name: string; base64: string; status: string }[] = [];
@@ -42,9 +42,9 @@ export class GalleryComponent implements OnInit {
   ) {
     this.notyf = new Notyf({ duration: 3000, position: { x: 'right', y: 'top' } });
 
-    this.galleryForm = new FormGroup({
-      photo: new FormControl(null, Validators.required),
-      url_video: new FormControl('', Validators.required),
+    this.galleryForm = new UntypedFormGroup({
+      photo: new UntypedFormControl(null, Validators.required),
+      url_video: new UntypedFormControl('', Validators.required),
     });
 
     // Initialize table columns

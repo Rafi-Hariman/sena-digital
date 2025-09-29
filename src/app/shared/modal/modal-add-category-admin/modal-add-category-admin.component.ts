@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { DashboardService, DashboardServiceType } from '../../../dashboard.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Notyf } from 'notyf';
 import { Subject } from 'rxjs';
 
@@ -13,14 +13,14 @@ import { Subject } from 'rxjs';
 export class ModalAddCategoryAdminComponent implements OnInit {
 
   @Input() initialState: any;
-  categoryForm!: FormGroup;
+  categoryForm!: UntypedFormGroup;
   private notyf: Notyf
   onClose!: Subject<boolean>;
 
   constructor(
     private modalSvc: BsModalService,
     private dasboardSvc: DashboardService,
-    private formSvc: FormBuilder
+    private formSvc: UntypedFormBuilder
   ) {
     this.notyf = new Notyf({
       duration: 1000,

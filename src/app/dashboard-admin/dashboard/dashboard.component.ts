@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { Notyf } from 'notyf';
 import { DashboardService, DashboardServiceType } from 'src/app/dashboard.service';
@@ -23,14 +23,14 @@ export class DashboardComponent implements OnInit {
 
   // Modal and form properties
   modalRef?: BsModalRef;
-  confirmPaymentForm: FormGroup;
+  confirmPaymentForm: UntypedFormGroup;
   selectedUser: any = null;
   private notyf: Notyf;
 
   constructor(
     private dashboardSvc: DashboardService,
     private modalService: BsModalService,
-    private fb: FormBuilder
+    private fb: UntypedFormBuilder
   ) {
     // Initialize Notyf
     this.notyf = new Notyf({
