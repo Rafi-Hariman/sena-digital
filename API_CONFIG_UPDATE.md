@@ -1,5 +1,5 @@
 # API Configuration Update
-
+triger: update
 ## Perubahan yang Dilakukan
 
 ### 1. Environment Production (environment.prod.ts)
