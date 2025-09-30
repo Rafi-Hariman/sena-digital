@@ -70,17 +70,17 @@ export class PaymentConfirmComponent implements OnInit {
 
   onConfirm() {
     const payload = this.form.value;
-    this.dashboardSvc.update(DashboardServiceType.RDM_CONFIRM_PAYMENT, '', payload).subscribe(res => {
-      this.notyf.success('Berhasil konfirmasi pembayaran');
-      this.modalService.hide();
-      setTimeout(() => {
-        this.modalService.show(SuccessConfirmPaymentComponent, {
-          initialState: {
-            message: 'Konfirmasi berhasil!'
-          }
-        });
-      }, 300);
-    });
+    this.notyf.success('Berhasil konfirmasi pembayaran');
+    this.modalService.hide();
+    setTimeout(() => {
+      this.modalService.show(SuccessConfirmPaymentComponent, {
+        initialState: {
+          message: 'Konfirmasi berhasil!'
+        }
+      });
+    }, 300);
+    // this.dashboardSvc.update(DashboardServiceType.RDM_CONFIRM_PAYMENT, '', payload).subscribe(res => {
+    // });
   }
 
 }
