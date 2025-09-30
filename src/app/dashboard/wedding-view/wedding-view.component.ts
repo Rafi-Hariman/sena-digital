@@ -94,18 +94,6 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
   // QR Code Modal
   private qrModalRef?: BsModalRef;
 
-  // LocalStorage keys - Updated to use domain instead of couple name
-  private readonly STORAGE_KEYS = {
-    CURRENT_VIEW: 'wedding_current_view',
-    INVITATION_OPENED: 'wedding_invitation_opened',
-    SIDE_ICONS_VISIBLE: 'wedding_side_icons_visible',
-    IS_PLAYING: 'wedding_is_playing',
-    IS_MUTED: 'wedding_is_muted',
-    WEDDING_DATA: 'wedding_data',
-    DOMAIN: 'wedding_domain', // Changed from couple_name to domain
-    AUDIO_VOLUME: 'wedding_audio_volume'
-  };
-
   constructor(
     private elementRef: ElementRef,
     private renderer: Renderer2,
@@ -118,7 +106,6 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     this.injectRippleStyles();
-    this.loadStateFromLocalStorage();
     this.initializeWeddingData();
   }
 
@@ -131,200 +118,38 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscriptions.unsubscribe();
-    // Save current state before component destruction
-    this.saveStateToLocalStorage();
-    // Cleanup audio resources
     this.cleanupAudio();
-    // Clean up QR modal subscription
     if (this.qrModalRef) {
       this.qrModalRef.hide();
     }
   }
 
-  /**
-   * Load component state from localStorage
-   */
-  private loadStateFromLocalStorage(): void {
-    try {
-      // Validate localStorage data first
-      if (!this.validateLocalStorageData()) {
-        console.log('localStorage data invalid, clearing...');
-        this.clearLocalStorage();
-        return;
-      }
 
-      // Load basic state
-      const savedCurrentView = localStorage.getItem(this.STORAGE_KEYS.CURRENT_VIEW) as ContentView;
-      const savedInvitationOpened = localStorage.getItem(this.STORAGE_KEYS.INVITATION_OPENED);
-      const savedSideIconsVisible = localStorage.getItem(this.STORAGE_KEYS.SIDE_ICONS_VISIBLE);
-      const savedIsPlaying = localStorage.getItem(this.STORAGE_KEYS.IS_PLAYING);
-      const savedIsMuted = localStorage.getItem(this.STORAGE_KEYS.IS_MUTED);
-      const savedDomain = localStorage.getItem(this.STORAGE_KEYS.DOMAIN);
-      const savedWeddingData = localStorage.getItem(this.STORAGE_KEYS.WEDDING_DATA);
 
-      // Restore state if exists
-      if (savedCurrentView && Object.values(ContentView).includes(savedCurrentView)) {
-        this.currentView = savedCurrentView;
-        console.log('Restored current view from localStorage:', savedCurrentView);
-      }
 
-      if (savedInvitationOpened !== null) {
-        this.invitationOpened = savedInvitationOpened === 'true';
-        console.log('Restored invitation opened state:', this.invitationOpened);
-      }
 
-      if (savedSideIconsVisible !== null) {
-        this.sideIconsVisible = savedSideIconsVisible === 'true';
-      }
 
-      if (savedIsPlaying !== null) {
-        this.isPlaying = savedIsPlaying === 'true';
-      }
 
-      if (savedIsMuted !== null) {
-        this.isMuted = savedIsMuted === 'true';
-      }
 
-      // Load saved volume
-      const savedVolume = localStorage.getItem(this.STORAGE_KEYS.AUDIO_VOLUME);
-      if (savedVolume !== null) {
-        this.currentVolume = parseFloat(savedVolume);
-      }
 
-      if (savedDomain) {
-        this.domain = savedDomain;
-        console.log('Restored domain from localStorage:', savedDomain);
-      }
 
-      // Restore wedding data if exists and is valid
-      if (savedWeddingData) {
-        try {
-          const parsedWeddingData = JSON.parse(savedWeddingData);
-          this.weddingData = parsedWeddingData;
-          this.weddingDataService.setWeddingData(parsedWeddingData);
-          console.log('Restored wedding data from localStorage');
-        } catch (parseError) {
-          console.error('Failed to parse saved wedding data:', parseError);
-          localStorage.removeItem(this.STORAGE_KEYS.WEDDING_DATA);
-        }
-      }
 
-    } catch (error) {
-      console.error('Failed to load state from localStorage:', error);
-      this.clearLocalStorage();
-    }
-  }
 
-  /**
-   * Save component state to localStorage
-   */
-  private saveStateToLocalStorage(): void {
-    try {
-      localStorage.setItem(this.STORAGE_KEYS.CURRENT_VIEW, this.currentView);
-      localStorage.setItem(this.STORAGE_KEYS.INVITATION_OPENED, this.invitationOpened.toString());
-      localStorage.setItem(this.STORAGE_KEYS.SIDE_ICONS_VISIBLE, this.sideIconsVisible.toString());
-      localStorage.setItem(this.STORAGE_KEYS.IS_PLAYING, this.isPlaying.toString());
-      localStorage.setItem(this.STORAGE_KEYS.IS_MUTED, this.isMuted.toString());
-      localStorage.setItem(this.STORAGE_KEYS.AUDIO_VOLUME, this.currentVolume.toString());
-
-      if (this.domain) {
-        localStorage.setItem(this.STORAGE_KEYS.DOMAIN, this.domain);
-      }
-
-      if (this.weddingData) {
-        localStorage.setItem(this.STORAGE_KEYS.WEDDING_DATA, JSON.stringify(this.weddingData));
-      }
-
-      console.log('State saved to localStorage');
-    } catch (error) {
-      console.error('Failed to save state to localStorage:', error);
-    }
-  }
-
-  /**
-   * Clear localStorage data (useful for testing or logout)
-   */
-  private clearLocalStorage(): void {
-    Object.values(this.STORAGE_KEYS).forEach(key => {
-      localStorage.removeItem(key);
-    });
-    console.log('localStorage cleared');
-  }
-
-  /**
-   * Check if wedding data exists in localStorage
-   */
-  private hasLocalStorageData(): boolean {
-    return localStorage.getItem(this.STORAGE_KEYS.WEDDING_DATA) !== null;
-  }
-
-  /**
-   * Validate localStorage data integrity
-   */
-  private validateLocalStorageData(): boolean {
-    try {
-      const savedWeddingData = localStorage.getItem(this.STORAGE_KEYS.WEDDING_DATA);
-      const savedDomain = localStorage.getItem(this.STORAGE_KEYS.DOMAIN);
-
-      if (!savedWeddingData || !savedDomain) {
-        return false;
-      }
-
-      const parsedData = JSON.parse(savedWeddingData);
-      return !!(parsedData && parsedData.user_info && parsedData.mempelai);
-    } catch (error) {
-      console.error('localStorage validation failed:', error);
-      return false;
-    }
-  }
-
-  /**
-   * Debug method to export localStorage data (development only)
-   */
-  public exportLocalStorageData(): any {
-    const data: any = {};
-    Object.entries(this.STORAGE_KEYS).forEach(([key, storageKey]) => {
-      const value = localStorage.getItem(storageKey);
-      data[key] = value;
-    });
-    console.log('LocalStorage Data Export:', data);
-    return data;
-  }
 
   /**
    * Initialize wedding data using domain-based approach
    * New implementation: Always gets domain first from SETTINGS_GET_FILTER or route params
    */
   private initializeWeddingData(): void {
-    console.log('Initializing wedding data with domain-based approach');
 
     // Get route params first (check if domain is passed via route)
     const routeSubscription = this.route.params.subscribe(params => {
       const routeDomain = params['coupleName'] || params['domain'] || null; // Support both old and new param names
 
-      console.log('Route params:', {
-        coupleName: params['coupleName'],
-        domain: params['domain'],
-        routeDomain
-      });
-
-      // Priority: route domain > localStorage domain > get from settings
       if (routeDomain) {
         this.domain = routeDomain;
-        console.log('Using domain from route params:', routeDomain);
-
-        // Check if we have valid wedding data in localStorage for this domain
-        if (this.weddingData && this.domain === routeDomain) {
-          console.log('Using wedding data from localStorage for domain:', this.domain);
-          this.updateWeddingContent(this.weddingData);
-          // Still fetch fresh data in background for updates
-          this.loadWeddingDataFromAPI(this.domain!, true);
-        } else {
-          // Load fresh data from API using domain
-          this.loadWeddingDataFromAPI(this.domain!);
-        }
+        this.loadWeddingDataFromAPI(this.domain!);
       } else if (this.domain) {
-        console.log('Using domain from localStorage:', this.domain);
         // Use stored domain
         if (this.weddingData) {
           this.updateWeddingContent(this.weddingData);
@@ -333,8 +158,6 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
           this.loadWeddingDataFromAPI(this.domain!);
         }
       } else {
-        // No domain available, get it from settings
-        console.log('No domain available, fetching from SETTINGS_GET_FILTER');
         this.loadDomainFromSettings();
       }
     });
@@ -350,11 +173,8 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this.isLoading = true;
     this.errorMessage = null;
 
-    console.log('Fetching domain from SETTINGS_GET_FILTER API');
-
     const settingsSubscription = this.dashboardService.list(DashboardServiceType.SETTINGS_GET_FILTER).subscribe({
       next: (response: SettingsResponse) => {
-        console.log('SETTINGS_GET_FILTER response:', response);
 
         try {
           const domain = response?.setting?.domain;
@@ -365,19 +185,16 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
             return;
           }
 
-          console.log('Domain extracted from settings:', domain);
           this.domain = domain;
 
           // Now load wedding data using the domain
           this.loadWeddingDataFromAPI(domain);
 
         } catch (error) {
-          console.error('Error processing domain from settings:', error);
           this.handleDataNotFound('Error processing domain from settings');
         }
       },
       error: (error) => {
-        console.error('Error fetching settings for domain:', error);
         this.handleAPIError(error);
       }
     });
@@ -397,26 +214,17 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
       this.errorMessage = null;
     }
 
-    console.log('Loading fresh wedding data from API for domain:', domain, isBackgroundUpdate ? '(background)' : '');
-
-    // Use the endpoint: v1/wedding-profile/couple/{domain}
     const apiSubscription = this.dashboardService.getParam(DashboardServiceType.WEDDING_VIEW_COUPLE, `/${domain}`).subscribe({
       next: (response) => {
-        console.log('API Response:', response);
-        console.log('API Response (formatted):', JSON.stringify(response, null, 2));
 
         if (response && response.data) {
-          console.log('Wedding Data from API:', JSON.stringify(response.data, null, 2));
 
           this.weddingData = response.data;
           this.weddingDataService.setWeddingData(response.data);
 
           this.updateWeddingContent(response.data);
 
-          // Save to localStorage after successful API call
-          this.saveStateToLocalStorage();
 
-          console.log('Fresh wedding data loaded successfully from API using domain:', domain);
         } else {
           if (!isBackgroundUpdate) {
             this.handleDataNotFound('No data returned from API');
@@ -424,9 +232,6 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       },
       error: (error) => {
-        console.error('API Error:', error);
-        console.error('API Error (formatted):', JSON.stringify(error, null, 2));
-
         if (!isBackgroundUpdate) {
           // Enhanced error handling for domain-based requests
           if (error.status === 404) {
@@ -454,7 +259,6 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
       if (data) {
         this.weddingData = data;
         this.updateWeddingContent(data);
-        console.log('Wedding data loaded from service');
       } else {
         this.handleDataNotFound('No data available in service');
       }
@@ -474,12 +278,11 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
     console.warn('Wedding data not found:', reason);
 
     // Clear localStorage if data is not found
-    this.clearLocalStorage();
+
 
     // Optional: Redirect to home after 5 seconds
     setTimeout(() => {
       if (!this.weddingData) {
-        console.log('Redirecting to home due to missing wedding data');
         this.router.navigate(['/']);
       }
     }, 5000);
@@ -503,7 +306,6 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     this.errorMessage = errorMsg;
-    console.error('API Error details:', error);
   }
 
   /**
@@ -512,27 +314,13 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   private updateWeddingContent(data: WeddingData): void {
     try {
-      console.log('Updating wedding content with fresh data:', JSON.stringify(data, null, 2));
-      console.log('Updating wedding content for:', {
-        groom: data.mempelai?.pria?.nama_lengkap || 'Unknown',
-        bride: data.mempelai?.wanita?.nama_lengkap || 'Unknown',
-        user: data.user_info?.email || 'Unknown',
-        domain: this.domain
-      });
+      this.weddingData = data;
+      this.weddingDataService.setWeddingData(data);
 
       // Initialize audio when wedding data is updated
       this.initializeAudio();
 
-      // Here you would update component properties based on wedding data
-      // Example implementation for when you add UI binding:
-      // this.groomName = data.mempelai.pria.nama_lengkap;
-      // this.brideName = data.mempelai.wanita.nama_lengkap;
-      // this.coverPhoto = data.mempelai.cover_photo;
-      // this.weddingDate = data.acara?.tanggal;
-      // etc.
-
     } catch (error) {
-      console.error('Error updating wedding content:', error);
       this.errorMessage = 'Error displaying wedding content';
     }
   }
@@ -556,10 +344,8 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   refreshWeddingData(): void {
     if (this.domain) {
-      console.log('Refreshing wedding data for domain:', this.domain);
       this.loadWeddingDataFromAPI(this.domain);
     } else {
-      console.log('No domain available, fetching from settings');
       this.loadDomainFromSettings();
     }
   }
@@ -646,7 +432,6 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     try {
-      console.log('Initializing audio with URL:', musicUrl);
       this.isAudioLoading = true;
       this.audioError = null;
 
@@ -667,10 +452,8 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
       // Mark as initialized
       this.audioInitialized = true;
 
-      console.log('Audio system initialized successfully');
 
     } catch (error) {
-      console.error('Error initializing audio:', error);
       this.audioError = 'Failed to initialize audio system';
       this.isAudioLoading = false;
     }
@@ -685,40 +468,32 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // Audio loaded and ready to play
     this.audioElement.addEventListener('canplay', () => {
-      console.log('Audio can start playing');
       this.isAudioLoading = false;
       this.audioError = null;
     });
 
     // Audio is playing
     this.audioElement.addEventListener('play', () => {
-      console.log('Audio started playing');
       this.isPlaying = true;
-      this.saveStateToLocalStorage();
     });
 
     // Audio is paused
     this.audioElement.addEventListener('pause', () => {
-      console.log('Audio paused');
       this.isPlaying = false;
-      this.saveStateToLocalStorage();
     });
 
     // Audio loading started
     this.audioElement.addEventListener('loadstart', () => {
-      console.log('Audio loading started');
       this.isAudioLoading = true;
     });
 
     // Audio metadata loaded
     this.audioElement.addEventListener('loadedmetadata', () => {
-      console.log('Audio metadata loaded, duration:', this.audioElement?.duration);
     });
 
     // Audio loading error
     this.audioElement.addEventListener('error', (event) => {
       const error = this.audioElement?.error;
-      console.error('Audio loading error:', error);
 
       let errorMessage = 'Audio loading failed';
       if (error) {
@@ -748,15 +523,12 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
       if (this.audioElement) {
         this.currentVolume = this.audioElement.volume;
         this.isMuted = this.audioElement.muted;
-        this.saveStateToLocalStorage();
       }
     });
 
     // Audio ended (shouldn't happen with loop=true)
     this.audioElement.addEventListener('ended', () => {
-      console.log('Audio ended');
       this.isPlaying = false;
-      this.saveStateToLocalStorage();
     });
 
     // Audio stalled
@@ -766,13 +538,11 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // Audio waiting for data
     this.audioElement.addEventListener('waiting', () => {
-      console.log('Audio waiting for data');
       this.isAudioLoading = true;
     });
 
     // Audio can play through
     this.audioElement.addEventListener('canplaythrough', () => {
-      console.log('Audio can play through');
       this.isAudioLoading = false;
     });
   }
@@ -783,7 +553,6 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   private cleanupAudio(): void {
     if (this.audioElement) {
-      console.log('Cleaning up audio resources');
 
       // Pause and reset
       this.audioElement.pause();
@@ -824,8 +593,6 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
       this.audioElement.volume = volume;
     }
 
-    this.saveStateToLocalStorage();
-    console.log('Volume set to:', volume);
   }
 
   /**
@@ -898,7 +665,6 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
     try {
       if (this.isPlaying) {
         this.audioElement.pause();
-        console.log('Audio paused by user');
       } else {
         // Handle browser autoplay policies
         const playPromise = this.audioElement.play();
@@ -906,17 +672,14 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
         if (playPromise !== undefined) {
           playPromise
             .then(() => {
-              console.log('Audio started playing successfully');
             })
             .catch(error => {
-              console.error('Audio play failed:', error);
               this.audioError = 'Playback failed - please interact with the page first';
               this.isPlaying = false;
             });
         }
       }
     } catch (error) {
-      console.error('Error toggling audio play:', error);
       this.audioError = 'Playback control failed';
     }
 
@@ -932,17 +695,14 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
     try {
       this.audioElement.muted = !this.audioElement.muted;
-      console.log('Audio muted:', this.audioElement.muted);
 
       // State will be updated by volumechange event listener
     } catch (error) {
-      console.error('Error toggling audio mute:', error);
     }
   }
 
   toggleSideIcons(): void {
     this.sideIconsVisible = !this.sideIconsVisible;
-    this.saveStateToLocalStorage();
   }
 
   openInvitation(): void {
@@ -953,7 +713,6 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this.submitAttendanceView();
 
     // Save state immediately after opening invitation
-    this.saveStateToLocalStorage();
   }
 
   /**
@@ -973,33 +732,26 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
       pesan: `Undangan ${this.domain} telah dilihat` // Include domain in tracking message
     };
 
-    console.log('Tracking invitation view with attendance data:', attendanceData);
 
     const attendanceSubscription = this.dashboardService.create(
       DashboardServiceType.ATTENDANCE,
       attendanceData
     ).subscribe({
       next: (response: AttendanceResponse) => {
-        console.log('Attendance view tracked successfully:', response);
         if (response.data) {
-          console.log('View tracking record created with ID:', response.data.id);
         }
       },
       error: (error) => {
-        console.error('Failed to track attendance view:', error);
 
         // Log specific error details without blocking the user experience
         if (error.status === 422) {
-          console.error('Validation error for attendance tracking:', error.error?.errors);
         } else if (error.status === 500) {
-          console.error('Server error during attendance tracking:', error.error?.error);
         }
 
         // Don't show error to user since this is background tracking
         // The invitation should still open normally
       },
       complete: () => {
-        console.log('Attendance view tracking request completed');
       }
     });
 
@@ -1008,7 +760,6 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
   setCurrentView(view: ContentView): void {
     this.currentView = view;
-    this.saveStateToLocalStorage();
   }
 
   showMessages(): void {
@@ -1051,11 +802,8 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
    * Open QR Code modal for sharing wedding URL
    */
   openQRCodeModal(): void {
-    console.log('openQRCodeModal called');
-    console.log('Current domain:', this.domain);
 
     if (!this.domain) {
-      console.error('No domain available for QR code generation');
       alert('No domain available for QR code generation');
       return;
     }
@@ -1063,8 +811,6 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
     const weddingUrl = this.getWeddingUrl();
     const coupleNames = this.getCoupleDisplayName();
 
-    console.log('Wedding URL:', weddingUrl);
-    console.log('Couple names:', coupleNames);
 
     const initialState = {
       url: weddingUrl,
@@ -1072,8 +818,6 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
       description: 'Scan this QR code to view our wedding invitation'
     };
 
-    console.log('Modal initial state:', initialState);
-    console.log('Modal service:', this.modalService);
 
     try {
       this.qrModalRef = this.modalService.show(QRCodeModalComponent, {
@@ -1084,17 +828,13 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
         animated: true
       });
 
-      console.log('Modal ref created:', this.qrModalRef);
 
       // Handle modal close event
       this.qrModalRef.onHide?.subscribe(() => {
-        console.log('QR Code modal closed');
         this.qrModalRef = undefined;
       });
 
-      console.log('QR Code modal opened successfully');
     } catch (error) {
-      console.error('Error opening QR modal:', error);
       alert('Error opening QR modal: ' + error);
     }
   }
@@ -1103,9 +843,6 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
    * Test modal opening for debugging
    */
   testModal(): void {
-    console.log('Test modal button clicked');
-    console.log('Modal service available:', !!this.modalService);
-    console.log('QRCodeModalComponent:', QRCodeModalComponent);
 
     try {
       const testModalRef = this.modalService.show(QRCodeModalComponent, {
@@ -1117,9 +854,7 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
         class: 'modal-lg'
       });
 
-      console.log('Test modal opened:', testModalRef);
     } catch (error) {
-      console.error('Test modal error:', error);
       alert('Test modal error: ' + error);
     }
   }
@@ -1128,56 +863,56 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
    * Check if messages page should be visible based on filter_undangan.halaman_ucapan
    */
   isMessagesVisible(): boolean {
-    return this.weddingData?.filter_undangan?.halaman_ucapan === 1;
+    return String(this.weddingData?.filter_undangan?.halaman_ucapan) === "1";
   }
 
   /**
    * Check if calendar page should be visible based on filter_undangan.halaman_acara
    */
   isCalendarVisible(): boolean {
-    return this.weddingData?.filter_undangan?.halaman_acara === 1;
+    return String(this.weddingData?.filter_undangan?.halaman_acara) === "1";
   }
 
   /**
    * Check if birthday/events page should be visible based on filter_undangan.halaman_acara
    */
   isBirthdayVisible(): boolean {
-    return this.weddingData?.filter_undangan?.halaman_acara === 1;
+    return String(this.weddingData?.filter_undangan?.halaman_acara) === "1";
   }
 
   /**
    * Check if chat/stories page should be visible based on filter_undangan.halaman_cerita
    */
   isChatVisible(): boolean {
-    return this.weddingData?.filter_undangan?.halaman_cerita === 1;
+    return String(this.weddingData?.filter_undangan?.halaman_cerita) === "1";
   }
 
   /**
    * Check if gallery page should be visible based on filter_undangan.halaman_galery
    */
   isGalleryVisible(): boolean {
-    return this.weddingData?.filter_undangan?.halaman_galery === 1;
+    return String(this.weddingData?.filter_undangan?.halaman_galery) === "1";
   }
 
   /**
    * Check if profile/location page should be visible based on filter_undangan.halaman_lokasi
    */
   isProfileVisible(): boolean {
-    return this.weddingData?.filter_undangan?.halaman_lokasi === 1;
+    return String(this.weddingData?.filter_undangan?.halaman_lokasi) === "1";
   }
 
   /**
    * Check if gifts page should be visible based on filter_undangan.halaman_send_gift
    */
   isGiftsVisible(): boolean {
-    return this.weddingData?.filter_undangan?.halaman_send_gift === 1;
+    return String(this.weddingData?.filter_undangan?.halaman_send_gift) === "1";
   }
 
   /**
-   * Check if favorite button should be visible (always visible when invitation is opened)
+   * Check if favorite button should be visible based on filter_undangan.halaman_sampul
    */
   isFavoriteVisible(): boolean {
-    return this.weddingData?.filter_undangan?.halaman_sampul === 1;
+    return String(this.weddingData?.filter_undangan?.halaman_sampul) === "1";
   }
 
   private initializeBootstrapTooltips(): void {

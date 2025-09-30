@@ -90,6 +90,7 @@ export enum DashboardServiceType {
   ADM_MANUAL_PAYMENT,
   MD_RGS_PAYMENT,
   ADM_ADD_REKENING,
+  ADM_GET_REKENING,
   ADM_TRIPAY_PAYMENT,
   ADM_MIDTRANS_PAYMENT,
   ADM_ADD_CATEGORY,
@@ -429,10 +430,10 @@ export class DashboardService {
         return `${this.BASE_URL_API}/v1/admin/send-midtrans`;
       case DashboardServiceType.ADM_ADD_REKENING:
         return `${this.BASE_URL_API}/v1/admin/send-rekening`;
+      case DashboardServiceType.ADM_GET_REKENING:
+        return `${this.BASE_URL_API}/v1/admin/get-rekening`;
       case DashboardServiceType.RDM_CONFIRM_PAYMENT:
-        return `${this.BASE_URL_API}/v1/update/status-bayar`;
-
-      // Kategori
+        return `${this.BASE_URL_API}/v1/update/status-bayar`;      // Kategori
       case DashboardServiceType.ADM_ADD_CATEGORY:
         return `${this.BASE_URL_API}/v1/admin/add-categorys`;
       case DashboardServiceType.ADM_EDIT_CATEGORY:
@@ -1318,7 +1319,7 @@ export interface ApiResponse<T = any> {
   providedIn: 'root'
 })
 export class TestimonialService {
-  constructor(private dashboardService: DashboardService) {}
+  constructor(private dashboardService: DashboardService) { }
 
   // === Public Testimonial Methods ===
   // Methods for public-facing testimonial display.
@@ -1396,7 +1397,7 @@ export class TestimonialService {
   providedIn: 'root'
 })
 export class ThemeService {
-  constructor(private dashboardService: DashboardService) {}
+  constructor(private dashboardService: DashboardService) { }
 
   // Admin Category Management
   /**

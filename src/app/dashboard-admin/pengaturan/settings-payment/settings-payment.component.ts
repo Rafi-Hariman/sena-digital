@@ -310,14 +310,12 @@ export class SettingsPaymentComponent implements OnInit {
   }
 
   private loadManualPaymentDetails(): void {
-    this.dashboardSvc.httpSvc.get('/api/v1/admin/get-rekening').subscribe({
+    this.dashboardSvc.list(DashboardServiceType.ADM_GET_REKENING).subscribe({
       next: (response: any) => {
-        console.log('Manual payment API response:', response);
         this.mapManualPaymentDetails(response.data || []);
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('Error loading manual payment details:', err);
         this.notyf.error('Gagal memuat detail rekening');
         this.isLoading = false;
       }

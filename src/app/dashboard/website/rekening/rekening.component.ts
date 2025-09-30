@@ -23,6 +23,11 @@ interface BankAccountFormData {
   editMode?: boolean;
 }
 
+interface RekeningResponse {
+  data?: any;
+  message?: string;
+}
+
 @Component({
   selector: 'wc-rekening',
   templateUrl: './rekening.component.html',
@@ -258,8 +263,7 @@ export class RekeningComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const payload = this.buildCreatePayload(newAccounts);
-    this.createBankAccounts(payload);
+    this.createBankAccountsSequentially(newAccounts);
   }
 
   private getNewAccounts(): BankAccountFormData[] {
@@ -279,37 +283,42 @@ export class RekeningComponent implements OnInit, OnDestroy {
     return true;
   }
 
-  private buildCreatePayload(accounts: BankAccountFormData[]): FormData {
+  private buildCreatePayload(account: BankAccountFormData): FormData {
     const formData = new FormData();
 
-    // Add array data
-    accounts.forEach((acc, index) => {
-      formData.append(`kode_bank[${index}]`, acc.kode_bank);
-      formData.append(`nomor_rekening[${index}]`, acc.nomor_rekening);
-      formData.append(`nama_pemilik[${index}]`, acc.nama_pemilik);
+    // Add single account data as per Laravel controller expectations
+    formData.append('kode_bank', account.kode_bank);
+    formData.append('nomor_rekening', account.nomor_rekening);
+    formData.append('nama_pemilik', account.nama_pemilik);
 
-      // Add file if exists
-      if (acc.photo_rek instanceof File) {
-        formData.append(`photo_rek[${index}]`, acc.photo_rek);
-      }
-    });
+    // Add file if exists
+    if (account.photo_rek instanceof File) {
+      formData.append('photo_rek', account.photo_rek);
+    }
 
     return formData;
   }
 
-  private createBankAccounts(payload: FormData): void {
+  private async createBankAccountsSequentially(accounts: BankAccountFormData[]): Promise<void> {
     this.isSubmitting = true;
-    this.dashboardSvc.uploadFile(DashboardServiceType.REKENINGS_STORE, payload).subscribe({
-      next: (res) => {
-        this.notyf.success(res?.message || 'Rekening berhasil ditambahkan');
-        this.loadBankAccounts();
-        this.isSubmitting = false;
-      },
-      error: (err) => {
+    let successCount = 0;
+
+    for (const account of accounts) {
+      try {
+        const payload = this.buildCreatePayload(account);
+        const res = await this.dashboardSvc.uploadFile(DashboardServiceType.REKENINGS_STORE, payload).toPromise();
+        successCount++;
+        if (accounts.length === 1 || successCount === accounts.length) {
+          this.notyf.success(res?.message || `${successCount} rekening berhasil ditambahkan`);
+        }
+      } catch (err) {
         this.handleApiError(err);
-        this.isSubmitting = false;
+        break; // Stop on first error
       }
-    });
+    }
+
+    this.loadBankAccounts();
+    this.isSubmitting = false;
   }
 
   onEdit(index: number): void {
@@ -338,72 +347,44 @@ export class RekeningComponent implements OnInit, OnDestroy {
     }
 
     const accountData = accountForm.value;
+    const accountId = accountData.id;
 
-    // Use FormData if file is present, otherwise use JSON
-    if (accountData.photo_rek instanceof File) {
-      const formData = new FormData();
-
-      // Laravel method spoofing for PUT request via POST
-      formData.append('_method', 'PUT');
-
-      // Append data in the exact format Laravel expects for nested arrays
-      formData.append('rekenings[0][id]', accountData.id.toString());
-      formData.append('rekenings[0][kode_bank]', accountData.kode_bank);
-      formData.append('rekenings[0][nomor_rekening]', accountData.nomor_rekening);
-      formData.append('rekenings[0][nama_pemilik]', accountData.nama_pemilik);
-      formData.append('rekenings[0][photo_rek]', accountData.photo_rek);
-
-      // Debug: Log FormData contents
-      console.log('FormData contents for update:');
-      formData.forEach((value, key) => {
-        console.log(key + ': ' + value);
-      });
-
-      this.isSubmitting = true;
-      this.dashboardSvc.uploadFile(DashboardServiceType.REKENINGS_UPDATE_JSON, formData).subscribe({
-        next: (res: any) => {
-          this.notyf.success(res?.message || 'Rekening berhasil diperbarui');
-          accountForm.get('editMode')?.setValue(false);
-          this.loadBankAccounts();
-          this.isSubmitting = false;
-        },
-        error: (err: any) => {
-          this.handleApiError(err);
-          this.isSubmitting = false;
-        }
-      });
-    } else {
-      // For JSON payload, only include basic fields
-      // Don't include photo_rek if it's a string URL (existing photo)
-      const payload: any = {
-        rekenings: [{
-          id: accountData.id,
-          kode_bank: accountData.kode_bank,
-          nomor_rekening: accountData.nomor_rekening,
-          nama_pemilik: accountData.nama_pemilik
-        }]
-      };
-
-      // Only include photo_rek if it's explicitly null (user wants to remove photo)
-      if (accountData.photo_rek === null) {
-        payload.rekenings[0].photo_rek = null;
-      }
-      // If photo_rek is a string URL, don't include it in payload (keep existing photo)
-
-      this.isSubmitting = true;
-      this.dashboardSvc.update(DashboardServiceType.REKENINGS_UPDATE_JSON, '', payload).subscribe({
-        next: (res: any) => {
-          this.notyf.success(res?.message || 'Rekening berhasil diperbarui');
-          accountForm.get('editMode')?.setValue(false);
-          this.loadBankAccounts();
-          this.isSubmitting = false;
-        },
-        error: (err: any) => {
-          this.handleApiError(err);
-          this.isSubmitting = false;
-        }
-      });
+    if (!accountId) {
+      this.notyf.error('ID rekening tidak ditemukan');
+      return;
     }
+
+    // Always use FormData for updates to match Laravel controller expectations
+    const formData = new FormData();
+
+    // Laravel method spoofing for PUT request via POST with FormData
+    formData.append('_method', 'PUT');
+
+    // Append data as per Laravel controller expectations
+    formData.append('kode_bank', accountData.kode_bank);
+    formData.append('nomor_rekening', accountData.nomor_rekening);
+    formData.append('nama_pemilik', accountData.nama_pemilik);
+
+    // Add file if it's a new file upload
+    if (accountData.photo_rek instanceof File) {
+      formData.append('photo_rek', accountData.photo_rek);
+    }
+
+    this.isSubmitting = true;
+
+    // Use update method with account ID in URL path
+    this.dashboardSvc.httpSvc.post(`${this.dashboardSvc.getUrl(DashboardServiceType.REKENINGS_UPDATE_JSON)}/${accountId}`, formData).subscribe({
+      next: (res: any) => {
+        this.notyf.success(res?.message || 'Rekening berhasil diperbarui');
+        accountForm.get('editMode')?.setValue(false);
+        this.loadBankAccounts();
+        this.isSubmitting = false;
+      },
+      error: (err: any) => {
+        this.handleApiError(err);
+        this.isSubmitting = false;
+      }
+    });
   }
 
   onDelete(index: number): void {
@@ -456,8 +437,10 @@ export class RekeningComponent implements OnInit, OnDestroy {
 
   private deleteBankAccount(accountId: number): void {
     this.isSubmitting = true;
-    this.dashboardSvc.deleteV2(DashboardServiceType.REKENINGS_DELETE_JSON, accountId).subscribe({
-      next: (res) => {
+
+    // Use direct HTTP call with account ID in URL path to match Laravel controller expectations
+    this.dashboardSvc.httpSvc.delete(`${this.dashboardSvc.getUrl(DashboardServiceType.REKENINGS_DELETE_JSON)}/${accountId}`).subscribe({
+      next: (res: any) => {
         this.notyf.success(res?.message || 'Rekening berhasil dihapus');
         this.loadBankAccounts();
         this.isSubmitting = false;
@@ -477,10 +460,8 @@ export class RekeningComponent implements OnInit, OnDestroy {
   }
 
   private handleApiError(err: any): void {
-    console.error('API Error:', err);
-
     if (err?.error?.errors) {
-      // Handle validation errors
+      // Handle Laravel validation errors
       Object.values(err.error.errors).forEach((messages: any) => {
         if (Array.isArray(messages)) {
           messages.forEach(message => this.notyf.error(message));
@@ -488,6 +469,12 @@ export class RekeningComponent implements OnInit, OnDestroy {
       });
     } else if (err?.error?.message) {
       this.notyf.error(err.error.message);
+    } else if (err?.status === 422) {
+      this.notyf.error('Data yang dimasukkan tidak valid');
+    } else if (err?.status === 404) {
+      this.notyf.error('Rekening tidak ditemukan');
+    } else if (err?.status === 500) {
+      this.notyf.error('Terjadi kesalahan server');
     } else {
       this.notyf.error('Terjadi kesalahan pada sistem');
     }
