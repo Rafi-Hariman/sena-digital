@@ -1,8 +1,11 @@
 {
   "/api": {
-    "target": "https://www.sena-digital.com/api",
+    "target": "https://cloud-api.sena-digital.com/api",
     "secure": true,
     "changeOrigin": true,
-    "logLevel": "debug"
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/api": ""
+    }
   }
 }
