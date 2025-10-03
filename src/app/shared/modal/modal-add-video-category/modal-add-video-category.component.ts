@@ -79,7 +79,7 @@ export class ModalAddVideoCategoryComponent implements OnInit {
     if (file) {
       // Validate file type and size
       const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
-      const maxSize = 2 * 1024 * 1024; // 2MB
+      const maxSize = 10 * 1024 * 1024; // 2MB
 
       if (!allowedTypes.includes(file.type)) {
         this.notyf.error('Please select a valid image file (JPEG, PNG, JPG, or GIF)');

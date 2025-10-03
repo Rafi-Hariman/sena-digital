@@ -31,8 +31,7 @@
 
     <!-- Gallery view - properly isolated -->
     <wc-gallery-view
-      *ngIf="isCurrentView(ContentView.GALLERY)"
-      [galleryItems]="weddingData?.gallery">
+      *ngIf="isCurrentView(ContentView.GALLERY)">
     </wc-gallery-view>
 
     <!-- Main content - hidden when gallery is active -->

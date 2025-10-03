@@ -10,27 +10,35 @@
     </div>
 
     <div class="row">
-      <div class="col-12">
+      <div class="col-12" style="padding: 0px;">
 
-        <!-- Static Event Form (Countdown) -->
+        <!-- Countdown Configuration Section -->
         <div class="col-12 mb-4">
           <div class="card-custom">
-            <h2 class="title-border">Pengaturan Acara</h2>
-            <form class="row g-3 align-items-end" [formGroup]="staticEventForm" (ngSubmit)="onStaticSubmitClicked()">
+            <h2 class="title-border">Pengaturan Countdown</h2>
+            <form class="row g-3 align-items-end" [formGroup]="countdownForm" (ngSubmit)="onCountdownSubmitClicked()">
               <div class="col-12 col-lg">
-                <label for="event" class="form-label">Sebagai countdown acara</label>
-                <input type="text" id="event" class="form-control"
-                  placeholder="Masukkan nama countdown acara"
-                  formControlName="selectedEvent"
-                  [value]="countdownData?.name_countdown || ''" />
+                <label for="countdown" class="form-label">Nama Countdown Acara</label>
+                <input
+                  type="text"
+                  id="countdown"
+                  class="form-control"
+                  [class.is-invalid]="isFieldInvalid(countdownForm, 'name_countdown')"
+                  placeholder="Contoh: Wedding Countdown"
+                  formControlName="name_countdown" />
+                <div class="invalid-feedback" *ngIf="isFieldInvalid(countdownForm, 'name_countdown')">
+                  {{ getFieldError(countdownForm, 'name_countdown') }}
+                </div>
               </div>
               <div class="col-12 col-lg-auto">
                 <div class="d-flex gap-2 flex-wrap">
-                  <button type="button" class="btn btn-simpan" (click)="onStaticUpdateClicked()" *ngIf="hasExistingData()" [disabled]="isLoading">
-                    Update Countdown
+                  <button type="button" class="btn btn-update" (click)="onCountdownUpdateClicked()"
+                    *ngIf="hasCountdown()" [disabled]="isLoading || countdownForm.invalid">
+                    <i class="fas fa-edit me-2"></i>Update Countdown
                   </button>
-                  <button type="submit" class="btn btn-simpan" *ngIf="!hasExistingData()" [disabled]="isLoading">
-                    Simpan Countdown
+                  <button type="submit" class="btn btn-simpan"
+                    *ngIf="!hasCountdown()" [disabled]="isLoading || countdownForm.invalid">
+                    <i class="fas fa-plus me-2"></i>Simpan Countdown
                   </button>
                 </div>
               </div>
@@ -38,119 +46,315 @@
           </div>
         </div>
 
-        <!-- Dynamic Events Form -->
+        <!-- Event Management Section -->
         <div class="col-12">
-          <form [formGroup]="dynamicEventForm" (ngSubmit)="onDynamicSubmitClicked()">
-            <div formArrayName="dynamicEvents" class="dynamic-events-container">
-              <div *ngFor="let eventForm of dynamicEvents.controls; let i = index" [formGroupName]="i" class="form-container">
 
-                <div class="card-header-responsive">
-                  <h2 class="title mb-0">Acara #{{ i + 1 }}</h2>
-                  <div class="card-action-buttons">
-                    <button type="button" class="btn btn-link text-dark fs-2 fw-bold p-0 m-0"
-                      (click)="addDynamicEvent()" aria-label="Add" [disabled]="isLoading">
-                      <i class="fa fa-plus"></i>
-                    </button>
-                    <button type="button" class="btn btn-link text-danger fs-2 fw-bold p-0 m-0"
-                      (click)="deleteDynamicEvent(i)" *ngIf="dynamicEvents.length > 1" aria-label="Delete"
-                      [disabled]="isLoading">
-                      <i class="fa fa-trash"></i>
-                    </button>
-                  </div>
-                </div>
+          <!-- Existing Events Display -->
+          <div class="existing-events-section" *ngIf="hasEvent('akad') || hasEvent('resepsi')">
+            <h3 class="section-title">Acara yang Sudah Dibuat</h3>
 
-                <!-- Hidden ID -->
-                <input type="hidden" formControlName="id" />
-
-                <div class="mb-4">
-                  <label for="namaAcara{{i}}" class="form-label fw-semibold">Nama Acara</label>
-                  <input type="text" class="form-control text-secondary" id="namaAcara{{i}}"
-                    placeholder="Contoh: Pernikahan Andra dan Mega"
-                    formControlName="nama_acara" [disabled]="isLoading" />
-                  <div class="text-danger small mt-1"
-                    *ngIf="eventForm.get('nama_acara')?.invalid && eventForm.get('nama_acara')?.touched">
-                    Nama acara wajib diisi
-                  </div>
-                </div>
-
-                <div class="mb-4">
-                  <label for="tanggal{{i}}" class="form-label fw-semibold">Tanggal</label>
-                  <div class="input-icon">
-                    <input type="text" class="form-control text-secondary pe-5" id="tanggal{{i}}"
-                      placeholder="Pilih tanggal" formControlName="tanggal_acara" bsDatepicker [bsConfig]="bsConfig"
-                      readonly [disabled]="isLoading" />
-                    <i class="far fa-calendar-alt"></i>
-                  </div>
-                  <div class="text-danger small mt-1"
-                    *ngIf="eventForm.get('tanggal_acara')?.invalid && eventForm.get('tanggal_acara')?.touched">
-                    Tanggal acara wajib diisi
-                  </div>
-                </div>
-
-                <div class="responsive-form-row mb-4">
-                  <div>
-                    <label for="waktuMulai{{i}}" class="form-label fw-semibold">Waktu Mulai</label>
-                    <div class="input-icon">
-                      <input type="time" class="form-control text-secondary pe-5" id="waktuMulai{{i}}"
-                        formControlName="start_acara" [disabled]="isLoading" />
-                      <i class="far fa-clock"></i>
+            <div class="row g-3 mb-4">
+              <!-- Akad Event Card -->
+              <div class="col-md-6" *ngIf="hasEvent('akad')">
+                <div class="event-card akad-card">
+                  <div class="event-header">
+                    <div class="event-type-badge akad-badge">
+                      <i class="fas fa-mosque me-2"></i>{{ getEventTypeLabel('akad') }}
                     </div>
-                    <div class="text-danger small mt-1"
-                      *ngIf="eventForm.get('start_acara')?.invalid && eventForm.get('start_acara')?.touched">
-                      Waktu mulai wajib diisi
+                    <div class="event-actions">
+                      <button type="button" class="btn btn-sm btn-outline-primary"
+                        (click)="onEventTypeSelect('akad')" [disabled]="isLoading">
+                        <i class="fas fa-edit"></i>
+                      </button>
+                      <button type="button" class="btn btn-sm btn-outline-danger"
+                        (click)="deleteEvent('akad')" [disabled]="isLoading">
+                        <i class="fas fa-trash"></i>
+                      </button>
                     </div>
                   </div>
-                  <div>
-                    <label for="waktuSelesai{{i}}" class="form-label fw-semibold">Waktu Selesai</label>
-                    <div class="input-icon">
-                      <input type="time" class="form-control text-secondary pe-5" id="waktuSelesai{{i}}"
-                        formControlName="end_acara" [disabled]="isLoading" />
-                      <i class="far fa-clock"></i>
-                    </div>
-                    <div class="text-danger small mt-1"
-                      *ngIf="eventForm.get('end_acara')?.invalid && eventForm.get('end_acara')?.touched">
-                      Waktu selesai wajib diisi
+                  <div class="event-content">
+                    <h5 class="event-name">{{ akadEvent?.nama_acara }}</h5>
+                    <div class="event-details">
+                      <p><i class="fas fa-calendar me-2"></i>{{ formatDate(akadEvent?.tanggal_acara || null) }}</p>
+                      <p><i class="fas fa-clock me-2"></i>{{ akadEvent?.start_acara }} - {{ akadEvent?.end_acara }}</p>
+                      <p><i class="fas fa-map-marker-alt me-2"></i>{{ akadEvent?.alamat }}</p>
+
                     </div>
                   </div>
                 </div>
+              </div>
 
-                <div class="mb-4">
-                  <label for="alamat{{i}}" class="form-label fw-semibold">Alamat</label>
-                  <textarea class="form-control text-secondary" id="alamat{{i}}" rows="3"
-                    formControlName="alamat" placeholder="Masukkan alamat lengkap acara"
-                    [disabled]="isLoading"></textarea>
-                  <div class="text-danger small mt-1"
-                    *ngIf="eventForm.get('alamat')?.invalid && eventForm.get('alamat')?.touched">
-                    Alamat wajib diisi
+              <!-- Resepsi Event Card -->
+              <div class="col-md-6" *ngIf="hasEvent('resepsi')">
+                <div class="event-card resepsi-card">
+                  <div class="event-header">
+                    <div class="event-type-badge resepsi-badge">
+                      <i class="fas fa-glass-cheers me-2"></i>{{ getEventTypeLabel('resepsi') }}
+                    </div>
+                    <div class="event-actions">
+                      <button type="button" class="btn btn-sm btn-outline-primary"
+                        (click)="onEventTypeSelect('resepsi')" [disabled]="isLoading">
+                        <i class="fas fa-edit"></i>
+                      </button>
+                      <button type="button" class="btn btn-sm btn-outline-danger"
+                        (click)="deleteEvent('resepsi')" [disabled]="isLoading">
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="event-content">
+                    <h5 class="event-name">{{ resepsiEvent?.nama_acara }}</h5>
+                    <div class="event-details">
+                      <p><i class="fas fa-calendar me-2"></i>{{ formatDate(resepsiEvent?.tanggal_acara || null) }}</p>
+                      <p><i class="fas fa-clock me-2"></i>{{ resepsiEvent?.start_acara }} - {{ resepsiEvent?.end_acara }}</p>
+                      <p><i class="fas fa-map-marker-alt me-2"></i>{{ resepsiEvent?.alamat }}</p>
+
+                    </div>
                   </div>
                 </div>
-
-                <div class="mb-4">
-                  <label for="linkLokasi{{i}}" class="form-label fw-semibold">Link Lokasi</label>
-                  <div class="input-group">
-                    <button class="btn btn-google" type="button" disabled>Google Maps</button>
-                    <input type="url" class="form-control text-secondary" id="linkLokasi{{i}}"
-                      placeholder="https://maps.google.com/..." formControlName="link_maps"
-                      [disabled]="isLoading" />
-                  </div>
-                  <div class="text-danger small mt-1"
-                    *ngIf="eventForm.get('link_maps')?.invalid && eventForm.get('link_maps')?.touched">
-                    Link lokasi wajib diisi
-                  </div>
-                </div>
-
               </div>
             </div>
+          </div>
 
-            <!-- Submit Button -->
-            <div class="submit-button-container">
-              <button type="submit" class="btn btn-save" [disabled]="isLoading || dynamicEventForm.invalid">
-                {{ hasExistingData() ? 'Update Data Acara' : 'Simpan Data Acara' }}
-              </button>
+          <!-- Event Type Selection -->
+          <div class="event-type-selection" *ngIf="!showEventForm && hasCountdown()">
+            <div class="event-type-selector">
+              <div class="row g-3">
+                <div class="col-md-6" *ngFor="let eventType of getAvailableEventTypes()">
+                  <button type="button" class="btn btn-event-type w-100"
+                    (click)="onEventTypeSelect(eventType.key)" [disabled]="isLoading">
+                    <div class="event-type-content">
+                      <i class="fas" [class.fa-mosque]="eventType.key === 'akad'"
+                        [class.fa-glass-cheers]="eventType.key === 'resepsi'"></i>
+                      <h5>{{ eventType.label }}</h5>
+                      <p class="text-muted">
+                        {{ eventType.key === 'akad' ? 'Acara akad nikah dengan penghulu' : 'Acara resepsi pernikahan' }}
+                      </p>
+                    </div>
+                  </button>
+                </div>
+              </div>
             </div>
-          </form>
-        </div>
+          </div>
 
+          <!-- No Countdown Warning -->
+          <div class="alert alert-warning" *ngIf="!hasCountdown()">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            <strong>Perhatian!</strong> Silakan buat countdown terlebih dahulu sebelum menambah acara.
+          </div>
+
+          <!-- Event Form -->
+          <div class="event-form-container" *ngIf="showEventForm && selectedEventType">
+            <div class="card-custom">
+              <div class="form-header">
+                <h3 class="title">
+                  <i class="fas me-2" [class.fa-mosque]="selectedEventType === 'akad'"
+                    [class.fa-glass-cheers]="selectedEventType === 'resepsi'"></i>
+                  {{ hasEvent(selectedEventType) ? 'Edit' : 'Tambah' }} {{ getEventTypeLabel(selectedEventType) }}
+                </h3>
+                <button type="button" class="btn btn-outline-secondary" (click)="cancelEventForm()">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+
+              <!-- Akad Form -->
+              <form *ngIf="selectedEventType === 'akad'" [formGroup]="akadForm" (ngSubmit)="onEventSubmitClicked()">
+
+                <!-- Basic Event Info -->
+                <div class="form-section">
+                  <h5 class="section-subtitle">Informasi Dasar</h5>
+
+                  <div class="row g-3">
+                    <div class="col-12">
+                      <label for="akadNamaAcara" class="form-label">Nama Acara *</label>
+                      <input type="text" class="form-control" id="akadNamaAcara"
+                        [class.is-invalid]="isFieldInvalid(akadForm, 'nama_acara')"
+                        placeholder="Contoh: Akad Nikah Ahmad & Siti"
+                        formControlName="nama_acara" [disabled]="isLoading" />
+                      <div class="invalid-feedback" *ngIf="isFieldInvalid(akadForm, 'nama_acara')">
+                        {{ getFieldError(akadForm, 'nama_acara') }}
+                      </div>
+                    </div>
+
+                    <div class="col-md-4">
+                      <label for="akadTanggal" class="form-label">Tanggal *</label>
+                      <div class="input-icon">
+                        <input type="text" class="form-control" id="akadTanggal"
+                          [class.is-invalid]="isFieldInvalid(akadForm, 'tanggal_acara')"
+                          placeholder="Pilih tanggal" formControlName="tanggal_acara"
+                          bsDatepicker [bsConfig]="bsConfig" readonly [disabled]="isLoading" />
+                        <i class="far fa-calendar-alt"></i>
+                      </div>
+                      <div class="invalid-feedback" *ngIf="isFieldInvalid(akadForm, 'tanggal_acara')">
+                        {{ getFieldError(akadForm, 'tanggal_acara') }}
+                      </div>
+                    </div>
+
+                    <div class="col-md-4">
+                      <label for="akadWaktuMulai" class="form-label">Waktu Mulai *</label>
+                      <input type="time" class="form-control" id="akadWaktuMulai"
+                        [class.is-invalid]="isFieldInvalid(akadForm, 'start_acara')"
+                        formControlName="start_acara" [disabled]="isLoading" />
+                      <div class="invalid-feedback" *ngIf="isFieldInvalid(akadForm, 'start_acara')">
+                        {{ getFieldError(akadForm, 'start_acara') }}
+                      </div>
+                    </div>
+
+                    <div class="col-md-4">
+                      <label for="akadWaktuSelesai" class="form-label">Waktu Selesai *</label>
+                      <input type="time" class="form-control" id="akadWaktuSelesai"
+                        [class.is-invalid]="isFieldInvalid(akadForm, 'end_acara')"
+                        formControlName="end_acara" [disabled]="isLoading" />
+                      <div class="invalid-feedback" *ngIf="isFieldInvalid(akadForm, 'end_acara')">
+                        {{ getFieldError(akadForm, 'end_acara') }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+
+                <!-- Location Info -->
+                <div class="form-section">
+                  <h5 class="section-subtitle">Informasi Lokasi</h5>
+
+                  <div class="row g-3">
+                    <div class="col-12">
+                      <label for="akadAlamat" class="form-label">Alamat Lengkap *</label>
+                      <textarea class="form-control" id="akadAlamat" rows="3"
+                        [class.is-invalid]="isFieldInvalid(akadForm, 'alamat')"
+                        formControlName="alamat" placeholder="Masukkan alamat lengkap tempat akad"
+                        [disabled]="isLoading"></textarea>
+                      <div class="invalid-feedback" *ngIf="isFieldInvalid(akadForm, 'alamat')">
+                        {{ getFieldError(akadForm, 'alamat') }}
+                      </div>
+                    </div>
+
+                    <div class="col-12">
+                      <label for="akadLinkLokasi" class="form-label">Link Google Maps *</label>
+                      <input type="url" class="form-control" id="akadLinkLokasi"
+                        [class.is-invalid]="isFieldInvalid(akadForm, 'link_maps')"
+                        placeholder="https://maps.google.com/..." formControlName="link_maps"
+                        [disabled]="isLoading" />
+                      <div class="invalid-feedback" *ngIf="isFieldInvalid(akadForm, 'link_maps')">
+                        {{ getFieldError(akadForm, 'link_maps') }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="form-actions">
+                  <button type="button" class="btn btn-cancel me-3" (click)="cancelEventForm()" [disabled]="isLoading">
+                    Batal
+                  </button>
+                  <button type="submit" class="btn btn-save" [disabled]="isLoading || akadForm.invalid">
+                    {{ hasEvent('akad') ? 'Update Akad' : 'Simpan Akad' }}
+                  </button>
+                </div>
+              </form>
+
+              <!-- Resepsi Form -->
+              <form *ngIf="selectedEventType === 'resepsi'" [formGroup]="resepsiForm" (ngSubmit)="onEventSubmitClicked()">
+
+                <!-- Basic Event Info -->
+                <div class="form-section">
+                  <h5 class="section-subtitle">Informasi Dasar</h5>
+
+                  <div class="row g-3">
+                    <div class="col-12">
+                      <label for="resepsiNamaAcara" class="form-label">Nama Acara *</label>
+                      <input type="text" class="form-control" id="resepsiNamaAcara"
+                        [class.is-invalid]="isFieldInvalid(resepsiForm, 'nama_acara')"
+                        placeholder="Contoh: Resepsi Pernikahan Ahmad & Siti"
+                        formControlName="nama_acara" [disabled]="isLoading" />
+                      <div class="invalid-feedback" *ngIf="isFieldInvalid(resepsiForm, 'nama_acara')">
+                        {{ getFieldError(resepsiForm, 'nama_acara') }}
+                      </div>
+                    </div>
+
+                    <div class="col-md-4">
+                      <label for="resepsiTanggal" class="form-label">Tanggal *</label>
+                      <div class="input-icon">
+                        <input type="text" class="form-control" id="resepsiTanggal"
+                          [class.is-invalid]="isFieldInvalid(resepsiForm, 'tanggal_acara')"
+                          placeholder="Pilih tanggal" formControlName="tanggal_acara"
+                          bsDatepicker [bsConfig]="bsConfig" readonly [disabled]="isLoading" />
+                        <i class="far fa-calendar-alt"></i>
+                      </div>
+                      <div class="invalid-feedback" *ngIf="isFieldInvalid(resepsiForm, 'tanggal_acara')">
+                        {{ getFieldError(resepsiForm, 'tanggal_acara') }}
+                      </div>
+                    </div>
+
+                    <div class="col-md-4">
+                      <label for="resepsiWaktuMulai" class="form-label">Waktu Mulai *</label>
+                      <input type="time" class="form-control" id="resepsiWaktuMulai"
+                        [class.is-invalid]="isFieldInvalid(resepsiForm, 'start_acara')"
+                        formControlName="start_acara" [disabled]="isLoading" />
+                      <div class="invalid-feedback" *ngIf="isFieldInvalid(resepsiForm, 'start_acara')">
+                        {{ getFieldError(resepsiForm, 'start_acara') }}
+                      </div>
+                    </div>
+
+                    <div class="col-md-4">
+                      <label for="resepsiWaktuSelesai" class="form-label">Waktu Selesai *</label>
+                      <input type="time" class="form-control" id="resepsiWaktuSelesai"
+                        [class.is-invalid]="isFieldInvalid(resepsiForm, 'end_acara')"
+                        formControlName="end_acara" [disabled]="isLoading" />
+                      <div class="invalid-feedback" *ngIf="isFieldInvalid(resepsiForm, 'end_acara')">
+                        {{ getFieldError(resepsiForm, 'end_acara') }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+
+                <!-- Location Info -->
+                <div class="form-section">
+                  <h5 class="section-subtitle">Informasi Lokasi</h5>
+
+                  <div class="row g-3">
+                    <div class="col-12">
+                      <label for="resepsiAlamat" class="form-label">Alamat Lengkap *</label>
+                      <textarea class="form-control" id="resepsiAlamat" rows="3"
+                        [class.is-invalid]="isFieldInvalid(resepsiForm, 'alamat')"
+                        formControlName="alamat" placeholder="Masukkan alamat lengkap tempat resepsi"
+                        [disabled]="isLoading"></textarea>
+                      <div class="invalid-feedback" *ngIf="isFieldInvalid(resepsiForm, 'alamat')">
+                        {{ getFieldError(resepsiForm, 'alamat') }}
+                      </div>
+                    </div>
+
+                    <div class="col-12">
+                      <label for="resepsiLinkLokasi" class="form-label">Link Google Maps *</label>
+                      <input type="url" class="form-control" id="resepsiLinkLokasi"
+                        [class.is-invalid]="isFieldInvalid(resepsiForm, 'link_maps')"
+                        placeholder="https://maps.google.com/..." formControlName="link_maps"
+                        [disabled]="isLoading" />
+                      <div class="invalid-feedback" *ngIf="isFieldInvalid(resepsiForm, 'link_maps')">
+                        {{ getFieldError(resepsiForm, 'link_maps') }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="form-actions">
+                  <button type="button" class="btn btn-cancel me-3" (click)="cancelEventForm()" [disabled]="isLoading">
+                    Batal
+                  </button>
+                  <button type="submit" class="btn btn-save" [disabled]="isLoading || resepsiForm.invalid">
+                    {{ hasEvent('resepsi') ? 'Update Resepsi' : 'Simpan Resepsi' }}
+                  </button>
+                </div>
+              </form>
+
+            </div>
+          </div>
+
+        </div>
       </div>
     </div>
   </div>

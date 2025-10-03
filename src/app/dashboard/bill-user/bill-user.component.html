@@ -1,3 +1,56 @@
-<p>
-  bill-user works!
-</p>
+<div class="content-section">
+    <!-- Tagihan Section -->
+    <div class="tagihan-section">
+      <h2 class="section-title">Tagihan</h2>
+
+      <!-- Loading State -->
+      <div *ngIf="isLoading" class="loading-container">
+        <div class="loading-spinner"></div>
+        <p class="loading-text">Memuat data tagihan...</p>
+      </div>
+
+      <!-- Error State -->
+      <div *ngIf="error && !isLoading" class="error-container">
+        <div class="error-icon">⚠️</div>
+        <p class="error-text">{{ error }}</p>
+        <button class="retry-button" (click)="retryLoadData()">Coba Lagi</button>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="!isLoading && !error && !hasData" class="empty-container">
+        <div class="empty-icon">📄</div>
+        <h3 class="empty-title">Belum Ada Tagihan</h3>
+        <p class="empty-text">Anda belum memiliki riwayat tagihan yang telah dibayar.</p>
+      </div>
+
+      <!-- Invoice Table -->
+      <div *ngIf="!isLoading && !error && hasData" class="invoice-table-container">
+        <div class="table-responsive">
+          <table class="invoice-table">
+            <thead>
+              <tr>
+                <th>No Invoice</th>
+                <th>Tanggal Transaksi</th>
+                <th>Paket</th>
+                <th>Harga</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let invoice of invoices; trackBy: trackByInvoice" class="invoice-row">
+                <td class="invoice-id">{{ invoice.no_invoice }}</td>
+                <td class="transaction-date">{{ invoice.tanggal_transaksi }}</td>
+                <td class="package-name">{{ invoice.paket }}</td>
+                <td class="price-cell">{{ formatCurrency(invoice.harga) }}</td>
+                <td class="status-cell">
+                  <span class="status-badge" [ngClass]="getStatusClass(invoice.status)">
+                    {{ getStatusText(invoice.status) }}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>

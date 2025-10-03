@@ -36,7 +36,10 @@ export interface WeddingEvent {
   end_acara: string;
   alamat: string;
   link_maps: string;
-  countdown: string | null;
+  countdown: {
+    id: number;
+    name_countdown: string;
+  } | null;
 }
 
 export interface WeddingStory {
@@ -56,11 +59,14 @@ export interface WeddingQuote {
 
 export interface GalleryItem {
   id: number;
+  user_id: string;
   photo: string;
-  url_video: string;
+  photo_url: string;
+  url_video: string | null;
   nama_foto: string;
   status: number;
   created_at: string;
+  updated_at: string;
 }
 
 export interface BankAccount {

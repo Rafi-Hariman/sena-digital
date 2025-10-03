@@ -1,5 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { GalleryItem } from '../../../services/wedding-data.service';
+import { DashboardService, DashboardServiceType } from '../../../dashboard.service';
 
 @Component({
   selector: 'wc-gallery-view',
@@ -7,12 +8,29 @@ import { GalleryItem } from '../../../services/wedding-data.service';
   styleUrls: ['./gallery-view.component.scss']
 })
 export class GalleryViewComponent implements OnInit {
-  @Input() galleryItems: GalleryItem[] | undefined = [];
+  galleryItems: GalleryItem[] = [];
+  isLoading: boolean = true;
 
-  constructor() { }
+  constructor(private dashboardService: DashboardService) { }
 
   ngOnInit(): void {
-    console.log('GalleryViewComponent initialized with gallery:', this.galleryItems);
+    this.loadGalleryData();
+  }
+
+  private loadGalleryData(): void {
+    this.isLoading = true;
+    this.dashboardService.list(DashboardServiceType.GALERY_DATA).subscribe({
+      next: (response: any) => {
+        if (response && response.data) {
+          this.galleryItems = response.data;
+        }
+        this.isLoading = false;
+      },
+      error: (error: any) => {
+        this.isLoading = false;
+        this.galleryItems = [];
+      }
+    });
   }
 
   getGalleryImages(): GalleryItem[] {
@@ -24,7 +42,7 @@ export class GalleryViewComponent implements OnInit {
   }
 
   getImageUrl(item: GalleryItem): string {
-    return item.photo || 'assets/default-gallery.jpg';
+    return item.photo_url || '';
   }
 
   getImageAlt(item: GalleryItem, index: number): string {

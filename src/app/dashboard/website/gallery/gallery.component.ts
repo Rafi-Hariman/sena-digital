@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Notyf } from 'notyf';
 import { DashboardService, DashboardServiceType } from 'src/app/dashboard.service';
@@ -36,6 +36,21 @@ export class GalleryComponent implements OnInit {
   private modalRef?: BsModalRef;
   userData: any;
 
+  // Custom validator to ensure at least one field (photo or url_video) is filled
+  private atLeastOneFieldValidator(control: AbstractControl): ValidationErrors | null {
+    const photo = control.get('photo')?.value;
+    const urlVideo = control.get('url_video')?.value;
+
+    const hasPhoto = photo && photo instanceof File;
+    const hasVideoUrl = urlVideo && urlVideo.trim().length > 0;
+
+    if (!hasPhoto && !hasVideoUrl) {
+      return { atLeastOneRequired: true };
+    }
+
+    return null;
+  }
+
   constructor(
     private dashboardSvc: DashboardService,
     private modalSvc: BsModalService
@@ -43,9 +58,9 @@ export class GalleryComponent implements OnInit {
     this.notyf = new Notyf({ duration: 3000, position: { x: 'right', y: 'top' } });
 
     this.galleryForm = new FormGroup({
-      photo: new FormControl(null, Validators.required),
-      url_video: new FormControl('', Validators.required),
-    });
+      photo: new FormControl(null),
+      url_video: new FormControl(''),
+    }, { validators: this.atLeastOneFieldValidator });
 
     // Initialize table columns
     this.columns = [
@@ -68,7 +83,6 @@ export class GalleryComponent implements OnInit {
         this.getGalleryData();
       },
       (error) => {
-        console.error('Error fetching user profile:', error);
         this.notyf.error('Gagal mengambil data profil pengguna.');
       }
     );
@@ -130,7 +144,7 @@ export class GalleryComponent implements OnInit {
 
 
   validateFile(file: File): boolean {
-    const maxFileSize = 5 * 1024 * 1024; // 5MB
+    const maxFileSize = 10 * 1024 * 1024; // 10MB
     const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
 
     if (!allowedTypes.includes(file.type)) {
@@ -139,7 +153,7 @@ export class GalleryComponent implements OnInit {
     }
 
     if (file.size > maxFileSize) {
-      this.uploadStatus = `Error: File size of "${file.name}" exceeds 5MB.`;
+      this.uploadStatus = `Error: File size of "${file.name}" exceeds 10MB.`;
       return false;
     }
 
@@ -174,6 +188,13 @@ export class GalleryComponent implements OnInit {
           this.modalRef?.hide();
         });
       }
+    } else {
+      // Show validation error message
+      if (this.galleryForm.errors?.['atLeastOneRequired']) {
+        this.notyf.error('Silakan upload foto atau masukkan URL video');
+      } else {
+        this.notyf.error('Silakan lengkapi data yang diperlukan');
+      }
     }
   }
 
@@ -199,7 +220,6 @@ export class GalleryComponent implements OnInit {
       },
       error: (err) => {
         this.notyf.error(err?.message || 'Ada kesalahan dalam sistem.');
-        console.error('Error while submitting data:', err);
       }
     });
   }
@@ -208,7 +228,6 @@ export class GalleryComponent implements OnInit {
   getGalleryData(page: number = this.currentPage, perPage: number = this.pageSize): void {
     // Check if userData is available
     if (!this.userData?.id) {
-      console.warn('User data not available, initializing user profile first');
       this.initUserProfile();
       return;
     }
@@ -219,14 +238,13 @@ export class GalleryComponent implements OnInit {
 
     this.dashboardSvc.list(DashboardServiceType.GALERY_DATA, params).subscribe({
       next: (res) => {
-        const baseUrl = environment.apiBaseUrl || '';
         this.galleryData = (res?.data || []).map((item: any) => ({
           id: item.id,
-          photo_url: item.photo ? (item.photo.startsWith('http') ? item.photo : baseUrl + '/' + item.photo) : '',
-          photo_name: item.nama_foto || (item.photo ? item.photo.split('/').pop() : ''),
-          url_video: item.url_video,
+          photo_url: item.photo_url || '', // Use API-provided photo_url directly
+          photo_name: item.nama_foto || '',
+          url_video: item.url_video || '',
           created_at: item.created_at ? new Date(item.created_at) : null,
-          status: item.status === 1 ? 'active' : 'inactive',
+          status: item.status === 1 || item.status === '1' ? 'active' : 'inactive',
         }));
         this.totalItems = res?.total || this.galleryData.length;
         this.pageSize = res?.per_page || this.pageSize;
@@ -237,7 +255,6 @@ export class GalleryComponent implements OnInit {
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('Error fetching gallery data:', err);
         this.galleryData = [];
         this.isLoading = false;
         this.notyf.error('Gagal mengambil data galeri.');
@@ -289,6 +306,16 @@ export class GalleryComponent implements OnInit {
     }
   }
 
+  // Method to go to first page
+  goToFirstPage(): void {
+    this.onPageChange(1);
+  }
+
+  // Method to go to last page
+  goToLastPage(): void {
+    this.onPageChange(this.totalPages);
+  }
+
   onPageSizeChange(newSize: number): void {
     this.pageSize = newSize;
     this.currentPage = 1;
@@ -308,7 +335,6 @@ export class GalleryComponent implements OnInit {
   }
 
   private deleteGalleryItem(item: any): void {
-    console.log('Deleting gallery item:', item);
     const params = {
       id: item.id
     }
@@ -352,5 +378,67 @@ export class GalleryComponent implements OnInit {
   isImageFile(filename: string): boolean {
     const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'];
     return imageExtensions.includes(this.getFileExtension(filename));
+  }
+
+  // Helper method to check if form has the at-least-one validation error
+  get hasAtLeastOneFieldError(): boolean {
+    return this.galleryForm.errors?.['atLeastOneRequired'] && this.galleryForm.touched;
+  }
+
+  // Helper method to generate page numbers array for pagination
+  get pageNumbers(): number[] {
+    const pages: number[] = [];
+    for (let i = 1; i <= this.totalPages; i++) {
+      pages.push(i);
+    }
+    return pages;
+  }
+
+  // Helper method to get visible page numbers with ellipsis logic
+  get visiblePageNumbers(): (number | string)[] {
+    const pages: (number | string)[] = [];
+    const maxVisiblePages = 5;
+    
+    if (this.totalPages <= maxVisiblePages) {
+      // Show all pages if total is small
+      return this.pageNumbers;
+    }
+    
+    const halfVisible = Math.floor(maxVisiblePages / 2);
+    let startPage = Math.max(1, this.currentPage - halfVisible);
+    let endPage = Math.min(this.totalPages, this.currentPage + halfVisible);
+    
+    // Adjust if we're near the beginning
+    if (this.currentPage <= halfVisible) {
+      endPage = Math.min(this.totalPages, maxVisiblePages);
+    }
+    
+    // Adjust if we're near the end
+    if (this.currentPage > this.totalPages - halfVisible) {
+      startPage = Math.max(1, this.totalPages - maxVisiblePages + 1);
+    }
+    
+    // Add first page and ellipsis if needed
+    if (startPage > 1) {
+      pages.push(1);
+      if (startPage > 2) {
+        pages.push('...');
+      }
+    }
+    
+    // Add visible page range
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+    
+    // Add ellipsis and last page if needed
+    if (endPage < this.totalPages) {
+      if (endPage < this.totalPages - 1) {
+        pages.push('...');
+      }
+      pages.push(this.totalPages);
+    }
+    
+    return pages;
   }
 }

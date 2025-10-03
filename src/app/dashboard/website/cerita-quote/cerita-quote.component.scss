@@ -29,7 +29,7 @@
 .section-title {
   font-size: 2rem;
   font-weight: 700;
-  color: #ff66a3;
+  color: #4A90E2;
   margin-bottom: 0.5rem;
   display: flex;
   align-items: center;
@@ -42,7 +42,7 @@
 }
 
 .section-subtitle {
-  color: rgba(255, 102, 163, 0.7);
+  color: rgba(108, 117, 125, 0.7);
   font-size: 1rem;
   margin: 0;
   font-weight: 400;
@@ -118,12 +118,12 @@
   justify-content: center;
   width: 32px;
   height: 32px;
-  background: linear-gradient(135deg, #ff66a3, rgba(255, 102, 163, 0.8));
+  background: linear-gradient(135deg, #4A90E2, rgba(74, 144, 226, 0.8));
   color: white;
   border-radius: 50%;
   font-weight: 600;
   font-size: 0.875rem;
-  box-shadow: 0 2px 8px rgba(255, 102, 163, 0.3);
+  box-shadow: 0 2px 8px rgba(74, 144, 226, 0.3);
 }
 
 .btn-action {
@@ -159,22 +159,22 @@
   }
 
   &.btn-add {
-    background: #ff66a3;
+    background: #4A90E2;
     color: white;
 
     &:hover {
-      background: #e5459a;
+      background: #357ABD;
       transform: scale(1.05);
-      box-shadow: 0 4px 12px rgba(255, 102, 163, 0.3);
+      box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
     }
   }
 
   &.btn-remove {
-    background: rgba(255, 102, 163, 0.1);
-    color: #ff66a3;
+    background: rgba(108, 117, 125, 0.1);
+    color: #6C757D;
 
     &:hover {
-      background: rgba(255, 102, 163, 0.2);
+      background: rgba(108, 117, 125, 0.2);
       transform: scale(1.05);
     }
   }
@@ -202,7 +202,7 @@
   margin: 0;
 
   i {
-    color: rgba(255, 102, 163, 0.7);
+    color: rgba(74, 144, 226, 0.7);
   }
 }
 
@@ -214,7 +214,7 @@
     right: 12px;
     top: 50%;
     transform: translateY(-50%);
-    color: rgba(255, 102, 163, 0.5);
+    color: rgba(74, 144, 226, 0.5);
     pointer-events: none;
     font-size: 0.875rem;
   }
@@ -231,8 +231,8 @@
 
   &:focus {
     outline: none;
-    border-color: #666;
-    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+    border-color: #4A90E2;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
     transform: translateY(-1px);
   }
 
@@ -259,13 +259,13 @@ textarea.form-control {
 
 .char-counter {
   font-size: 0.75rem;
-  // color: rgba(255, 102, 163, 0.6);
+  color: rgba(108, 117, 125, 0.6);
   text-align: right;
   margin-top: 0.25rem;
 }
 
 .error-message {
-  color: #ff66a3;
+  color: #E91E63;
   font-size: 0.75rem;
   display: flex;
   align-items: center;
@@ -316,13 +316,13 @@ textarea.form-control {
   }
 
   &.btn-primary {
-    background: linear-gradient(135deg, #ff66a3, #e5459a);
+    background: linear-gradient(135deg, #4A90E2, #357ABD);
     color: white;
-    box-shadow: 0 4px 15px rgba(255, 102, 163, 0.3);
+    box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
 
     &:hover:not(:disabled) {
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(255, 102, 163, 0.4);
+      box-shadow: 0 6px 20px rgba(74, 144, 226, 0.4);
     }
 
     &:active {
@@ -333,18 +333,18 @@ textarea.form-control {
       opacity: 0.6;
       cursor: not-allowed;
       transform: none;
-      box-shadow: 0 2px 8px rgba(255, 102, 163, 0.2);
+      box-shadow: 0 2px 8px rgba(74, 144, 226, 0.2);
     }
   }
 
   &.btn-secondary {
     background: white;
-    color: #ff66a3;
-    border: 2px solid rgba(255, 102, 163, 0.2);
+    color: #6C757D;
+    border: 2px solid rgba(108, 117, 125, 0.2);
 
     &:hover:not(:disabled) {
-      background: rgba(255, 102, 163, 0.05);
-      border-color: #ff66a3;
+      background: rgba(108, 117, 125, 0.05);
+      border-color: #6C757D;
       transform: translateY(-1px);
     }
   }
@@ -388,7 +388,7 @@ textarea.form-control {
 .data-title {
   font-size: 1.75rem;
   font-weight: 700;
-  color: #ff66a3;
+  color: #4A90E2;
   margin: 0;
   display: flex;
   align-items: center;
@@ -400,8 +400,8 @@ textarea.form-control {
 }
 
 .data-counter {
-  background: rgba(255, 102, 163, 0.1);
-  color: #ff66a3;
+  background: rgba(74, 144, 226, 0.1);
+  color: #4A90E2;
   padding: 0.5rem 1rem;
   border-radius: 20px;
   font-size: 0.875rem;
@@ -442,8 +442,8 @@ textarea.form-control {
   }
 
   &.editing {
-    border-color: #666;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    border-color: #4A90E2;
+    box-shadow: 0 8px 30px rgba(74, 144, 226, 0.15);
 
     &::before {
       transform: scaleX(1);
@@ -466,7 +466,7 @@ textarea.form-control {
 }
 
 .card-type {
-  background: linear-gradient(135deg, #ff66a3, rgba(255, 102, 163, 0.8));
+  background: linear-gradient(135deg, #4A90E2, rgba(74, 144, 226, 0.8));
   color: white;
   padding: 0.25rem 0.75rem;
   border-radius: 12px;
@@ -494,21 +494,21 @@ textarea.form-control {
   font-size: 0.75rem;
 
   &.btn-edit {
-    background: rgba(255, 102, 163, 0.1);
-    color: #ff66a3;
+    background: rgba(74, 144, 226, 0.1);
+    color: #4A90E2;
 
     &:hover:not(:disabled) {
-      background: rgba(255, 102, 163, 0.2);
+      background: rgba(74, 144, 226, 0.2);
       transform: scale(1.1);
     }
   }
 
   &.btn-delete {
-    background: rgba(255, 102, 163, 0.1);
-    color: #ff66a3;
+    background: rgba(233, 30, 99, 0.1);
+    color: #E91E63;
 
     &:hover:not(:disabled) {
-      background: rgba(255, 102, 163, 0.2);
+      background: rgba(233, 30, 99, 0.2);
       transform: scale(1.1);
     }
   }
@@ -536,7 +536,7 @@ textarea.form-control {
 .content-label {
   font-size: 0.75rem;
   font-weight: 600;
-  color: rgba(255, 102, 163, 0.7);
+  color: rgba(74, 144, 226, 0.7);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   display: flex;
@@ -564,7 +564,7 @@ textarea.form-control {
   .form-label {
     font-size: 0.75rem;
     font-weight: 600;
-    color: #ff66a3;
+    color: #4A90E2;
     text-transform: uppercase;
     letter-spacing: 0.5px;
   }
@@ -646,7 +646,7 @@ textarea.form-control {
 .empty-state {
   text-align: center;
   padding: 4rem 2rem;
-  color: rgba(255, 102, 163, 0.6);
+  color: rgba(108, 117, 125, 0.6);
 }
 
 .empty-icon {
@@ -658,7 +658,7 @@ textarea.form-control {
 .empty-title {
   font-size: 1.5rem;
   font-weight: 600;
-  color: rgba(255, 102, 163, 0.8);
+  color: rgba(108, 117, 125, 0.8);
   margin-bottom: 0.5rem;
 }
 

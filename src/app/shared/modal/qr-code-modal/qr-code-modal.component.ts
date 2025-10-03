@@ -1,17 +1,18 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild, ElementRef, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild, ElementRef, OnDestroy, AfterViewInit, ViewEncapsulation } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import * as QRCode from 'qrcode';
 
 @Component({
   selector: 'wc-qr-code-modal',
   templateUrl: './qr-code-modal.component.html',
-  styleUrls: ['./qr-code-modal.component.scss']
+  styleUrls: ['./qr-code-modal.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class QRCodeModalComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() url: string = '';
   @Input() title: string = 'Share Wedding Invitation';
   @Input() description: string = 'Scan this QR code to view the wedding invitation';
-  @Output() close = new EventEmitter<void>();
+  @Output() modalClose = new EventEmitter<void>();
 
   @ViewChild('qrCanvas', { static: false }) qrCanvas!: ElementRef<HTMLCanvasElement>;
 
@@ -201,7 +202,7 @@ export class QRCodeModalComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   closeModal(): void {
     console.log('Closing QR modal');
-    this.close.emit();
+    this.modalClose.emit();
     this.bsModalRef.hide();
   }
 }

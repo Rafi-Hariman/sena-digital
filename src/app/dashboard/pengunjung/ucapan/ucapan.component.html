@@ -80,69 +80,82 @@
       class="bg-white rounded-3 p-4 mt-4"
       aria-label="Ucapan data table and controls"
     >
-      <div
-        class="d-flex flex-column flex-sm-row justify-content-between align-items-center mb-3 gap-3"
-      >
-        <h2
-          class="text-pink-500 fw-semibold fs-5 border-start border-2 border-pink-400 ps-2 mb-0"
-        >
-          Data Doa & Ucapan
-        </h2>
-        <div class="d-flex align-items-center gap-3 w-100 w-sm-auto">
-          <!-- <button
-            type="button"
-            class="btn btn-pink d-flex align-items-center gap-2"
-            (click)="doDeleteAll()"
-            [disabled]="isLoading || dataList.length === 0">
-            <i class="fas fa-trash-alt"></i> Hapus Semua
-          </button> -->
-          <label for="search" class="fw-semibold small mb-0">Cari</label>
-          <input
-            id="search"
-            type="text"
-            class="form-control form-control-sm"
-            style="max-width: 180px"
-            [(ngModel)]="searchQuery"
-            placeholder="Cari nama atau ucapan..."
-            aria-label="Search ucapan data"
-          />
+      <div class="header-section mb-4">
+        <div class="row align-items-center g-3">
+          <div class="col-12 col-md-6">
+            <h2 class="text-pink-500 fw-semibold fs-5 border-start border-2 border-pink-400 ps-2 mb-0">
+              Data Doa & Ucapan
+            </h2>
+          </div>
+          <div class="col-12 col-md-6">
+            <div class="search-container">
+              <label for="search" class="fw-semibold small mb-2 d-block d-md-none">Cari</label>
+              <div class="input-group">
+                <span class="input-group-text d-none d-md-flex">
+                  <i class="fas fa-search text-muted"></i>
+                </span>
+                <input
+                  id="search"
+                  type="text"
+                  class="form-control"
+                  [(ngModel)]="searchQuery"
+                  placeholder="Cari nama atau ucapan..."
+                  aria-label="Search ucapan data"
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- Filter buttons -->
-      <div class="d-flex flex-wrap gap-2 mb-3">
-        <button
-          type="button"
-          class="btn btn-sm"
-          [class.btn-primary]="attendanceFilter === 'all'"
-          [class.btn-outline-primary]="attendanceFilter !== 'all'"
-          (click)="setAttendanceFilter('all')">
-          Semua ({{ getTotalCount() }})
-        </button>
-        <button
-          type="button"
-          class="btn btn-sm"
-          [class.btn-success]="attendanceFilter === 'hadir'"
-          [class.btn-outline-success]="attendanceFilter !== 'hadir'"
-          (click)="setAttendanceFilter('hadir')">
-          Hadir ({{ getAttendanceCount('hadir') }})
-        </button>
-        <button
-          type="button"
-          class="btn btn-sm"
-          [class.btn-danger]="attendanceFilter === 'tidak_hadir'"
-          [class.btn-outline-danger]="attendanceFilter !== 'tidak_hadir'"
-          (click)="setAttendanceFilter('tidak_hadir')">
-          Tidak Hadir ({{ getAttendanceCount('tidak_hadir') }})
-        </button>
-        <button
-          type="button"
-          class="btn btn-sm"
-          [class.btn-warning]="attendanceFilter === 'mungkin'"
-          [class.btn-outline-warning]="attendanceFilter !== 'mungkin'"
-          (click)="setAttendanceFilter('mungkin')">
-          Mungkin ({{ getAttendanceCount('mungkin') }})
-        </button>
+      <div class="filter-section mb-4">
+        <div class="row g-2">
+          <div class="col-6 col-md-3">
+            <button
+              type="button"
+              class="btn btn-filter w-100"
+              [class.btn-primary]="attendanceFilter === 'all'"
+              [class.btn-outline-primary]="attendanceFilter !== 'all'"
+              (click)="setAttendanceFilter('all')">
+              <span class="d-block">Semua</span>
+              <small class="d-block">({{ getTotalCount() }})</small>
+            </button>
+          </div>
+          <div class="col-6 col-md-3">
+            <button
+              type="button"
+              class="btn btn-filter w-100"
+              [class.btn-success]="attendanceFilter === 'hadir'"
+              [class.btn-outline-success]="attendanceFilter !== 'hadir'"
+              (click)="setAttendanceFilter('hadir')">
+              <span class="d-block">Hadir</span>
+              <small class="d-block">({{ getAttendanceCount('hadir') }})</small>
+            </button>
+          </div>
+          <div class="col-6 col-md-3">
+            <button
+              type="button"
+              class="btn btn-filter w-100"
+              [class.btn-danger]="attendanceFilter === 'tidak_hadir'"
+              [class.btn-outline-danger]="attendanceFilter !== 'tidak_hadir'"
+              (click)="setAttendanceFilter('tidak_hadir')">
+              <span class="d-block">Tidak Hadir</span>
+              <small class="d-block">({{ getAttendanceCount('tidak_hadir') }})</small>
+            </button>
+          </div>
+          <div class="col-6 col-md-3">
+            <button
+              type="button"
+              class="btn btn-filter w-100"
+              [class.btn-warning]="attendanceFilter === 'mungkin'"
+              [class.btn-outline-warning]="attendanceFilter !== 'mungkin'"
+              (click)="setAttendanceFilter('mungkin')">
+              <span class="d-block">Mungkin</span>
+              <small class="d-block">({{ getAttendanceCount('mungkin') }})</small>
+            </button>
+          </div>
+        </div>
       </div>
 
       <!-- Loading state -->
@@ -159,8 +172,8 @@
         {{ apiError }}
       </div>
 
-      <!-- Table -->
-      <div class="table-responsive" *ngIf="!isLoading && !apiError">
+      <!-- Desktop Table View -->
+      <div class="table-responsive d-none d-md-block" *ngIf="!isLoading && !apiError">
         <table class="table align-middle text-black mb-0" style="border-spacing: 0 0.25rem; border-collapse: separate;">
           <thead>
             <tr>
@@ -209,6 +222,59 @@
             </tr>
           </tbody>
         </table>
+      </div>
+
+      <!-- Mobile Card View -->
+      <div class="card-list-view d-md-none" *ngIf="!isLoading && !apiError">
+        <!-- No Data State -->
+        <div *ngIf="filteredDataList.length === 0" class="no-data-card text-center py-5">
+          <i class="fas fa-inbox fa-3x mb-3 text-muted opacity-25"></i>
+          <h6 class="mb-2">Tidak ada data yang ditemukan</h6>
+          <p class="text-muted small mb-0">Coba ubah filter atau kata kunci pencarian</p>
+        </div>
+
+        <!-- Data Cards -->
+        <div class="ucapan-cards">
+          <div *ngFor="let item of filteredDataList; let i = index" class="ucapan-card mb-3">
+            <div class="card h-100 border-0 shadow-sm">
+              <div class="card-body p-3">
+                <div class="d-flex align-items-start justify-content-between mb-3">
+                  <div class="user-info flex-grow-1">
+                    <h6 class="card-title mb-1 fw-semibold">{{ item.nama }}</h6>
+                    <span class="badge rounded-pill px-2 py-1 text-white fs-xs"
+                          [style.background-color]="getAttendanceColor(item.kehadiran)">
+                      {{ item.kehadiran_label }}
+                    </span>
+                  </div>
+                  <div class="item-number">
+                    <span class="badge bg-light text-dark">{{ i + 1 }}</span>
+                  </div>
+                </div>
+
+                <div class="message-content mb-3">
+                  <p class="card-text mb-0 text-muted" [title]="item.pesan">
+                    {{ item.pesan }}
+                  </p>
+                </div>
+
+                <div class="card-footer-content d-flex align-items-center justify-content-between">
+                  <small class="text-muted">
+                    <i class="fas fa-calendar-alt me-1"></i>
+                    {{ formatDate(item.created_at) }}
+                  </small>
+                  <button
+                    type="button"
+                    class="btn btn-outline-pink btn-sm"
+                    (click)="doDelete(item)"
+                    [disabled]="isLoading"
+                    title="Hapus ucapan">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div

@@ -9,9 +9,34 @@
   // padding-bottom: 120px;
   position: relative;
   background-repeat: no-repeat;
-  background-size: 100vw 100vh;
-  // background-position: center center;
+  background-size: 100vw 110vh; /* Slightly larger to allow for movement */
+  background-position: center center;
   background-attachment: scroll;
+  animation: floatingBackground 8s ease-in-out infinite;
+}
+
+/* Smooth floating animation for background */
+@keyframes floatingBackground {
+  0%, 100% {
+    background-position: center 0%;
+  }
+  50% {
+    background-position: center 10%;
+  }
+}
+
+/* Optimized animation for better performance */
+@media (prefers-reduced-motion: no-preference) {
+  :host {
+    will-change: background-position;
+  }
+}
+
+/* Disable animation for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  :host {
+    animation: none;
+  }
 }
 
 .wedding-container {

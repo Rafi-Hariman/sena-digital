@@ -115,3 +115,272 @@ body {
     font-size: 2.5rem;
   }
 }
+
+/* Mobile-First Responsive Styles */
+
+/* Header Section */
+.header-section {
+  .search-container {
+    @media (max-width: 767.98px) {
+      margin-top: 0.5rem;
+    }
+  }
+
+  .input-group-text {
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+    color: #6c757d;
+  }
+
+  .form-control {
+    border-color: #dee2e6;
+
+    &:focus {
+      border-color: #f95ea2;
+      box-shadow: 0 0 0 0.2rem rgba(249, 94, 162, 0.1);
+    }
+  }
+}
+
+/* Filter Section */
+.filter-section {
+  .btn-filter {
+    min-height: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease-in-out;
+
+    @media (max-width: 767.98px) {
+      min-height: 50px;
+      font-size: 0.75rem;
+    }
+
+    span {
+      font-weight: 600;
+      line-height: 1.2;
+    }
+
+    small {
+      font-size: 0.7rem;
+      opacity: 0.8;
+      font-weight: 400;
+      line-height: 1;
+
+      @media (max-width: 767.98px) {
+        font-size: 0.65rem;
+      }
+    }
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+}
+
+/* Mobile Card View Styles */
+.card-list-view {
+  .no-data-card {
+    background: white;
+    border-radius: 0.75rem;
+    padding: 2rem 1rem;
+    margin: 1rem 0;
+
+    h6 {
+      color: #6c757d;
+    }
+  }
+
+  .ucapan-cards {
+    .ucapan-card {
+      .card {
+        border-radius: 0.75rem;
+        transition: all 0.3s ease;
+        border: 1px solid rgba(0, 0, 0, 0.08);
+
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        .card-body {
+          padding: 1rem;
+
+          @media (min-width: 576px) {
+            padding: 1.25rem;
+          }
+        }
+
+        .user-info {
+          .card-title {
+            font-size: 1rem;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+
+            @media (min-width: 576px) {
+              font-size: 1.125rem;
+            }
+          }
+
+          .badge {
+            font-size: 0.7rem;
+            padding: 0.25rem 0.5rem;
+            font-weight: 500;
+          }
+        }
+
+        .item-number {
+          .badge {
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: 1px solid #dee2e6;
+          }
+        }
+
+        .message-content {
+          .card-text {
+            font-size: 0.875rem;
+            line-height: 1.5;
+            color: #4a5568;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-height: 3.75rem;
+
+            @media (min-width: 576px) {
+              font-size: 0.9rem;
+              -webkit-line-clamp: 2;
+              line-clamp: 2;
+              min-height: 2.7rem;
+            }
+          }
+        }
+
+        .card-footer-content {
+          padding-top: 0.75rem;
+          border-top: 1px solid rgba(0, 0, 0, 0.05);
+          margin-top: 0.75rem;
+
+          small {
+            font-size: 0.75rem;
+            color: #718096;
+            font-weight: 500;
+
+            i {
+              color: #a0aec0;
+            }
+          }
+
+          .btn {
+            min-width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.5rem;
+
+            &:hover {
+              transform: scale(1.05);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/* Responsive Typography */
+@media (max-width: 767.98px) {
+  .fs-5 {
+    font-size: 1.125rem !important;
+  }
+
+  .text-pink-500 {
+    font-size: 1.1rem !important;
+  }
+}
+
+/* Utility Classes */
+.fs-xs {
+  font-size: 0.7rem !important;
+}
+
+/* Enhanced button hover effects */
+.btn {
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-outline-pink {
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(249, 94, 162, 0.2);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+/* Loading and Empty States */
+.spinner-border {
+  @media (max-width: 767.98px) {
+    width: 2rem;
+    height: 2rem;
+  }
+}
+
+/* Responsive spacing improvements */
+@media (max-width: 575.98px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  main.container {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+
+  .bg-white.rounded-3 {
+    padding: 1.5rem !important;
+    margin-top: 2rem !important;
+  }
+}
+
+@media (min-width: 576px) and (max-width: 767.98px) {
+  .filter-section .btn-filter {
+    min-height: 55px;
+  }
+}
+
+/* Focus states for accessibility */
+.btn:focus,
+.form-control:focus {
+  outline: 2px solid rgba(249, 94, 162, 0.5);
+  outline-offset: 2px;
+}
+
+/* Touch targets for mobile */
+@media (max-width: 767.98px) {
+  .btn {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  .card {
+    cursor: pointer;
+  }
+}

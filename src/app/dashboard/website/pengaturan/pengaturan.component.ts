@@ -205,7 +205,7 @@ Kami bermaksud mengundang Bapak/Ibu/Saudara/i, teman sekaligus sahabat, untuk me
   uploadMusic(event: any): void {
     const file = event.target.files[0];
     const allowedTypes = ['audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/mp3'];
-    const maxSizeInBytes = 5 * 1024 * 1024;
+    const maxSizeInBytes = 10 * 1024 * 1024;
 
     if (!file) {
       this.selectedFileName = '';

@@ -1,230 +1,572 @@
-/* Responsive improvement for Filter Undangan toggles */
-@media (max-width: 575.98px) {
-  .card form.form-switch-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  .form-switch {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 0.5rem;
-    margin-bottom: 0.5rem;
-  }
-  .form-switch .form-check-input {
-    flex-shrink: 0;
-  }
-  .form-switch .form-check-label {
-    flex: 1 1 0;
-    min-width: 0;
-    word-break: break-word;
-  }
+/* Mobile-first responsive design for PengaturanComponent */
+
+/* Base styles - Mobile first (320px+) */
+.container-fluid {
+  padding: 0.75rem;
+  max-width: 100%;
 }
+
+.row {
+  gap: 1rem 0;
+  margin: 0;
+}
+
 .card {
-  border-radius: 1rem;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   position: relative;
-  padding: 1.5rem 2rem 4rem 2rem;
-  min-height: 320px;
+  padding: 1rem;
+  min-height: auto;
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border: 1px solid #f1f5f9;
 }
+
 .card .section-bar {
   position: absolute;
-  top: 1.5rem;
-  left: 1.5rem;
+  top: 1rem;
+  left: 1rem;
   width: 4px;
-  height: 1.75rem;
-  background-color: #f472b6; /* pink-400 */
-  border-radius: 0 0.375rem 0.375rem 0;
+  height: 1.5rem;
+  background-color: #f472b6;
+  border-radius: 0 0.25rem 0.25rem 0;
 }
+
 .card h2 {
   color: #f472b6;
   font-weight: 600;
-  font-size: 1.25rem;
-  padding-left: 1.25rem;
-  margin-bottom: 1.5rem;
+  font-size: 1rem;
+  padding-left: 1rem;
+  margin-bottom: 1rem;
+  margin-top: 0.25rem;
 }
+
+/* Form controls - Mobile optimized */
+.form-control {
+  font-size: 1rem;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid #d1d5db;
+  min-height: 44px; /* Touch target */
+  width: 100%;
+}
+
+.form-control:focus {
+  box-shadow: 0 0 0 2px rgba(244, 114, 182, 0.2);
+  border-color: #f472b6;
+  outline: none;
+}
+
+textarea.form-control {
+  font-size: 0.9rem;
+  color: #374151;
+  resize: vertical;
+  min-height: 80px;
+  line-height: 1.4;
+  margin-bottom: 1rem;
+}
+
+/* Input group styling */
+.input-group {
+  margin-bottom: 1rem;
+}
+
 .input-group-text.pink-bg {
   background-color: #f472b6;
   color: white;
   font-weight: 500;
-  border-top-left-radius: 0.375rem;
-  border-bottom-left-radius: 0.375rem;
-  border: 1px solid #ced4da;
+  border: 1px solid #f472b6;
   border-right: none;
+  font-size: 0.875rem;
+  padding: 0.75rem 0.5rem;
   white-space: nowrap;
+  min-width: fit-content;
 }
-.form-control:focus {
-  box-shadow: none;
-  border-color: #f472b6;
+
+.input-group .form-control {
+  flex: 1;
+  min-width: 0;
 }
+
+/* Toggle switches - Mobile optimized */
+.form-switch {
+  margin-bottom: 1.25rem;
+  padding: 0.5rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 50px; /* Touch target */
+  position: relative;
+}
+
+.form-switch .form-check-input {
+  width: 2.75rem;
+  height: 1.5rem;
+  margin: 0;
+  cursor: pointer;
+  flex-shrink: 0;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.form-switch .form-check-input:focus {
+  box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.2);
+  outline: none;
+}
+
+.form-switch .form-check-input:checked {
+  background-color: #007aff;
+  border-color: #007aff;
+}
+
+.form-switch .form-check-label {
+  font-weight: 500;
+  font-size: 1rem;
+  cursor: pointer;
+  margin: 0;
+  padding: 0;
+  line-height: 1.4;
+  max-width: calc(100% - 3.5rem);
+  word-wrap: break-word;
+}
+
+/* Button styling - Mobile first */
 .btn-sky {
   background-color: #38bdf8;
   color: white;
   font-weight: 600;
   border-radius: 0.5rem;
-  padding: 0.375rem 1.5rem;
-  box-shadow: 0 4px 6px rgb(56 189 248 / 0.5);
   border: none;
-  position: absolute;
-  bottom: 1.5rem;
-  right: 2rem;
-  transition: background-color 0.2s ease-in-out;
-  white-space: nowrap;
+  font-size: 1rem;
+  padding: 0.875rem 1.5rem;
+  min-height: 44px; /* Touch target */
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+  margin-top: 1.5rem;
+  box-shadow: 0 2px 4px rgba(56, 189, 248, 0.2);
+  position: static;
 }
+
 .btn-sky:hover,
 .btn-sky:focus {
   background-color: #0ea5e9;
   color: white;
   outline: none;
-  box-shadow: 0 6px 8px rgb(14 165 233 / 0.7);
+  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+  transform: translateY(-1px);
 }
-textarea.form-control {
-  font-size: 0.75rem;
-  color: #6b7280;
-  resize: none;
-}
-.form-text a {
-  font-style: italic;
-  text-decoration: underline;
-  color: #2563eb;
-}
-input[type="file"] {
-  background-color: #f472b6;
-  color: white;
-  font-weight: 600;
-  border-radius: 0.375rem;
-  padding: 0.375rem 1.5rem;
-  border: none;
-  cursor: pointer;
-}
-input[type="file"]::-webkit-file-upload-button {
-  cursor: pointer;
-  background: transparent;
-  border: none;
-  padding: 0;
-  margin: 0;
-  font-weight: 600;
-  color: white;
-}
-/* Toggle switch styling */
-.form-switch .form-check-input {
-  width: 2.25rem;
-  height: 1.25rem;
-  // margin-left: 0;
-  cursor: pointer;
-}
-.form-switch .form-check-input:focus {
+
+.btn-sky:disabled {
+  background-color: #94a3b8;
+  cursor: not-allowed;
+  transform: none;
   box-shadow: none;
 }
-.form-switch .form-check-input:checked {
-  background-color: #007aff;
-  border-color: #007aff;
-}
-.form-switch .form-check-input:checked:focus {
-  box-shadow: 0 0 0 0.25rem rgb(156 163 175 / 0.5);
-}
-.form-switch .form-check-label {
-  font-weight: 400;
-  font-size: 0.875rem;
+
+/* File input styling */
+input[type="file"] {
+  background-color: #f8fafc;
+  border: 2px dashed #cbd5e1;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  font-size: 0.9rem;
   cursor: pointer;
-  margin-left: 0.75rem;
+  min-height: 44px;
+  width: 100%;
+  margin-bottom: 1rem;
 }
 
-/* Responsive adjustments for Filter Undangan at 425px */
-@media (max-width: 425px) {
-  .card h2 {
-    font-size: 1.1rem;
-    padding-left: 1rem;
-    margin-bottom: 1rem;
+input[type="file"]::-webkit-file-upload-button {
+  background-color: #f472b6;
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  padding: 0.5rem 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  margin-right: 0.5rem;
+  font-size: 0.875rem;
+}
+
+/* Progress bar */
+.progress {
+  height: 0.75rem;
+  border-radius: 0.375rem;
+  background-color: #f1f5f9;
+}
+
+.progress-bar {
+  border-radius: 0.375rem;
+  font-size: 0.75rem;
+  line-height: 0.75rem;
+}
+
+/* Form text and links */
+.form-text {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-top: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.form-text a {
+  color: #2563eb;
+  text-decoration: underline;
+  font-style: italic;
+}
+
+/* Form label styling */
+.form-label {
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.5rem;
+  display: block;
+  font-size: 1rem;
+}
+
+/* Music file display styling */
+.d-flex.align-items-center {
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.d-flex.align-items-center span {
+  font-size: 0.875rem;
+  color: #6b7280;
+  word-break: break-all;
+}
+
+/* Additional mobile form spacing */
+@media (max-width: 767px) {
+  .form-label {
+    font-size: 0.95rem;
+    margin-bottom: 0.75rem;
   }
 
+  .form-text {
+    font-size: 0.8rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .input-group {
+    margin-bottom: 1.25rem;
+  }
+}
+
+/* Music section specific */
+.current-music-display {
+  background-color: #f8fafc;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+/* Loading states */
+.spinner-border-sm {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Mobile devices - all sizes (up to 767px) */
+@media (max-width: 767px) {
+  .btn-sky {
+    position: static !important;
+    width: 100% !important;
+    margin-top: 1.5rem !important;
+    margin-bottom: 0 !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    max-width: none !important;
+  }
+
+  .card {
+    padding: 1rem !important;
+  }
+}
+
+/* Very small mobile devices (320px - 480px) */
+@media (max-width: 480px) {
   .form-switch {
-    margin-bottom: 0.75rem !important;
-    padding: 0.25rem 0;
+    margin-bottom: 1rem;
+    padding: 0.75rem 0;
+    min-height: 54px;
   }
 
   .form-switch .form-check-input {
     width: 2.5rem;
-    height: 1.4rem;
-    margin-right: 0.75rem;
+    height: 1.375rem;
+    right: 0.25rem;
   }
 
   .form-switch .form-check-label {
     font-size: 0.95rem;
-    line-height: 1.3;
-    margin-left: 0;
+    font-weight: 500;
+    max-width: calc(100% - 3rem);
+    padding-right: 0.5rem;
   }
 
-  .d-grid .btn-sky {
+  .card {
+    padding: 0.875rem !important;
+  }
+
+  .card h2 {
     font-size: 0.95rem;
-    padding: 0.6rem 1rem;
-    margin-top: 0.5rem;
+    margin-bottom: 0.875rem;
+  }
+
+  .btn-sky {
+    font-size: 0.95rem !important;
+    padding: 0.75rem 1rem !important;
+  }
+
+  .form-control {
+    font-size: 0.95rem;
+    padding: 0.625rem;
+  }
+
+  textarea.form-control {
+    min-height: 70px;
+    font-size: 0.9rem;
   }
 }
 
-/* Responsive adjustments */
-@media (max-width: 575.98px) {
-  body {
-    padding: 0.5rem 0.25rem 1.5rem 0.25rem;
-  }
+
+
+/* Tablet breakpoint (768px+) */
+@media (min-width: 768px) {
   .container-fluid {
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
+    padding: 1rem 1.5rem;
   }
+
   .row {
-    margin-left: 0;
-    margin-right: 0;
-    gap: 1.25rem 0;
+    gap: 1.5rem;
   }
+
   .card {
-    padding: 1rem 0.5rem 2rem 0.5rem;
-    min-height: auto;
-    box-shadow: 0 0 8px rgba(0, 0, 0, 0.08);
+    padding: 1.5rem 1.5rem 4.5rem 1.5rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   }
-  .btn-sky {
-    position: static;
-    display: block;
-    width: 100%;
-    margin-top: 1rem;
-    white-space: normal;
-    text-align: center;
+
+  .card .section-bar {
+    top: 1.5rem;
+    left: 1.5rem;
+    height: 1.75rem;
+  }
+
+  .card h2 {
+    font-size: 1.25rem;
+    padding-left: 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .form-control {
     font-size: 1rem;
-    padding: 0.5rem 0.75rem;
   }
-  .card form {
-    padding-bottom: 0;
+
+  .btn-sky {
+    position: absolute;
+    width: auto;
+    min-width: 140px;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    left: auto;
+    max-width: 200px;
+    margin-top: 0;
   }
+
   .input-group-text.pink-bg {
-    font-size: 0.875rem;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
+    padding: 0.75rem 0.75rem;
+    font-size: 0.9rem;
   }
+
+  textarea.form-control {
+    min-height: 100px;
+  }
+
+  .form-switch {
+    padding: 0.5rem 0;
+    min-height: 48px;
+  }
+
+  .form-switch .form-check-input {
+    width: 2.5rem;
+    height: 1.375rem;
+    right: 0.5rem;
+  }
+
+  .form-switch .form-check-label {
+    font-size: 0.95rem;
+    max-width: calc(100% - 3.25rem);
+  }
+
+  /* Ensure proper Bootstrap grid behavior */
+  .col-md-6 {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+}
+
+/* Desktop breakpoint (1200px+) */
+@media (min-width: 1200px) {
+  .container-fluid {
+    padding: 1.5rem 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .row {
+    gap: 2rem;
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .col-md-6 {
+    flex: 0 0 calc(50% - 1rem);
+    max-width: calc(50% - 1rem);
+  }
+
+  .card {
+    padding: 2rem 2rem 5rem 2rem;
+    min-height: 360px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    height: 100%;
+  }
+
+  .card h2 {
+    font-size: 1.375rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .btn-sky {
+    padding: 0.75rem 2rem;
+    font-size: 1rem;
+    position: absolute;
+    bottom: 2rem;
+    right: 2rem;
+    left: auto;
+    width: auto;
+    min-width: 160px;
+    max-width: 200px;
+    margin-top: 0;
+  }
+
   textarea.form-control {
     font-size: 0.9rem;
-    min-height: 80px;
+    min-height: 120px;
   }
-  .form-switch .form-check-label {
-    font-size: 1rem;
-    margin-left: 3.5rem;
+
+  .form-switch {
+    padding: 0.375rem 0;
+    min-height: 46px;
   }
+
   .form-switch .form-check-input {
-    width: 2.2rem;
-    height: 1.2rem;
-    margin-left: 8px;
+    width: 2.25rem;
+    height: 1.25rem;
+    right: 1rem;
   }
-  .d-grid {
-    gap: 0.5rem;
+
+  .form-switch .form-check-label {
+    font-size: 0.9rem;
+    max-width: calc(100% - 3.5rem);
+    font-weight: 500;
   }
-  .progress {
-    min-width: 100px;
-    max-width: 100%;
-    overflow-x: auto;
+}
+
+/* Large desktop (1400px+) */
+@media (min-width: 1400px) {
+  .container-fluid {
+    max-width: 1600px;
   }
-  .d-flex {
-    flex-wrap: wrap;
-    gap: 0.5rem;
+
+  .card {
+    padding: 2.5rem 2.5rem 5.5rem 2.5rem;
+  }
+
+  .btn-sky {
+    bottom: 2.5rem;
+    right: 2.5rem;
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  .btn-sky,
+  .form-control,
+  .form-switch .form-check-input {
+    transition: none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .card {
+    border: 2px solid #374151;
+  }
+
+  .btn-sky {
+    border: 2px solid #1e40af;
+  }
+
+  .form-control:focus {
+    border: 2px solid #1e40af;
+  }
+}
+
+/* Focus management for keyboard navigation */
+.btn-sky:focus-visible,
+.form-control:focus-visible,
+.form-switch .form-check-input:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+/* Loading overlay */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  backdrop-filter: blur(2px);
+}
+
+.loading-content {
+  text-align: center;
+  padding: 2rem;
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive spacing utilities */
+.mb-responsive {
+  margin-bottom: 1rem;
+}
+
+@media (min-width: 768px) {
+  .mb-responsive {
+    margin-bottom: 1.5rem;
+  }
+}
+
+@media (min-width: 1200px) {
+  .mb-responsive {
+    margin-bottom: 2rem;
   }
 }

@@ -1,40 +1,34 @@
 <div class="gallery-container">
-  <div class="container-custom" *ngIf="hasImages(); else noGalleryTemplate">
-    <img
-      *ngFor="let item of getGalleryImages(); let i = index; trackBy: trackByGalleryId"
-      [src]="getImageUrl(item)"
-      [alt]="getImageAlt(item, i)"
-      [class]="'img-' + (i + 1)"
-      loading="lazy"
-    />
+  <!-- Loading State -->
+  <div class="loading-container" *ngIf="isLoading">
+    <div class="loading-spinner"></div>
+    <p class="loading-text">Memuat Galeri...</p>
   </div>
 
-  <ng-template #noGalleryTemplate>
-    <div class="container-custom">
+  <!-- Gallery Images from API -->
+  <div class="zigzag-gallery" *ngIf="!isLoading && hasImages()">
+    <div
+      *ngFor="let item of getGalleryImages(); let i = index; trackBy: trackByGalleryId"
+      class="gallery-item"
+      [class.left]="i % 2 === 0"
+      [class.right]="i % 2 === 1"
+      [style.--item-index]="i">
       <img
-        src="assets/default-gallery.jpg"
-        alt="Default gallery image 1"
-        class="img-1"
-        loading="lazy"
-      />
-      <img
-        src="assets/default-gallery.jpg"
-        alt="Default gallery image 2"
-        class="img-2"
-        loading="lazy"
-      />
-      <img
-        src="assets/default-gallery.jpg"
-        alt="Default gallery image 3"
-        class="img-3"
-        loading="lazy"
-      />
-      <img
-        src="assets/default-gallery.jpg"
-        alt="Default gallery image 4"
-        class="img-4"
+        [src]="getImageUrl(item)"
+        [alt]="getImageAlt(item, i)"
         loading="lazy"
       />
     </div>
-  </ng-template>
+  </div>
+
+  <!-- No Gallery Items -->
+  <div class="no-gallery" *ngIf="!isLoading && !hasImages()">
+    <div class="no-gallery-content">
+      <svg class="no-gallery-icon" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"></path>
+      </svg>
+      <h3>Belum Ada Foto</h3>
+      <p>Galeri foto akan muncul di sini setelah Anda mengunggah foto</p>
+    </div>
+  </div>
 </div>

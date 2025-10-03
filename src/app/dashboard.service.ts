@@ -151,6 +151,10 @@ export enum DashboardServiceType {
   ADMIN_PROFILE_PHOTO_DELETE,
   ADMIN_PROFILE_CHANGE_PASSWORD,
 
+  // === User Billing Endpoints ===
+  // User billing history and invoice management.
+  USER_TAGIHAN,
+
   // === Theme Management Endpoints ===
   // Admin and public theme/category management.
   THEME_ADMIN_CATEGORIES_LIST,
@@ -401,7 +405,7 @@ export class DashboardService {
       case DashboardServiceType.ACARA_SUBMIT_UPDATE_DYNAMIC:
         return `${this.BASE_URL_API}/v1/user/update-acara`;
       case DashboardServiceType.ACARA_SUBMIT_DELETE_DYNAMIC:
-        return `${this.BASE_URL_API}/v1/user/delete-countdown`;
+        return `${this.BASE_URL_API}/v1/user/delete-acara`;
 
       //SETTINGS BUNDLE ADMIN
       case DashboardServiceType.ST_BUNDLE_ADMIN:
@@ -561,6 +565,10 @@ export class DashboardService {
         return `${this.BASE_URL_API}/themes/select`;
       case DashboardServiceType.THEME_USER_SELECTED:
         return `${this.BASE_URL_API}/themes/selected`;
+
+      // User Billing
+      case DashboardServiceType.USER_TAGIHAN:
+        return `${this.BASE_URL_API}/v1/user/tagihan`;
 
       default:
         return '';
@@ -1298,6 +1306,21 @@ export interface UserSelectedThemeResponse {
     theme: Theme;
     selected_at: string;
   };
+}
+
+// === User Billing API Interfaces ===
+// Interfaces for user billing history and invoice data.
+export interface UserTagihanItem {
+  no_invoice: string;
+  tanggal_transaksi: string;
+  paket: string;
+  status: string;
+  harga: number;
+}
+
+export interface UserTagihanResponse {
+  message: string;
+  data: UserTagihanItem[];
 }
 
 // Generic API Response Interface

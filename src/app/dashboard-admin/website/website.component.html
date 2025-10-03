@@ -41,7 +41,8 @@
           </form>
         </div>
 
-        <div class="table-responsive">
+        <!-- Desktop Table View -->
+        <div class="table-responsive desktop-table-view">
           <table class="table align-middle mb-0 table-borderless">
             <thead class="thead-light">
               <tr>
@@ -83,14 +84,54 @@
                   <button type="button" class="btn btn-pink-icon rounded-3" (click)="openDeleteModal(item)" title="Hapus dengan modal lengkap">
                     <i class="fas fa-trash-alt"></i>
                   </button>
-                  <!-- Alternative: Simple delete confirmation -->
-                  <!-- <button type="button" class="btn btn-pink-icon rounded-3" (click)="showDeleteConfirmation(item)" title="Hapus dengan modal sederhana">
-                    <i class="fas fa-trash-alt"></i>
-                  </button> -->
                 </td>
               </tr>
             </tbody>
           </table>
+        </div>
+
+        <!-- Mobile Card List View -->
+        <div class="mobile-card-view">
+          <div class="category-card" *ngFor="let item of displayedData; let i = index">
+            <div class="card-header-mobile">
+              <div class="card-number">{{ i + 1 + (currentPage - 1) * pageSize }}</div>
+              <button type="button" class="btn btn-sm status-btn" [class.btn-success]="item.is_active"
+                [class.btn-secondary]="!item.is_active" (click)="toggleCategoryStatus(item)">
+                {{ item.is_active ? 'Aktif' : 'Nonaktif' }}
+              </button>
+            </div>
+
+            <div class="card-body-mobile">
+              <div class="card-image-section">
+                <img *ngIf="item.image" [src]="getImageUrl(item.image)" alt="Category Image" class="category-image-mobile">
+                <div *ngIf="!item.image" class="no-image-placeholder">
+                  <i class="fas fa-image"></i>
+                  <span>No Image</span>
+                </div>
+              </div>
+
+              <div class="card-info-section">
+                <h3 class="category-name-mobile">{{ item.nama_kategori }}</h3>
+                <p class="category-slug-mobile"><span class="label">Slug:</span> {{ item.slug }}</p>
+              </div>
+            </div>
+
+            <div class="card-actions-mobile">
+              <button type="button" class="btn-action btn-edit-mobile" (click)="openEditModal(item)">
+                <i class="fas fa-paint-brush"></i>
+                <span>Edit</span>
+              </button>
+              <button type="button" class="btn-action btn-delete-mobile" (click)="openDeleteModal(item)">
+                <i class="fas fa-trash-alt"></i>
+                <span>Hapus</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="empty-state-mobile" *ngIf="displayedData.length === 0">
+            <i class="fas fa-folder-open fa-3x"></i>
+            <p>Tidak ada data kategori</p>
+          </div>
         </div>
 
         <div class="d-flex justify-content-between align-items-center mt-4 flex-wrap gap-3">

@@ -129,7 +129,7 @@ export class MempelaiComponent implements OnInit {
 
   private validateFile(file: File): boolean {
     const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
-    const maxSize = 2 * 1024 * 1024; // 2 MB
+    const maxSize = 10 * 1024 * 1024; // 2 MB
 
     if (!allowedTypes.includes(file.type)) {
       this.notyf.error('Jenis file tidak valid. Silakan pilih file gambar (JPEG, PNG, JPG, GIF).');

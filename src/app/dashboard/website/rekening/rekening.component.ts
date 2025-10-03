@@ -194,7 +194,7 @@ export class RekeningComponent implements OnInit, OnDestroy {
   }
 
   private validateFile(file: File): boolean {
-    const maxSize = 2 * 1024 * 1024; // 2MB
+    const maxSize = 10 * 1024 * 1024; // 2MB
     const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
 
     if (file.size > maxSize) {

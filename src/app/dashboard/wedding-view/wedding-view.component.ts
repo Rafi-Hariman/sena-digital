@@ -124,6 +124,54 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  /**
+   * Get session storage key with domain scope
+   */
+  private getStorageKey(key: string): string {
+    return this.domain ? `wedding_${this.domain}_${key}` : `wedding_${key}`;
+  }
+
+  /**
+   * Save invitation opened state to session storage
+   */
+  private saveInvitationState(): void {
+    if (typeof sessionStorage !== 'undefined') {
+      sessionStorage.setItem(this.getStorageKey('invitationOpened'), 'true');
+    }
+  }
+
+  /**
+   * Save current view to session storage
+   */
+  private saveCurrentView(view: ContentView): void {
+    if (typeof sessionStorage !== 'undefined') {
+      sessionStorage.setItem(this.getStorageKey('currentView'), view);
+    }
+  }
+
+  /**
+   * Restore session state from storage
+   */
+  private restoreSessionState(): void {
+    if (typeof sessionStorage === 'undefined' || !this.domain) {
+      return;
+    }
+
+    const invitationOpenedStr = sessionStorage.getItem(this.getStorageKey('invitationOpened'));
+    const savedView = sessionStorage.getItem(this.getStorageKey('currentView'));
+
+    if (invitationOpenedStr === 'true') {
+      this.invitationOpened = true;
+      this.initializeAudio();
+
+      if (savedView && Object.values(ContentView).includes(savedView as ContentView)) {
+        this.currentView = savedView as ContentView;
+      } else {
+        this.currentView = ContentView.COUPLE;
+      }
+    }
+  }
+
 
 
 
@@ -144,13 +192,14 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // Get route params first (check if domain is passed via route)
     const routeSubscription = this.route.params.subscribe(params => {
-      const routeDomain = params['coupleName'] || params['domain'] || null; // Support both old and new param names
+      const routeDomain = params['coupleName'] || params['domain'] || null;
 
       if (routeDomain) {
         this.domain = routeDomain;
+        this.restoreSessionState();
         this.loadWeddingDataFromAPI(this.domain!);
       } else if (this.domain) {
-        // Use stored domain
+        this.restoreSessionState();
         if (this.weddingData) {
           this.updateWeddingContent(this.weddingData);
           this.loadWeddingDataFromAPI(this.domain!, true);
@@ -186,8 +235,8 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
           }
 
           this.domain = domain;
+          this.restoreSessionState();
 
-          // Now load wedding data using the domain
           this.loadWeddingDataFromAPI(domain);
 
         } catch (error) {
@@ -706,13 +755,15 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   openInvitation(): void {
+    const wasAlreadyOpened = this.invitationOpened;
     this.invitationOpened = true;
     this.setCurrentView(ContentView.COUPLE);
+    this.saveInvitationState();
+    this.initializeAudio();
 
-    // Track invitation view via attendance API
-    this.submitAttendanceView();
-
-    // Save state immediately after opening invitation
+    if (!wasAlreadyOpened) {
+      this.submitAttendanceView();
+    }
   }
 
   /**
@@ -760,6 +811,7 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
   setCurrentView(view: ContentView): void {
     this.currentView = view;
+    this.saveCurrentView(view);
   }
 
   showMessages(): void {

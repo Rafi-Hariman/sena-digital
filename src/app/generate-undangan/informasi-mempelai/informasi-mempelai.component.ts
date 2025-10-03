@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ModalUploadGaleriComponent } from '../modal-upload-galeri/modal-upload-galeri.component';
 import { DashboardService, DashboardServiceType } from '../../dashboard.service';
+import { StorageService } from '../../services/storage.service';
 import { Notyf } from 'notyf';
 
 @Component({
@@ -30,7 +31,8 @@ export class InformasiMempelaiComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private modalSvc: BsModalService,
-    private dashboardSvc: DashboardService
+    private dashboardSvc: DashboardService,
+    private storageService: StorageService
   ) {
     this.notyf = new Notyf({
       duration: 3000,
@@ -38,60 +40,82 @@ export class InformasiMempelaiComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    this.formGroup = this.fb.group({
-      name_lengkap_pria: ['', Validators.required],
-      name_panggilan_pria: ['', Validators.required],
-      ayah_pria: ['', Validators.required],
-      ibu_pria: ['', Validators.required],
-      name_lengkap_wanita: ['', Validators.required],
-      name_panggilan_wanita: ['', Validators.required],
-      ayah_wanita: ['', Validators.required],
-      ibu_wanita: ['', Validators.required],
-      user_id: ['', Validators.required],
-      status: [1],
-      photo_pria: [null],
-      photo_wanita: [null],
-      cover_photo: [null]
-    });
-
-    const step1LocalStorage = localStorage.getItem('formData');
-    if (step1LocalStorage) {
-      const allDataFromSteps = JSON.parse(step1LocalStorage);
-      const userID = allDataFromSteps?.registrasi?.response?.user?.id;
-      this.userId = userID;
-      this.formGroup.patchValue({
-        user_id: userID
+  async ngOnInit(): Promise<void> {
+    try {
+      // Initialize form
+      this.formGroup = this.fb.group({
+        name_lengkap_pria: ['', Validators.required],
+        name_panggilan_pria: ['', Validators.required],
+        ayah_pria: ['', Validators.required],
+        ibu_pria: ['', Validators.required],
+        name_lengkap_wanita: ['', Validators.required],
+        name_panggilan_wanita: ['', Validators.required],
+        ayah_wanita: ['', Validators.required],
+        ibu_wanita: ['', Validators.required],
+        user_id: ['', Validators.required],
+        status: [1],
+        photo_pria: [null],
+        photo_wanita: [null],
+        cover_photo: [null]
       });
+
+      // Get user ID safely
+      const userID = this.storageService.getUserId();
+      if (userID) {
+        this.userId = userID;
+        this.formGroup.patchValue({ user_id: userID });
+      }
+
+      // Load existing form data
+      const existingFormData = this.storageService.getFormData();
+      if (existingFormData?.informasiMempelai?.updatedData) {
+        this.formGroup.patchValue(existingFormData.informasiMempelai.updatedData);
+      }
+
+      // Load image previews from IndexedDB
+      await this.loadImagePreviews(existingFormData?.informasiMempelai?.updatedData);
+
+      // Migrate existing localStorage images if needed
+      await this.storageService.migrateExistingImages();
+    } catch (error) {
+      console.error('Error initializing component:', error);
+      this.notyf.error('Gagal memuat data. Silakan refresh halaman.');
     }
-
-    const existingFormData = JSON.parse(localStorage.getItem('formData') || '{}');
-    if (existingFormData.informasiMempelai) {
-      this.formGroup.patchValue(existingFormData.informasiMempelai.updatedData);
-      console.log(existingFormData.informasiMempelai);
-
-    }
-    this.imagePreviews = {
-      photo_pria: existingFormData?.informasiMempelai?.updatedData?.photo_pria
-        ? 'data:image/jpeg;base64,' + existingFormData?.informasiMempelai?.updatedData?.photo_pria
-        : null,
-      photo_wanita: existingFormData?.informasiMempelai?.updatedData?.photo_wanita
-        ? 'data:image/jpeg;base64,' + existingFormData?.informasiMempelai?.updatedData?.photo_wanita
-        : null,
-      cover_photo: existingFormData?.informasiMempelai?.updatedData?.cover_photo
-        ? 'data:image/jpeg;base64,' + existingFormData?.informasiMempelai?.updatedData.cover_photo
-        : null
-    };
-
-
   }
 
-  onFileSelected(event: any, controlName: string) {
+  private async loadImagePreviews(updatedData: any): Promise<void> {
+    const imageFields = ['photo_pria', 'photo_wanita', 'cover_photo'];
+
+    for (const field of imageFields) {
+      try {
+        if (updatedData?.[`${field}_stored`]) {
+          // Load from IndexedDB
+          const storedImage = await this.storageService.getImage(field);
+          if (storedImage) {
+            this.imagePreviews[field] = `data:image/jpeg;base64,${storedImage}`;
+          }
+        } else if (updatedData?.[field]) {
+          // Handle legacy base64 data
+          this.imagePreviews[field] = `data:image/jpeg;base64,${updatedData[field]}`;
+
+          // Migrate to IndexedDB
+          await this.storageService.setImage(field, updatedData[field]);
+        } else {
+          this.imagePreviews[field] = null;
+        }
+      } catch (error) {
+        console.error(`Error loading ${field}:`, error);
+        this.imagePreviews[field] = null;
+      }
+    }
+  }
+
+  onFileSelected(event: any, controlName: string): void {
     const file = event.target.files?.[0];
     if (!file) return;
 
     const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
-    const maxSize = 2 * 1024 * 1024; // 2MB
+    const maxSize = 10 * 1024 * 1024; // 10MB
 
     if (!allowedTypes.includes(file.type)) {
       this.notyf.error('Format gambar tidak didukung. Gunakan PNG atau JPG.');
@@ -99,46 +123,115 @@ export class InformasiMempelaiComponent implements OnInit {
     }
 
     if (file.size > maxSize) {
-      this.notyf.error('Ukuran file maksimal 2MB.');
+      this.notyf.error('Ukuran file maksimal 10MB.');
       return;
     }
 
     const reader = new FileReader();
-    reader.onload = () => {
-      const base64String = reader.result as string;
-      this.imagePreviews[controlName] = base64String;
-      this.formGroup.patchValue({ [controlName]: base64String.split(',')[1] });
-      const existingFormData = JSON.parse(localStorage.getItem('formData') || '{}');
-      const updatedFormData = {
-        ...existingFormData,
-        informasiMempelai: {
-          ...existingFormData.informasiMempelai,
-          ...this.formGroup.value
+    reader.onload = async () => {
+      try {
+        const base64String = reader.result as string;
+        const base64Data = base64String.split(',')[1];
+
+        // Store image in IndexedDB
+        const stored = await this.storageService.setImage(controlName, base64Data, file.type);
+
+        if (stored) {
+          this.imagePreviews[controlName] = base64String;
+          this.formGroup.patchValue({ [controlName]: base64Data });
+
+          // Update form data without storing the actual image data
+          await this.updateFormDataSafely();
+        } else {
+          this.notyf.error('Gagal menyimpan gambar. Silakan coba lagi.');
         }
-      };
-      localStorage.setItem('formData', JSON.stringify(updatedFormData));
+      } catch (error) {
+        console.error('Error processing file:', error);
+        this.notyf.error('Gagal memproses gambar.');
+      }
     };
     reader.readAsDataURL(file);
   }
 
+  private async updateFormDataSafely(): Promise<void> {
+    try {
+      const formValue = this.formGroup.value;
+      const existingFormData = this.storageService.getFormData();
 
-  onNext() {
-    this.modalRef = this.modalSvc.show(ModalUploadGaleriComponent, {
-      initialState: { formData: { ...this.formGroup.value } },
-      class: 'modal-lg'
-    });
+      // Create updated data without large base64 images
+      const updatedData = { ...formValue };
 
-    this.modalRef.content?.formDataChange.subscribe((updatedData: any) => {
-      this.formGroup.patchValue(updatedData);
-      const data = {
-        updatedData: updatedData,
+      // Mark images as stored in IndexedDB instead of including base64 data
+      ['photo_pria', 'photo_wanita', 'cover_photo'].forEach(field => {
+        if (updatedData[field] && typeof updatedData[field] === 'string' && updatedData[field].length > 1000) {
+          updatedData[`${field}_stored`] = true;
+          delete updatedData[field]; // Remove large base64 data
+        }
+      });
+
+      const updatedFormData = {
+        ...existingFormData,
+        informasiMempelai: {
+          ...existingFormData.informasiMempelai,
+          updatedData
+        }
       };
-      const existingFormData = JSON.parse(localStorage.getItem('formData') || '{}');
-      existingFormData.informasiMempelai = this.formGroup.value;
-      existingFormData.step = 3;
-      localStorage.setItem('formData', JSON.stringify(existingFormData));
-      this.next.emit(data);
-    });
+
+      const success = this.storageService.setFormData(updatedFormData);
+      if (!success) {
+        console.warn('Failed to store form data in localStorage');
+      }
+    } catch (error) {
+      console.error('Error updating form data:', error);
+    }
+  }
+
+
+  onNext(): void {
+    try {
+      this.modalRef = this.modalSvc.show(ModalUploadGaleriComponent, {
+        initialState: { formData: { ...this.formGroup.value } },
+        class: 'modal-lg'
+      });
+
+      this.modalRef.content?.formDataChange.subscribe(async (updatedData: any) => {
+        try {
+          this.formGroup.patchValue(updatedData);
+
+          const data = {
+            updatedData: updatedData,
+          };
+
+          // Update storage safely
+          const existingFormData = this.storageService.getFormData();
+          const updatedFormData = {
+            ...existingFormData,
+            informasiMempelai: {
+              ...existingFormData.informasiMempelai,
+              updatedData: {
+                ...this.formGroup.value,
+                // Mark photos as stored if they exist
+                photo_stored: !!updatedData.photo
+              }
+            },
+            step: 3
+          };
+
+          const success = this.storageService.setFormData(updatedFormData);
+          if (!success) {
+            console.warn('Failed to store updated form data');
+          }
+
+          this.next.emit(data);
+        } catch (error) {
+          console.error('Error handling modal data change:', error);
+          this.notyf.error('Gagal menyimpan data.');
+        }
+      });
+    } catch (error) {
+      console.error('Error opening modal:', error);
+      this.notyf.error('Gagal membuka modal.');
+    }
   }
 
   onBack() {
