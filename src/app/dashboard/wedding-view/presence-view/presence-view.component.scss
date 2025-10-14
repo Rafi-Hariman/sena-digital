@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap");
 
+// Mobile First Approach
 :host {
   display: block;
   width: 100%;
@@ -7,57 +8,55 @@
   font-family: "Open Sans", sans-serif;
   position: relative;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 .presence-container {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: calc(100vh - 120px); /* Account for bottom navbar */
-  padding: 2rem 1rem;
+  min-height: calc(100vh - 80px);
+  padding: 20px 15px;
+  padding-bottom: 100px;
   box-sizing: border-box;
-
-  /* Responsive padding to avoid side icons */
-  // padding-right: clamp(1rem, 8vw, 6rem);
-  padding-left: 1rem;
-  padding-bottom: clamp(6rem, 12vh, 8rem); /* Dynamic bottom padding */
 }
 
 .form-container {
-    background: linear-gradient(135deg, #E0DADE 0%, #E0DADE 100%);
-
-  border-radius: 20px;
-  padding: 40px 35px;
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+  background: linear-gradient(135deg, #E0DADE 0%, #E0DADE 100%);
+  border-radius: 16px;
+  padding: 30px 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 480px;
+  max-width: calc(100vw - 30px);
   backdrop-filter: blur(15px);
   border: 1px solid rgba(255, 255, 255, 0.2);
   position: relative;
   z-index: 10;
 
-  /* Responsive max-width */
-  max-width: min(480px, calc(100vw - 140px)); /* Account for side icons */
-
   // Entry animation - fade in with subtle scale
   opacity: 0;
   animation: fadeInScale 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   animation-delay: 0s;
+  will-change: opacity, transform;
 }
 
 .form-title {
-  font-size: clamp(24px, 5vw, 32px);
+  font-size: 24px;
   font-weight: 600;
   color: #2c5530;
   text-align: center;
-  margin-bottom: 35px;
+  margin-bottom: 30px;
   letter-spacing: 0.5px;
   line-height: 1.2;
+  word-break: break-word;
 
   // Entry animation - fade in after container
   opacity: 0;
   animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   animation-delay: 0.2s;
+  will-change: opacity;
 }
 
 .confirmation-form {
@@ -65,7 +64,7 @@
 }
 
 .form-group {
-  margin-bottom: 25px;
+  margin-bottom: 20px;
   position: relative;
   transition: transform 0.2s ease;
 
@@ -73,15 +72,15 @@
   opacity: 0;
   animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 
-  &:nth-child(2) { // Name field
+  &:nth-child(2) {
     animation-delay: 0.4s;
   }
 
-  &:nth-child(3) { // Attendance field
+  &:nth-child(3) {
     animation-delay: 0.6s;
   }
 
-  &:nth-child(4) { // Message field
+  &:nth-child(4) {
     animation-delay: 0.8s;
   }
 }
@@ -92,10 +91,10 @@
 
 .form-label {
   display: block;
-  font-size: clamp(16px, 3.5vw, 18px);
+  font-size: 15px;
   font-weight: 500;
   color: #5a5a5a;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   letter-spacing: 0.3px;
 }
 
@@ -103,17 +102,20 @@
 .form-select,
 .form-textarea {
   width: 100%;
-  padding: 14px 18px;
+  padding: 13px 16px;
   border: none;
-  border-radius: 12px;
+  border-radius: 10px;
   background: rgba(255, 255, 255, 0.8);
-  font-size: clamp(14px, 3vw, 16px);
+  font-size: 14px;
   font-family: "Open Sans", sans-serif;
   color: #333;
   box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
   outline: none;
   box-sizing: border-box;
+  min-height: 44px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .form-input:focus,
@@ -155,8 +157,8 @@
 
 .form-textarea {
   resize: vertical;
-  min-height: 100px;
-  max-height: 180px;
+  min-height: 90px;
+  max-height: 150px;
   line-height: 1.5;
 }
 
@@ -165,23 +167,28 @@
   background: linear-gradient(135deg, #c77777 0%, #b85c5c 100%);
   color: white;
   border: none;
-  border-radius: 12px;
-  padding: 16px 30px;
-  font-size: clamp(16px, 3.5vw, 18px);
+  border-radius: 10px;
+  padding: 14px 25px;
+  font-size: 15px;
   font-weight: 600;
   font-family: "Open Sans", sans-serif;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 8px 25px rgba(199, 119, 119, 0.3);
+  box-shadow: 0 6px 20px rgba(199, 119, 119, 0.3);
   letter-spacing: 0.5px;
-  margin-top: 15px;
+  margin-top: 12px;
   position: relative;
   overflow: hidden;
+  min-height: 48px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
 
   // Entry animation - final fade in with subtle scale
   opacity: 0;
   animation: fadeInScale 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   animation-delay: 1.0s;
+  will-change: opacity, transform;
 }
 
 .submit-button:hover:not(:disabled) {
@@ -202,23 +209,34 @@
   background: linear-gradient(135deg, #a0a0a0 0%, #888888 100%);
 }
 
-/* Mobile Optimizations (768px and below) */
-@media (max-width: 768px) {
+.submit-button:focus-visible {
+  outline: 2px solid #c77777;
+  outline-offset: 2px;
+}
+
+/* Progressive Enhancement - Tablet and larger */
+@media (min-width: 481px) {
   .presence-container {
-    padding: 1.5rem 0.75rem;
-    // padding-right: clamp(0.75rem, 12vw, 5rem); /* More space for side icons */
-    padding-bottom: clamp(5rem, 15vh, 7rem);
+    padding: 30px 20px;
+    padding-bottom: 120px;
     min-height: calc(100vh - 100px);
   }
 
   .form-container {
-    padding: 35px 25px;
-    border-radius: 16px;
-    max-width: calc(100vw - 120px); /* Account for side icons on mobile */
+    padding: 35px 30px;
+    border-radius: 18px;
+    max-width: 450px;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
   }
 
   .form-title {
-    margin-bottom: 30px;
+    font-size: 28px;
+    margin-bottom: 35px;
+  }
+
+  .form-label {
+    font-size: 16px;
+    margin-bottom: 10px;
   }
 
   .form-group {
@@ -228,63 +246,170 @@
   .form-input,
   .form-select,
   .form-textarea {
-    padding: 13px 16px;
-    border-radius: 10px;
+    padding: 14px 18px;
+    font-size: 15px;
+    border-radius: 11px;
   }
 
   .form-textarea {
-    min-height: 90px;
-    max-height: 150px;
+    min-height: 95px;
+    max-height: 160px;
   }
 
   .submit-button {
-    padding: 15px 25px;
-    border-radius: 10px;
+    padding: 15px 30px;
+    font-size: 16px;
+    border-radius: 11px;
+    margin-top: 15px;
   }
 }
 
-/* Tablet Specific (769px to 1024px) */
-@media (min-width: 769px) and (max-width: 1024px) {
+@media (min-width: 769px) {
   .presence-container {
-    padding: 2rem 1.5rem;
-    // padding-right: clamp(1.5rem, 10vw, 7rem);
-    padding-bottom: clamp(6rem, 14vh, 8rem);
+    padding: 40px 20px;
+    padding-bottom: 140px;
+    min-height: calc(100vh - 120px);
   }
 
   .form-container {
-    padding: 45px 40px;
-    max-width: min(500px, calc(100vw - 160px));
+    padding: 40px 35px;
+    border-radius: 20px;
+    max-width: 480px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
   }
 
   .form-title {
+    font-size: 32px;
     margin-bottom: 40px;
   }
-}
 
-/* Small Mobile (480px and below) */
-@media (max-width: 480px) {
-  .presence-container {
-    padding: 1rem 0.5rem;
-    // padding-right: clamp(0.5rem, 15vw, 4rem);
-    padding-bottom: clamp(4rem, 18vh, 6rem);
-    min-height: calc(100vh - 80px);
-  }
-
-  .form-container {
-    padding: 30px 20px;
-    border-radius: 12px;
-    max-width: calc(100vw - 100px);
+  .form-label {
+    font-size: 17px;
   }
 
   .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 25px;
+  }
+
+  .form-input,
+  .form-select,
+  .form-textarea {
+    padding: 15px 20px;
+    font-size: 16px;
+    border-radius: 12px;
+  }
+
+  .form-textarea {
+    min-height: 100px;
+    max-height: 180px;
+  }
+
+  .submit-button {
+    padding: 16px 32px;
+    font-size: 17px;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(199, 119, 119, 0.3);
+  }
+}
+
+@media (min-width: 1024px) {
+  .form-title {
+    font-size: 34px;
+  }
+
+  .form-label {
+    font-size: 18px;
+  }
+
+  .form-input,
+  .form-select,
+  .form-textarea {
+    font-size: 17px;
+  }
+
+  .submit-button {
+    font-size: 18px;
+  }
+}
+
+/* Mobile-specific optimizations */
+@media (max-width: 480px) {
+  .presence-container {
+    padding: 18px 12px;
+    padding-bottom: 90px;
+  }
+
+  .form-container {
+    padding: 25px 18px;
+    border-radius: 14px;
+  }
+
+  .form-title {
+    font-size: 22px;
+    margin-bottom: 25px;
+  }
+
+  .form-label {
+    font-size: 14px;
+  }
+
+  .form-group {
+    margin-bottom: 18px;
   }
 
   .form-input,
   .form-select,
   .form-textarea {
     padding: 12px 15px;
-    border-radius: 8px;
+    font-size: 13px;
+    border-radius: 9px;
+  }
+
+  .form-textarea {
+    min-height: 85px;
+    max-height: 130px;
+  }
+
+  .submit-button {
+    padding: 13px 22px;
+    font-size: 14px;
+    border-radius: 9px;
+  }
+
+  // Optimize animations for mobile performance
+  .form-container,
+  .form-title,
+  .form-group,
+  .submit-button {
+    animation-duration: 0.6s;
+  }
+}
+
+@media (max-width: 360px) {
+  .presence-container {
+    padding: 15px 10px;
+    padding-bottom: 80px;
+  }
+
+  .form-container {
+    padding: 22px 15px;
+    border-radius: 12px;
+  }
+
+  .form-title {
+    font-size: 20px;
+    margin-bottom: 22px;
+  }
+
+  .form-group {
+    margin-bottom: 16px;
+  }
+
+  .form-input,
+  .form-select,
+  .form-textarea {
+    padding: 11px 14px;
+    font-size: 13px;
   }
 
   .form-textarea {
@@ -293,32 +418,8 @@
   }
 
   .submit-button {
-    padding: 14px 20px;
-    border-radius: 8px;
-  }
-}
-
-/* Extra Small Mobile (360px and below) */
-@media (max-width: 360px) {
-  .presence-container {
-    padding: 0.75rem 0.25rem;
-    // padding-right: clamp(0.25rem, 18vw, 3rem);
-    padding-bottom: clamp(3rem, 20vh, 5rem);
-  }
-
-  .form-container {
-    padding: 25px 15px;
-    max-width: calc(100vw - 80px);
-  }
-
-  .form-input,
-  .form-select,
-  .form-textarea {
-    padding: 11px 14px;
-  }
-
-  .submit-button {
-    padding: 13px 18px;
+    padding: 12px 20px;
+    font-size: 13px;
   }
 }
 

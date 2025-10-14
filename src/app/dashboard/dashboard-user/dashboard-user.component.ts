@@ -152,12 +152,15 @@ export class DashboardUserComponent implements OnInit, OnDestroy {
   }
 
   logout(): void {
-    this.DashBoardSvc.create(DashboardServiceType.USER_LOGOUT, '').subscribe(
-      () => {
-        localStorage.removeItem('access_token')
-        this.router.navigate(['']);
+    console.log('User logout initiated...');
+    this.DashBoardSvc.performComprehensiveLogout().subscribe({
+      next: (response) => {
+        console.log('User logout completed:', response);
       },
-    );
+      error: (error) => {
+        console.error('User logout error (continuing with cleanup):', error);
+      }
+    });
   }
 
 
@@ -233,7 +236,7 @@ export class DashboardUserComponent implements OnInit, OnDestroy {
       return this.userData.profile_photo_url;
     }
     // Default avatar if no profile photo
-    return 'assets/logos.png';
+    return 'assets/wom.png';
   }
 
   /**

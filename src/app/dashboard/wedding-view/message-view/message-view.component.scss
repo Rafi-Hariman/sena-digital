@@ -1,20 +1,23 @@
+// Mobile First Approach
 .message-container {
-  padding: 1rem;
+  padding: 15px;
   max-width: 1200px;
   margin: 0 auto;
   height: 100vh;
   display: flex;
   flex-direction: column;
-  padding-bottom: 120px; // Space for bottom navbar
+  padding-bottom: 90px;
+  box-sizing: border-box;
 }
 
 .message-title {
   text-align: center;
-  margin-bottom: 1rem;
-  font-size: 2rem;
+  margin-bottom: 20px;
+  font-size: 24px;
   font-weight: bold;
   color: #333;
   flex-shrink: 0;
+  word-break: break-word;
 }
 
 .messages-scroll-container {
@@ -23,6 +26,9 @@
   overflow-x: hidden;
   padding-right: 4px;
   margin-right: -4px;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+  will-change: scroll-position;
 
   // Custom scrollbar styling
   &::-webkit-scrollbar {
@@ -55,25 +61,13 @@
 
 .message-wrapper {
   display: flex;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   width: 100%;
+  justify-content: center;
 
-  &.message-left {
-    justify-content: flex-start;
-
-    .message-card {
-      margin-right: auto;
-      margin-left: 0;
-    }
-  }
-
-  &.message-right {
-    justify-content: flex-end;
-
-    .message-card {
-      margin-left: auto;
-      margin-right: 0;
-    }
+  .message-card {
+    margin: 0;
+    max-width: 100%;
   }
 }
 
@@ -81,37 +75,35 @@
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 16px;
-  padding: 1.5rem;
+  border-radius: 12px;
+  padding: 1rem;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 450px;
   position: relative;
   transition: all 0.3s ease;
-
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-  }
+  touch-action: pan-y;
+  -webkit-tap-highlight-color: transparent;
+  will-change: transform;
 }
 
 .message-header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.75rem;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+  gap: 0.25rem;
 }
 
 .guest-name {
   font-weight: bold;
-  font-size: 1.1rem;
+  font-size: 1rem;
   color: #2c3e50;
+  word-break: break-word;
 }
 
 .message-date {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: #7f8c8d;
 }
 
@@ -120,16 +112,18 @@
   color: #2980b9;
   padding: 0.25rem 0.75rem;
   border-radius: 20px;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 500;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
   display: inline-block;
+  word-break: break-word;
 }
 
 .message-content {
   line-height: 1.6;
   color: #34495e;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
+  word-break: break-word;
 }
 
 .no-messages {
@@ -147,70 +141,110 @@
   }
 }
 
-// Responsive Design
-@media (max-width: 768px) {
+// Progressive Enhancement - Tablet and larger
+@media (min-width: 481px) {
   .message-container {
-    padding: 0.5rem;
-    padding-bottom: 100px; // Adjusted for mobile navbar
+    padding: 20px;
+    padding-bottom: 100px;
   }
 
   .message-title {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
+    font-size: 28px;
+    margin-bottom: 25px;
   }
 
   .message-wrapper {
-    &.message-left,
-    &.message-right {
-      justify-content: center;
-
-      .message-card {
-        margin: 0;
-        max-width: 100%;
-      }
-    }
+    margin-bottom: 2rem;
   }
 
   .message-card {
-    padding: 1rem;
+    padding: 1.25rem;
+    border-radius: 14px;
   }
 
   .message-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.25rem;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    gap: 0.5rem;
   }
 
   .guest-name {
-    font-size: 1rem;
+    font-size: 1.05rem;
   }
 
   .message-date {
+    font-size: 0.85rem;
+  }
+
+  .attendance-status {
     font-size: 0.8rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .message-container {
-    padding: 0.25rem;
-    padding-bottom: 90px; // Adjusted for smaller mobile navbar
-  }
-
-  .message-title {
-    font-size: 1.25rem;
-  }
-
-  .message-card {
-    padding: 0.75rem;
-    border-radius: 12px;
+    margin-bottom: 0.875rem;
   }
 
   .message-content {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
+  }
+}
+
+@media (min-width: 769px) {
+  .message-container {
+    padding: 25px;
+    padding-bottom: 110px;
+  }
+
+  .message-title {
+    font-size: 32px;
+    margin-bottom: 30px;
+  }
+
+  .message-card {
+    padding: 1.5rem;
+    border-radius: 16px;
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  .guest-name {
+    font-size: 1.1rem;
+  }
+
+  .message-content {
+    font-size: 0.95rem;
+  }
+
+  // Reintroduce alternating layout on desktop
+  .message-wrapper {
+    &.message-left {
+      justify-content: flex-start;
+
+      .message-card {
+        margin-right: auto;
+        margin-left: 0;
+      }
+    }
+
+    &.message-right {
+      justify-content: flex-end;
+
+      .message-card {
+        margin-left: auto;
+        margin-right: 0;
+      }
+    }
   }
 }
 
 @media (min-width: 1024px) {
+  .message-container {
+    padding: 30px;
+    padding-bottom: 120px;
+  }
+
   .message-wrapper {
     &.message-left .message-card {
       margin-left: 5%;
@@ -219,5 +253,83 @@
     &.message-right .message-card {
       margin-right: 5%;
     }
+  }
+}
+
+// Mobile-specific optimizations
+@media (max-width: 480px) {
+  .message-container {
+    padding: 12px;
+    padding-bottom: 85px;
+  }
+
+  .message-title {
+    font-size: 22px;
+    margin-bottom: 18px;
+  }
+
+  .message-wrapper {
+    margin-bottom: 1.25rem;
+  }
+
+  .message-card {
+    padding: 0.875rem;
+    border-radius: 10px;
+  }
+
+  .guest-name {
+    font-size: 0.95rem;
+  }
+
+  .message-date {
+    font-size: 0.75rem;
+  }
+
+  .attendance-status {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.65rem;
+    margin-bottom: 0.65rem;
+  }
+
+  .message-content {
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .message-container {
+    padding: 10px;
+    padding-bottom: 80px;
+  }
+
+  .message-title {
+    font-size: 20px;
+    margin-bottom: 16px;
+  }
+
+  .message-card {
+    padding: 0.75rem;
+    border-radius: 10px;
+  }
+
+  .guest-name {
+    font-size: 0.9rem;
+  }
+
+  .message-content {
+    font-size: 0.85rem;
+  }
+}
+
+// Reduced motion accessibility
+@media (prefers-reduced-motion: reduce) {
+  .message-card,
+  .messages-scroll-container {
+    transition: none;
+    will-change: auto;
+  }
+
+  .message-card:hover {
+    transform: none;
   }
 }

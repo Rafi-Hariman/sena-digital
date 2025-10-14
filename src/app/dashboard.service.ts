@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { tap, finalize, catchError } from 'rxjs/operators';
 import { environment } from '../environments/environment';
 
 
@@ -179,6 +179,16 @@ export enum DashboardServiceType {
   THEME_USER_SELECTED,
   DELETE_REKENING_ADMIN,
   UPDATE_REKENING_ADMIN,
+
+  // === Admin Contact Settings Endpoints ===
+  // Manages admin contact information for customer support.
+  ADMIN_CONTACT_SETTINGS_GET,
+  ADMIN_CONTACT_SETTINGS_UPDATE,
+  ADMIN_CONTACT_SETTINGS_DELETE,
+
+  // === User Contact Settings Endpoints ===
+  // Allows users to view admin contact information.
+  USER_CONTACT_SETTINGS_GET,
 }
 
 // Testimonial Interfaces
@@ -570,6 +580,18 @@ export class DashboardService {
       case DashboardServiceType.USER_TAGIHAN:
         return `${this.BASE_URL_API}/v1/user/tagihan`;
 
+      // Admin Contact Settings
+      case DashboardServiceType.ADMIN_CONTACT_SETTINGS_GET:
+        return `${this.BASE_URL_API}/v1/admin/contact-settings`;
+      case DashboardServiceType.ADMIN_CONTACT_SETTINGS_UPDATE:
+        return `${this.BASE_URL_API}/v1/admin/contact-settings`;
+      case DashboardServiceType.ADMIN_CONTACT_SETTINGS_DELETE:
+        return `${this.BASE_URL_API}/v1/admin/contact-settings`;
+
+      // User Contact Settings
+      case DashboardServiceType.USER_CONTACT_SETTINGS_GET:
+        return `${this.BASE_URL_API}/v1/user/contact-settings`;
+
       default:
         return '';
 
@@ -585,6 +607,70 @@ export class DashboardService {
         localStorage.setItem('access_token', response.access_token);
       })
     );
+  }
+
+  /**
+   * Comprehensive logout method that clears all authentication state
+   * and forces a complete page refresh to prevent role confusion
+   */
+  performComprehensiveLogout(): Observable<any> {
+    // Create logout observable with proper error handling
+    const logoutRequest = this.httpSvc.post(this.getUrl(DashboardServiceType.USER_LOGOUT), {}).pipe(
+      finalize(() => {
+        // Always execute cleanup regardless of API success/failure
+        this.clearAllAuthenticationState();
+        // Force complete page reload to reset all Angular services and cached state
+        setTimeout(() => {
+          window.location.href = '/login';
+        }, 100);
+      }),
+      catchError((error: any) => {
+        console.warn('Logout API failed, but continuing with local cleanup:', error);
+        // Don't throw error, just log it and continue with cleanup
+        return of({ message: 'Logout completed locally' });
+      })
+    );
+
+    return logoutRequest;
+  }
+
+  /**
+   * Clear all browser authentication state comprehensively
+   */
+  private clearAllAuthenticationState(): void {
+    try {
+      // Clear all localStorage items
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('formData');
+      localStorage.removeItem('formRegis');
+      localStorage.removeItem('profileUpdated');
+
+      // Clear all sessionStorage items
+      sessionStorage.clear();
+
+      // Clear any authentication-related cookies by setting them to expire
+      document.cookie.split(";").forEach(cookie => {
+        const eqPos = cookie.indexOf("=");
+        const name = eqPos > -1 ? cookie.substr(0, eqPos).trim() : cookie.trim();
+        if (name) {
+          document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+          document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=.${window.location.hostname}`;
+        }
+      });
+
+      // Clear any cached HTTP requests
+      if ('caches' in window) {
+        caches.keys().then(names => {
+          names.forEach(name => {
+            caches.delete(name);
+          });
+        });
+      }
+
+      console.log('All authentication state cleared successfully');
+    } catch (error) {
+      console.error('Error during authentication state cleanup:', error);
+    }
   }
 
   // === Profile Management Methods ===
@@ -1321,6 +1407,53 @@ export interface UserTagihanItem {
 export interface UserTagihanResponse {
   message: string;
   data: UserTagihanItem[];
+}
+
+// === Admin Contact Settings API Interfaces ===
+// Interfaces for managing admin contact settings.
+export interface AdminContactSettingsData {
+  id: number;
+  host_email: string | null;
+  email: string | null;
+  whatsapp: string | null;
+  whatsapp_token: string | null;
+  whatsapp_message: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface AdminContactSettingsResponse {
+  success: boolean;
+  message: string;
+  data: AdminContactSettingsData | null;
+}
+
+export interface AdminContactSettingsUpdateRequest {
+  host_email?: string | null;
+  email?: string | null;
+  whatsapp?: string | null;
+  email_password?: string | null;
+  whatsapp_token?: string | null;
+  whatsapp_message?: string | null;
+}
+
+export interface AdminContactSettingsDeleteResponse {
+  success: boolean;
+  message: string;
+}
+
+// === User Contact Settings API Interfaces ===
+// Interfaces for users to view admin contact information.
+export interface UserContactSettingsData {
+  email: string | null;
+  whatsapp: string | null;
+  whatsapp_message: string | null;
+}
+
+export interface UserContactSettingsResponse {
+  success: boolean;
+  message: string;
+  data: UserContactSettingsData | null;
 }
 
 // Generic API Response Interface

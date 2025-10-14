@@ -1,115 +1,130 @@
-// Wedding invitation component with elegant entry animations
+// Mobile-First Responsive Design with elegant entry animations
 :host {
   font-family: "Open Sans", sans-serif;
   display: block;
   width: 100%;
   box-sizing: border-box;
-  padding: clamp(40px, 8vw, 60px) clamp(15px, 4vw, 20px);
+  padding: 30px 12px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 .invitation-container {
-  max-width: 600px;
+  max-width: 100%;
   width: 100%;
   text-align: center;
-  padding: clamp(25px, 6vw, 40px) clamp(15px, 4vw, 30px);
-  line-height: 1.6;
+  padding: 20px 12px;
+  line-height: 1.5;
   box-sizing: border-box;
   margin: 0 auto;
 }
 
 .opening-text {
-  font-size: clamp(15px, 3.5vw, 18px);
+  font-size: 15px;
   color: #5a5a5a;
   font-weight: 400;
-  margin-bottom: clamp(25px, 6vw, 40px);
-  line-height: 1.5;
+  margin-bottom: 22px;
+  line-height: 1.4;
   letter-spacing: 0.3px;
+  word-break: break-word;
 
   // Entry animation - fade in only (no transform)
   opacity: 0;
   animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   animation-delay: 0s;
+  will-change: opacity;
 }
 
 .dots {
-  font-size: clamp(20px, 4vw, 24px);
+  font-size: 20px;
   color: #666;
-  margin-bottom: clamp(20px, 5vw, 30px);
-  letter-spacing: clamp(6px, 1.5vw, 8px);
+  margin-bottom: 18px;
+  letter-spacing: 6px;
 
   // Entry animation - subtle scale only
   opacity: 0;
   animation: fadeInScale 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   animation-delay: 0.3s;
+  will-change: opacity, transform;
 }
 
 .groom-name {
   font-family: "Dancing Script", cursive;
-  font-size: clamp(42px, 10vw, 72px);
+  font-size: 38px;
   font-weight: 600;
   color: #2c5530;
-  margin-bottom: 15px;
-  line-height: 1;
-  letter-spacing: 2px;
+  margin-bottom: 12px;
+  line-height: 1.1;
+  letter-spacing: 1px;
+  word-break: break-word;
 
   // Entry animation - fade in only
   opacity: 0;
   animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   animation-delay: 0.6s;
+  will-change: opacity;
 }
 
 .groom-parents {
-  font-size: clamp(14px, 3vw, 16px);
+  font-size: 14px;
   color: #5a5a5a;
   font-weight: 400;
-  margin-bottom: clamp(35px, 8vw, 50px);
+  margin-bottom: 30px;
   line-height: 1.4;
+  word-break: break-word;
 
   // Entry animation - fade in
   opacity: 0;
   animation: fadeIn 0.6s ease-out forwards;
   animation-delay: 0.9s;
+  will-change: opacity;
 }
 
 .ampersand {
   font-family: "Dancing Script", cursive;
-  font-size: clamp(32px, 7vw, 48px);
+  font-size: 32px;
   font-weight: 500;
   color: #2c5530;
-  margin: clamp(15px, 4vw, 20px) 0;
+  margin: 14px 0;
   display: block;
 
   // Entry animation - subtle scale fade in
   opacity: 0;
   animation: fadeInScale 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   animation-delay: 1.2s;
+  will-change: opacity, transform;
 }
 
 .bride-name {
   font-family: "Dancing Script", cursive;
-  font-size: clamp(42px, 10vw, 72px);
+  font-size: 38px;
   font-weight: 600;
   color: #2c5530;
-  margin-bottom: 15px;
-  line-height: 1;
-  letter-spacing: 2px;
+  margin-bottom: 12px;
+  line-height: 1.1;
+  letter-spacing: 1px;
+  word-break: break-word;
 
   // Entry animation - fade in only
   opacity: 0;
   animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   animation-delay: 1.5s;
+  will-change: opacity;
 }
 
 .bride-parents {
-  font-size: clamp(14px, 3vw, 16px);
+  font-size: 14px;
   color: #5a5a5a;
   font-weight: 400;
   line-height: 1.4;
+  word-break: break-word;
 
   // Entry animation - final fade in
   opacity: 0;
   animation: fadeIn 0.6s ease-out forwards;
   animation-delay: 1.8s;
+  will-change: opacity;
 }
 
 // Animation keyframes - simplified to prevent layout shifts
@@ -133,31 +148,212 @@
   }
 }
 
-// Responsive optimizations
-@media (max-width: 768px) {
+// Progressive Enhancement - Tablet and larger
+@media (min-width: 481px) {
   :host {
-    padding: clamp(30px, 6vw, 40px) clamp(10px, 3vw, 15px);
+    padding: 38px 15px;
   }
 
   .invitation-container {
-    padding: clamp(20px, 5vw, 30px) clamp(12px, 3vw, 20px);
+    max-width: 520px;
+    padding: 28px 18px;
+    line-height: 1.55;
   }
-}
 
-@media (max-width: 480px) {
+  .opening-text {
+    font-size: 16px;
+    margin-bottom: 28px;
+    line-height: 1.5;
+  }
+
+  .dots {
+    font-size: 22px;
+    margin-bottom: 22px;
+    letter-spacing: 7px;
+  }
+
   .groom-name,
   .bride-name {
-    letter-spacing: 1px;
+    font-size: 52px;
+    margin-bottom: 14px;
+    letter-spacing: 1.5px;
+  }
+
+  .groom-parents,
+  .bride-parents {
+    font-size: 15px;
+  }
+
+  .groom-parents {
+    margin-bottom: 38px;
   }
 
   .ampersand {
-    margin: clamp(12px, 3vw, 15px) 0;
+    font-size: 38px;
+    margin: 16px 0;
   }
 }
 
-@media (max-width: 320px) {
+@media (min-width: 769px) {
+  :host {
+    padding: 48px 18px;
+  }
+
+  .invitation-container {
+    max-width: 580px;
+    padding: 35px 25px;
+    line-height: 1.6;
+  }
+
   .opening-text {
-    line-height: 1.4;
+    font-size: 17px;
+    margin-bottom: 35px;
+  }
+
+  .dots {
+    font-size: 23px;
+    margin-bottom: 26px;
+    letter-spacing: 7.5px;
+  }
+
+  .groom-name,
+  .bride-name {
+    font-size: 64px;
+    margin-bottom: 15px;
+    letter-spacing: 2px;
+  }
+
+  .groom-parents,
+  .bride-parents {
+    font-size: 16px;
+  }
+
+  .groom-parents {
+    margin-bottom: 45px;
+  }
+
+  .ampersand {
+    font-size: 44px;
+    margin: 18px 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  :host {
+    padding: 55px 20px;
+  }
+
+  .invitation-container {
+    max-width: 600px;
+    padding: 40px 30px;
+  }
+
+  .opening-text {
+    font-size: 18px;
+    margin-bottom: 40px;
+  }
+
+  .dots {
+    font-size: 24px;
+    margin-bottom: 30px;
+    letter-spacing: 8px;
+  }
+
+  .groom-name,
+  .bride-name {
+    font-size: 72px;
+  }
+
+  .groom-parents {
+    margin-bottom: 50px;
+  }
+
+  .ampersand {
+    font-size: 48px;
+    margin: 20px 0;
+  }
+}
+
+// Mobile-specific optimizations
+@media (max-width: 480px) {
+  :host {
+    padding: 26px 10px;
+  }
+
+  .invitation-container {
+    padding: 18px 10px;
+  }
+
+  .opening-text {
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+
+  .dots {
+    font-size: 18px;
+    margin-bottom: 16px;
+    letter-spacing: 5px;
+  }
+
+  .groom-name,
+  .bride-name {
+    font-size: 34px;
+    margin-bottom: 10px;
+  }
+
+  .groom-parents,
+  .bride-parents {
+    font-size: 13px;
+  }
+
+  .groom-parents {
+    margin-bottom: 26px;
+  }
+
+  .ampersand {
+    font-size: 28px;
+    margin: 12px 0;
+  }
+}
+
+@media (max-width: 360px) {
+  :host {
+    padding: 24px 8px;
+  }
+
+  .invitation-container {
+    padding: 16px 8px;
+  }
+
+  .opening-text {
+    font-size: 13px;
+    margin-bottom: 18px;
+  }
+
+  .dots {
+    font-size: 16px;
+    margin-bottom: 14px;
+    letter-spacing: 4px;
+  }
+
+  .groom-name,
+  .bride-name {
+    font-size: 30px;
+    margin-bottom: 10px;
+  }
+
+  .groom-parents,
+  .bride-parents {
+    font-size: 12px;
+  }
+
+  .groom-parents {
+    margin-bottom: 22px;
+  }
+
+  .ampersand {
+    font-size: 26px;
+    margin: 10px 0;
   }
 }
 
@@ -173,5 +369,6 @@
     animation: none;
     opacity: 1;
     transform: none;
+    will-change: auto;
   }
 }

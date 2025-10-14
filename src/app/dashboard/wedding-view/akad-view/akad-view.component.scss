@@ -1,48 +1,54 @@
-// Akad ceremony component with elegant entry animations
+// Mobile-First Responsive Design with elegant entry animations
 :host {
-  // background: linear-gradient(135deg, #f0eef2 0%, #e8e4ea 50%, #ddd7dd 100%);
   font-family: "Open Sans", sans-serif;
   display: block;
   width: 100%;
   box-sizing: border-box;
-  padding: clamp(40px, 8vw, 60px) clamp(15px, 4vw, 20px);
+  padding: 32px 12px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 .akad-container {
-  max-width: 500px;
+  max-width: 100%;
   width: 100%;
   text-align: center;
-  padding: clamp(30px, 8vw, 50px) clamp(20px, 6vw, 30px);
+  padding: 25px 15px;
   margin: 0 auto;
   box-sizing: border-box;
 }
 
 .akad-title {
   font-family: "Dancing Script", cursive;
-  font-size: clamp(52px, 12vw, 80px);
+  font-size: 48px;
   font-weight: 600;
   color: #2c5530;
-  margin-bottom: clamp(30px, 6vw, 40px);
-  line-height: 1;
-  letter-spacing: 2px;
+  margin-bottom: 26px;
+  line-height: 1.1;
+  letter-spacing: 1px;
+  word-break: break-word;
 
   // Entry animation - fade in with subtle scale
   opacity: 0;
   animation: fadeInScale 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   animation-delay: 0s;
+  will-change: opacity, transform;
 }
 
 .event-details {
-  font-size: clamp(15px, 3.5vw, 18px);
+  font-size: 15px;
   color: #5a5a5a;
   font-weight: 400;
-  line-height: 1.6;
-  margin-bottom: clamp(40px, 8vw, 60px);
+  line-height: 1.5;
+  margin-bottom: 35px;
+  word-break: break-word;
 
   // Entry animation - fade in
   opacity: 0;
   animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   animation-delay: 0.3s;
+  will-change: opacity;
 }
 
 .date {
@@ -52,6 +58,7 @@
   opacity: 0;
   animation: fadeIn 0.6s ease-out forwards;
   animation-delay: 0.5s;
+  will-change: opacity;
 }
 
 .time {
@@ -61,6 +68,7 @@
   opacity: 0;
   animation: fadeIn 0.6s ease-out forwards;
   animation-delay: 0.7s;
+  will-change: opacity;
 }
 
 .location {
@@ -70,12 +78,13 @@
   opacity: 0;
   animation: fadeIn 0.6s ease-out forwards;
   animation-delay: 0.9s;
+  will-change: opacity;
 }
 
 .wedding-rings {
-  width: clamp(70px, 15vw, 80px);
-  height: clamp(50px, 12vw, 60px);
-  margin: 0 auto clamp(40px, 8vw, 50px);
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 32px;
   position: relative;
   display: flex;
   align-items: center;
@@ -85,15 +94,11 @@
   opacity: 0;
   animation: fadeInScale 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   animation-delay: 1.1s;
+  will-change: opacity, transform;
 
   img {
-    // max-width: 100%;
     height: auto;
     transition: transform 0.3s ease;
-
-    &:hover {
-      transform: scale(1.05);
-    }
   }
 }
 
@@ -152,29 +157,34 @@
   color: white;
   border: none;
   border-radius: 30px;
-  padding: clamp(12px, 3vw, 15px) clamp(25px, 6vw, 35px);
-  font-size: clamp(15px, 3.5vw, 18px);
+  padding: 13px 28px;
+  font-size: 15px;
   font-weight: 500;
   font-family: "Open Sans", sans-serif;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 4px 15px rgba(199, 119, 119, 0.3);
   letter-spacing: 0.5px;
+  min-height: 48px;
+  min-width: 44px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
 
   // Entry animation - final fade in with subtle scale
   opacity: 0;
   animation: fadeInScale 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   animation-delay: 1.4s;
-
-  &:hover {
-    transform: translateY(-2px) scale(1.02);
-    box-shadow: 0 6px 20px rgba(199, 119, 119, 0.4);
-    background: linear-gradient(135deg, #d18888 0%, #c96d6d 100%);
-  }
+  will-change: opacity, transform;
 
   &:active {
     transform: translateY(0) scale(0.98);
     box-shadow: 0 3px 10px rgba(199, 119, 119, 0.3);
+  }
+
+  &:focus-visible {
+    outline: 2px solid #c77777;
+    outline-offset: 2px;
   }
 }
 
@@ -199,20 +209,139 @@
   }
 }
 
-// Responsive optimizations
-@media (max-width: 768px) {
+// Progressive Enhancement - Tablet and larger
+@media (min-width: 481px) {
   :host {
-    padding: clamp(30px, 6vw, 40px) clamp(10px, 3vw, 15px);
+    padding: 40px 15px;
   }
 
   .akad-container {
-    padding: clamp(25px, 6vw, 40px) clamp(15px, 4vw, 25px);
+    max-width: 460px;
+    padding: 32px 20px;
+  }
+
+  .akad-title {
+    font-size: 60px;
+    margin-bottom: 32px;
+    letter-spacing: 1.5px;
+  }
+
+  .event-details {
+    font-size: 16px;
+    line-height: 1.55;
+    margin-bottom: 42px;
   }
 
   .wedding-rings {
-    width: clamp(60px, 12vw, 70px);
-    height: clamp(45px, 10vw, 50px);
-    margin-bottom: clamp(30px, 6vw, 40px);
+    width: 110px;
+    height: 110px;
+    margin-bottom: 38px;
+  }
+
+  .location-button {
+    padding: 14px 32px;
+    font-size: 16px;
+  }
+}
+
+@media (min-width: 769px) {
+  :host {
+    padding: 50px 18px;
+  }
+
+  .akad-container {
+    max-width: 500px;
+    padding: 42px 26px;
+  }
+
+  .akad-title {
+    font-size: 72px;
+    margin-bottom: 38px;
+    letter-spacing: 2px;
+  }
+
+  .event-details {
+    font-size: 17px;
+    line-height: 1.6;
+    margin-bottom: 50px;
+  }
+
+  .wedding-rings {
+    width: 120px;
+    height: 120px;
+    margin-bottom: 45px;
+
+    img:hover {
+      transform: scale(1.05);
+    }
+  }
+
+  .location-button {
+    padding: 15px 35px;
+    font-size: 17px;
+
+    &:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 6px 20px rgba(199, 119, 119, 0.4);
+      background: linear-gradient(135deg, #d18888 0%, #c96d6d 100%);
+    }
+  }
+}
+
+@media (min-width: 1024px) {
+  :host {
+    padding: 60px 20px;
+  }
+
+  .akad-container {
+    padding: 50px 30px;
+  }
+
+  .akad-title {
+    font-size: 80px;
+    margin-bottom: 40px;
+  }
+
+  .event-details {
+    font-size: 18px;
+    margin-bottom: 60px;
+  }
+
+  .wedding-rings {
+    width: 130px;
+    height: 130px;
+    margin-bottom: 50px;
+  }
+
+  .location-button {
+    font-size: 18px;
+  }
+}
+
+// Mobile-specific optimizations
+@media (max-width: 480px) {
+  :host {
+    padding: 28px 10px;
+  }
+
+  .akad-container {
+    padding: 22px 12px;
+  }
+
+  .akad-title {
+    font-size: 42px;
+    margin-bottom: 22px;
+  }
+
+  .event-details {
+    font-size: 14px;
+    margin-bottom: 30px;
+  }
+
+  .wedding-rings {
+    width: 90px;
+    height: 90px;
+    margin-bottom: 28px;
   }
 
   .ring {
@@ -231,25 +360,46 @@
     width: 10px;
     height: 10px;
   }
+
+  .location-button {
+    padding: 12px 24px;
+    font-size: 14px;
+  }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 360px) {
+  :host {
+    padding: 26px 8px;
+  }
+
   .akad-container {
-    padding: clamp(20px, 5vw, 30px) clamp(12px, 3vw, 20px);
+    padding: 20px 10px;
   }
 
   .akad-title {
-    margin-bottom: clamp(25px, 5vw, 30px);
+    font-size: 38px;
+    margin-bottom: 20px;
   }
 
   .event-details {
-    margin-bottom: clamp(30px, 6vw, 40px);
+    font-size: 13px;
+    margin-bottom: 26px;
   }
-}
 
-@media (max-width: 320px) {
-  .akad-title {
-    letter-spacing: 1px;
+  .wedding-rings {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 24px;
+  }
+
+  .ring {
+    width: 28px;
+    height: 28px;
+  }
+
+  .location-button {
+    padding: 11px 22px;
+    font-size: 13px;
   }
 }
 
@@ -264,6 +414,17 @@
   .location-button {
     animation: none;
     opacity: 1;
+    transform: none;
+    will-change: auto;
+  }
+
+  .wedding-rings img,
+  .location-button {
+    transition: none;
+  }
+
+  .wedding-rings img:hover,
+  .location-button:hover {
     transform: none;
   }
 }

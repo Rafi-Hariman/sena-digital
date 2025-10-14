@@ -1,1 +1,78 @@
-<p>hubungi-kami works!</p>
+<div class="contact-container">
+  <div class="contact-card">
+    <div class="card-header">
+      <h2 class="card-title">Hubungi Kami</h2>
+      <p class="card-subtitle">Butuh bantuan? Hubungi admin kami melalui kontak di bawah ini</p>
+    </div>
+
+    <div class="card-body">
+      <!-- Loading State -->
+      <div *ngIf="isLoading" class="loading-state">
+        <div class="skeleton skeleton-title"></div>
+        <div class="skeleton skeleton-text"></div>
+        <div class="skeleton skeleton-text"></div>
+        <div class="skeleton skeleton-button"></div>
+      </div>
+
+      <!-- Error State -->
+      <div *ngIf="!isLoading && hasError" class="error-state">
+        <div class="error-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+        </div>
+        <p class="error-message">{{ errorMessage }}</p>
+        <button class="btn-retry" (click)="loadContactSettings()">Coba Lagi</button>
+      </div>
+
+      <!-- Success State -->
+      <div *ngIf="!isLoading && !hasError && contactSettings" class="contact-info">
+        <!-- Email Contact -->
+        <div class="contact-item" *ngIf="contactSettings.email">
+          <div class="contact-icon email-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+              <polyline points="22,6 12,13 2,6"></polyline>
+            </svg>
+          </div>
+          <div class="contact-details">
+            <span class="contact-label">Email</span>
+            <a [href]="getEmailLink()" class="contact-value">{{ contactSettings.email }}</a>
+          </div>
+        </div>
+
+        <!-- WhatsApp Contact -->
+        <div class="contact-item" *ngIf="contactSettings.whatsapp">
+          <div class="contact-icon whatsapp-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+            </svg>
+          </div>
+          <div class="contact-details">
+            <span class="contact-label">WhatsApp</span>
+            <a [href]="getWhatsAppLink()" target="_blank" rel="noopener noreferrer" class="contact-value">{{ contactSettings.whatsapp }}</a>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="contact-actions">
+          <a *ngIf="contactSettings.whatsapp" [href]="getWhatsAppLink()" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+            </svg>
+            Chat WhatsApp
+          </a>
+          <a *ngIf="contactSettings.email" [href]="getEmailLink()" class="btn btn-email">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+              <polyline points="22,6 12,13 2,6"></polyline>
+            </svg>
+            Kirim Email
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

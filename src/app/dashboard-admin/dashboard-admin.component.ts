@@ -172,12 +172,15 @@ export class DashboardAdminComponent implements OnInit, OnDestroy {
   }
 
   logout(): void {
-    this.DashBoardSvc.create(DashboardServiceType.USER_LOGOUT, '').subscribe(
-      () => {
-        localStorage.removeItem('access_token')
-        this.router.navigate(['']);
+    console.log('Admin logout initiated...');
+    this.DashBoardSvc.performComprehensiveLogout().subscribe({
+      next: (response) => {
+        console.log('Admin logout completed:', response);
       },
-    );
+      error: (error) => {
+        console.error('Admin logout error (continuing with cleanup):', error);
+      }
+    });
   }
 
   isActiveRoute(route: string): boolean {
@@ -251,7 +254,7 @@ export class DashboardAdminComponent implements OnInit, OnDestroy {
       return this.dataAdmin.profile_photo_url;
     }
     // Default avatar if no profile photo
-    return 'assets/logos.png';
+    return 'assets/wom.png';
   }
 
   /**
