@@ -501,7 +501,7 @@ export class SettingsPaymentComponent implements OnInit {
     }
 
     // Call admin endpoint as per API contract
-    this.dashboardSvc.httpSvc.post('/api/v1/admin/send-rekening', formData).subscribe({
+    this.dashboardSvc.create(DashboardServiceType.ADM_ADD_REKENING, formData).subscribe({
       next: (response: any) => {
         console.log('Create rekening response:', response);
         this.notyf.success(response?.message || 'Rekening berhasil ditambahkan');

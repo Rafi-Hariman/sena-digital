@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Notyf } from 'notyf';
 import { DashboardService, DashboardServiceType, AdminContactSettingsResponse, AdminContactSettingsUpdateRequest } from '../../../dashboard.service';
 declare const Swal: any;
 
@@ -20,8 +21,15 @@ export class SettingsAplicationComponent implements OnInit {
 
   isLoading = false;
   isSubmitting = false;
+  private notyf: Notyf;
 
-  constructor(private dashboardSvc: DashboardService) { }
+
+  constructor(private dashboardSvc: DashboardService) {
+    this.notyf = new Notyf({
+      duration: 3000,
+      position: { x: 'right', y: 'top' }
+    });
+  }
 
   ngOnInit(): void {
     this.loadContactSettings();
@@ -86,13 +94,7 @@ export class SettingsAplicationComponent implements OnInit {
       next: (response: AdminContactSettingsResponse) => {
         this.isSubmitting = false;
         if (response.success) {
-          Swal.fire({
-            icon: 'success',
-            title: 'Success',
-            text: response.message || 'Contact settings saved successfully',
-            confirmButtonColor: '#0275d8',
-            timer: 2000
-          });
+          this.notyf.success('Contact settings updated successfully');
           this.contactForm.email_password = '';
           this.loadContactSettings();
         }
@@ -109,12 +111,8 @@ export class SettingsAplicationComponent implements OnInit {
           errorMessage = error.error.message;
         }
 
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: errorMessage,
-          confirmButtonColor: '#0275d8'
-        });
+        this.notyf.error('Gagal mengupdate pengaturan kontak: ');
+
       }
     });
   }

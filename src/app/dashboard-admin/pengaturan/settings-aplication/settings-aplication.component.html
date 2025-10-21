@@ -1,77 +1,7 @@
 <div class="container">
   <div class="row g-4">
     <!-- Left Form -->
-    <form
-      class="col-12 col-md-6 d-flex form-container"
-      autocomplete="off"
-      novalidate
-    >
-      <h2>Salam Pembuka</h2>
 
-      <div class="mb-4">
-        <label for="trial-days" class="form-label"
-          >Waktu Trial Undangan (hari)</label
-        >
-        <select
-          id="trial-days"
-          name="trial-days"
-          class="form-select"
-          aria-label="Waktu Trial Undangan (hari)"
-        >
-          <option disabled selected>Contoh: 2</option>
-        </select>
-      </div>
-
-      <div class="mb-4">
-        <label for="salampembuka-undangan" class="form-label"
-          >Salam Pembuka Undangan</label
-        >
-        <textarea
-          id="salampembuka-undangan"
-          name="salampembuka-undangan"
-          rows="4"
-          class="form-control"
-        >
-Assalamu'alaikum Warahmatullahi Wabarakatuh.
-
-Dengan memohon Rahmat dan Ridho Allah SWT, Kami akan menyelenggarakan resepsi pernikahan Putra-Putri kami :</textarea
-        >
-      </div>
-
-      <div class="mb-4">
-        <label for="salampembuka-whatsapp-atas" class="form-label"
-          >Salam Pembuka WhatsApp (atas)</label
-        >
-        <textarea
-          id="salampembuka-whatsapp-atas"
-          name="salampembuka-whatsapp-atas"
-          rows="4"
-          class="form-control"
-        >
-Assalamualaikum Wr Wb.
-Dengan segala kerendahan hati dan syukur atas Karunia Allah SWT.
-Kami bermaksud mengundangBapak/Ibu/Saudara/i, teman sekaligus sahabat, untuk menghadiri acara pernikahan kami :</textarea
-        >
-      </div>
-
-      <div class="mb-5">
-        <label for="salampembuka-whatsapp-bawah" class="form-label"
-          >Salam Pembuka WhatsApp (bawah)</label
-        >
-        <textarea
-          id="salampembuka-whatsapp-bawah"
-          name="salampembuka-whatsapp-bawah"
-          rows="4"
-          class="form-control"
-        >
-Assalamualaikum Wr Wb.
-Dengan segala kerendahan hati dan syukur atas Karunia Allah SWT.
-Kami bermaksud mengundangBapak/Ibu/Saudara/i, teman sekaligus sahabat, untuk menghadiri acara pernikahan kami :</textarea
-        >
-      </div>
-
-      <button type="submit" class="btn btn-simpan">Simpan</button>
-    </form>
 
     <!-- Right Form -->
     <form
@@ -125,18 +55,6 @@ Kami bermaksud mengundangBapak/Ibu/Saudara/i, teman sekaligus sahabat, untuk men
         />
       </div>
 
-      <div class="mb-3">
-        <label for="email-password" class="form-label">Kata Sandi Email</label>
-        <input
-          id="email-password"
-          name="email-password"
-          type="password"
-          [(ngModel)]="contactForm.email_password"
-          placeholder="***********"
-          class="form-control"
-          [disabled]="isSubmitting"
-        />
-      </div>
 
       <div class="mb-3">
         <label for="whatsapp-token" class="form-label"
