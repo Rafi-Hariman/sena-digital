@@ -84,6 +84,7 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
   // Audio management properties
   private audioElement: HTMLAudioElement | null = null;
   private audioInitialized: boolean = false;
+  private autoplayRequested: boolean = false;
   isAudioLoading: boolean = false;
   audioError: string | null = null;
   currentVolume: number = 0.7; // Default volume (70%)
@@ -460,8 +461,9 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Initialize audio system with wedding music settings
    * Sets up HTML5 Audio element with proper event listeners
+   * @param autoplay - Whether to attempt autoplay when audio is ready
    */
-  private initializeAudio(): void {
+  private initializeAudio(autoplay: boolean = false): void {
     // Don't reinitialize if already done
     if (this.audioInitialized) {
       return;
@@ -471,6 +473,9 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
       console.warn('No wedding settings available for audio initialization');
       return;
     }
+
+    // Store autoplay request
+    this.autoplayRequested = autoplay;
 
     // Try to get music URL - prefer stream URL, fallback to direct musik URL
     const musicUrl = this.weddingData.settings.music_stream_url || this.weddingData.settings.musik;
@@ -501,10 +506,12 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
       // Mark as initialized
       this.audioInitialized = true;
 
+      console.log('Audio initialized', { musicUrl, autoplay });
 
     } catch (error) {
       this.audioError = 'Failed to initialize audio system';
       this.isAudioLoading = false;
+      console.error('Audio initialization error:', error);
     }
   }
 
@@ -519,6 +526,12 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this.audioElement.addEventListener('canplay', () => {
       this.isAudioLoading = false;
       this.audioError = null;
+
+      // Attempt autoplay if requested
+      if (this.autoplayRequested) {
+        this.autoplayRequested = false; // Reset flag to prevent repeated attempts
+        this.attemptAutoplay();
+      }
     });
 
     // Audio is playing
@@ -624,6 +637,46 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
       this.isPlaying = false;
       this.isAudioLoading = false;
     }
+  }
+
+  /**
+   * Attempt to autoplay audio with fallback to muted playback
+   * Handles browser autoplay restrictions gracefully
+   */
+  private attemptAutoplay(): void {
+    if (!this.audioElement) {
+      console.warn('Cannot autoplay: audio element not available');
+      return;
+    }
+
+    console.log('Attempting autoplay...');
+
+    // First attempt: play with sound
+    this.audioElement.play()
+      .then(() => {
+        console.log('Autoplay successful');
+        this.isPlaying = true;
+        this.isMuted = false;
+      })
+      .catch((error) => {
+        console.warn('Autoplay blocked, attempting muted playback:', error);
+
+        // Fallback: mute and try again
+        if (this.audioElement) {
+          this.audioElement.muted = true;
+          this.isMuted = true;
+
+          this.audioElement.play()
+            .then(() => {
+              console.log('Muted autoplay successful');
+              this.isPlaying = true;
+            })
+            .catch((mutedError) => {
+              console.error('Muted autoplay also failed:', mutedError);
+              this.audioError = 'Autoplay blocked by browser. Click play button to start music.';
+            });
+        }
+      });
   }
 
   /**
@@ -759,7 +812,9 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this.invitationOpened = true;
     this.setCurrentView(ContentView.COUPLE);
     this.saveInvitationState();
-    this.initializeAudio();
+
+    // Initialize audio with autoplay enabled
+    this.initializeAudio(true);
 
     if (!wasAlreadyOpened) {
       this.submitAttendanceView();
