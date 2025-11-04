@@ -1,81 +1,271 @@
+// Payment Status - Modern Minimalist White Theme
+
+// Color Palette (matching invoice component)
+$color-white: #ffffff;
+$color-background: #fafafa;
+$color-text-primary: #1a1a1a;
+$color-text-secondary: #4a4a4a;
+$color-text-tertiary: #6b6b6b;
+$color-text-muted: #9ca3af;
+$color-border: #e5e7eb;
+
+// Status Colors
+$color-success: #10b981;
+$color-success-bg: #d1fae5;
+$color-pending: #f59e0b;
+$color-pending-bg: #fef3c7;
+$color-error: #ef4444;
+$color-error-bg: #fee2e2;
+
+// Shadows
+$shadow-card: 0 2px 8px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+$shadow-button: 0 2px 6px rgba(0, 0, 0, 0.1);
+$shadow-button-hover: 0 4px 12px rgba(0, 0, 0, 0.15);
+$shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.08);
+
+// Spacing
+$spacing-xs: 8px;
+$spacing-sm: 12px;
+$spacing-md: 16px;
+$spacing-lg: 24px;
+$spacing-xl: 32px;
+$spacing-2xl: 48px;
+
+// Border Radius
+$radius-sm: 6px;
+$radius-md: 8px;
+$radius-lg: 12px;
+
+// Main Container
 .status-container {
   max-width: 600px;
-  margin: 4rem auto;
-  padding: 2rem;
+  margin: $spacing-2xl auto;
+  padding: $spacing-xl;
+  background: $color-white;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-card;
   text-align: center;
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 
   @media (min-width: 768px) {
-    padding: 3rem;
+    padding: $spacing-2xl;
+  }
+
+  @media (max-width: 480px) {
+    margin: $spacing-lg;
+    padding: $spacing-lg;
   }
 }
 
-.icon {
-  font-size: 4rem;
-  margin-bottom: 1.5rem;
+// Status-specific styles
+.checking,
+.success,
+.pending,
+.failed {
+  .icon {
+    font-size: 48px;
+    margin-bottom: $spacing-lg;
+  }
 
-  @media (min-width: 768px) {
-    font-size: 5rem;
+  h2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: $color-text-primary;
+    margin-bottom: $spacing-md;
+    letter-spacing: -0.02em;
+  }
+
+  p {
+    color: $color-text-secondary;
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: $spacing-lg;
+  }
+
+  .small-text {
+    font-size: 12px;
+    color: $color-text-muted;
+    margin-top: $spacing-xs;
+    margin-bottom: $spacing-md;
   }
 }
 
-h2 {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-  color: #333;
+// Progress Container
+.progress-container {
+  margin-top: $spacing-lg;
+  margin-bottom: $spacing-lg;
 
-  @media (min-width: 768px) {
-    font-size: 2rem;
+  .progress-bar {
+    width: 100%;
+    height: 8px;
+    background: $color-background;
+    border-radius: $radius-sm;
+    overflow: hidden;
+    box-shadow: $shadow-subtle inset;
+
+    .progress-fill {
+      height: 100%;
+      background: $color-text-primary;
+      transition: width 0.3s ease;
+      border-radius: $radius-sm;
+    }
+  }
+
+  .progress-text {
+    margin-top: $spacing-sm;
+    font-size: 12px;
+    color: $color-text-tertiary;
+    font-weight: 600;
   }
 }
 
-p {
-  color: #666;
-  margin-bottom: 2rem;
-  font-size: 0.95rem;
+// Redirect Info
+.redirect-info {
+  margin-top: $spacing-lg;
+  padding: $spacing-md;
+  background: $color-background;
+  border-radius: $radius-md;
+  box-shadow: $shadow-subtle;
+
+  p {
+    font-size: 14px;
+    color: $color-text-secondary;
+    font-weight: 500;
+    margin-bottom: $spacing-md;
+  }
 }
 
-.btn {
-  padding: 0.875rem 2.5rem;
-  font-size: 1rem;
-  background: #667eea;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
+// Button Styles
+.btn,
+.btn-primary,
+.btn-secondary {
+  padding: $spacing-md $spacing-lg;
+  font-size: 16px;
   font-weight: 600;
-  transition: all 0.3s;
+  border-radius: $radius-md;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid $color-border;
+  letter-spacing: -0.01em;
+}
 
-  @media (min-width: 768px) {
-    padding: 1rem 3rem;
-    font-size: 1.125rem;
-  }
+.btn,
+.btn-primary {
+  background: $color-white;
+  color: $color-text-primary;
+  box-shadow: $shadow-button;
 
   &:hover {
-    background: #5568d3;
-    transform: translateY(-2px);
+    box-shadow: $shadow-button-hover;
+    transform: translateY(-1px);
+    background: $color-background;
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: $shadow-subtle;
   }
 }
 
+.btn-secondary {
+  background: $color-background;
+  color: $color-text-secondary;
+  box-shadow: $shadow-subtle;
+
+  &:hover {
+    box-shadow: $shadow-button;
+    transform: translateY(-1px);
+    background: $color-white;
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: $shadow-subtle;
+  }
+}
+
+// Button Group
+.button-group {
+  display: flex;
+  gap: $spacing-sm;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: $spacing-md;
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+
+    button {
+      width: 100%;
+    }
+  }
+}
+
+// Spinner
 .spinner {
   width: 50px;
   height: 50px;
-  border: 5px solid #f3f3f3;
-  border-top: 5px solid #667eea;
+  border: 4px solid $color-border;
+  border-top-color: $color-text-primary;
   border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin: 0 auto 2rem;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto $spacing-lg;
 
   @media (min-width: 768px) {
     width: 60px;
     height: 60px;
-    border-width: 6px;
+    border-width: 5px;
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+// Responsive Typography
+@media (max-width: 768px) {
+  .checking,
+  .success,
+  .pending,
+  .failed {
+    .icon {
+      font-size: 40px;
+    }
+
+    h2 {
+      font-size: 20px;
+    }
+
+    p {
+      font-size: 13px;
+    }
   }
 
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+  .btn,
+  .btn-primary,
+  .btn-secondary {
+    padding: $spacing-sm $spacing-md;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .checking,
+  .success,
+  .pending,
+  .failed {
+    .icon {
+      font-size: 36px;
+      margin-bottom: $spacing-md;
+    }
+
+    h2 {
+      font-size: 18px;
+      margin-bottom: $spacing-sm;
+    }
+
+    p {
+      font-size: 12px;
+      margin-bottom: $spacing-md;
+    }
   }
 }

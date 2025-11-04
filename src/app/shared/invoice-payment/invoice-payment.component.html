@@ -6,155 +6,146 @@
 
   <div *ngIf="!isLoading && invitation && package" class="invoice-content">
     <div class="invoice-card">
+      <!-- Header -->
       <div class="invoice-header">
         <h1>Invoice Pembayaran</h1>
         <div class="invoice-meta">
           <div class="meta-item">
-            <span class="label">Order ID:</span>
+            <span class="label">Order ID</span>
             <code>{{ invitation.order_id || 'Belum dibuat' }}</code>
           </div>
           <div class="meta-item">
-            <span class="label">Tanggal:</span>
-            <span>{{ formatDate(invitation.created_at) }}</span>
+            <span class="label">Tanggal</span>
+            <span class="value">{{ formatDate(invitation.created_at) }}</span>
           </div>
         </div>
       </div>
 
+      <!-- Package Details -->
       <div class="package-section">
-        <h2>📦 Detail Paket</h2>
-        <div class="package-details">
-          <div class="package-name">
-            {{ package.name_paket }}
+        <h2>Detail Paket</h2>
+        <div class="package-info">
+          <div class="package-name">{{ package.name_paket }}</div>
+          <div class="package-meta">
+            <span class="meta-tag">{{ package.jenis_paket | titlecase }}</span>
+            <span class="meta-tag">{{ package.masa_aktif }} hari</span>
           </div>
-          <div class="package-type">
-            Jenis: {{ package.jenis_paket | titlecase }}
-          </div>
-          <div class="package-duration">
-            Masa Aktif: {{ package.masa_aktif }} bulan
-          </div>
+        </div>
 
-          <div class="features-list">
-            <h3>Fitur yang Didapat:</h3>
-            <ul>
-              <li class="feature-item">
-                <span class="icon">{{ hasHalamanBuku() ? '✓' : '✗' }}</span>
-                Halaman Buku Tamu: {{ package.halaman_buku }}
-              </li>
-              <li class="feature-item" [class.disabled]="!package.kirim_wa">
-                <span class="icon">{{ package.kirim_wa ? '✓' : '✗' }}</span>
-                Kirim WhatsApp: {{ package.kirim_wa ? 'Unlimited' : 'Tidak Tersedia' }}
-              </li>
-              <li class="feature-item" [class.disabled]="!package.bebas_pilih_tema">
-                <span class="icon">{{ package.bebas_pilih_tema ? '✓' : '✗' }}</span>
-                Bebas Pilih Tema
-              </li>
-              <li class="feature-item" [class.disabled]="!package.kirim_hadiah">
-                <span class="icon">{{ package.kirim_hadiah ? '✓' : '✗' }}</span>
-                Fitur Kirim Hadiah
-              </li>
-              <li class="feature-item" [class.disabled]="!package.import_data">
-                <span class="icon">{{ package.import_data ? '✓' : '✗' }}</span>
-                Import Data Tamu
-              </li>
-            </ul>
-          </div>
+        <div class="features-list">
+          <h3>Fitur Termasuk</h3>
+          <ul>
+            <li [class.disabled]="!hasHalamanBuku()">
+              Halaman Buku Tamu: {{ package.halaman_buku }}
+            </li>
+            <li [class.disabled]="!package.kirim_wa">
+              Kirim WhatsApp: {{ package.kirim_wa ? 'Unlimited' : 'Tidak Tersedia' }}
+            </li>
+            <li [class.disabled]="!package.bebas_pilih_tema">
+              Bebas Pilih Tema
+            </li>
+            <li [class.disabled]="!package.kirim_hadiah">
+              Fitur Kirim Hadiah
+            </li>
+            <li [class.disabled]="!package.import_data">
+              Import Data Tamu
+            </li>
+          </ul>
         </div>
       </div>
 
+      <!-- Price Breakdown -->
       <div class="price-section">
-        <h2>💰 Rincian Biaya</h2>
-        <div class="price-breakdown">
-          <div class="price-row">
-            <span class="label">Harga Paket</span>
-            <span class="value">{{ formatPrice(package.price) }}</span>
-          </div>
-          <div class="price-divider"></div>
-          <div class="price-row total">
-            <span class="label">Total Pembayaran</span>
-            <span class="value">{{ formatPrice(package.price) }}</span>
-          </div>
+        <div class="price-row">
+          <span class="label">Harga Paket</span>
+          <span class="value">{{ formatPrice(package.price) }}</span>
+        </div>
+        <div class="price-divider"></div>
+        <div class="price-row total">
+          <span class="label">Total Pembayaran</span>
+          <span class="value">{{ formatPrice(package.price) }}</span>
         </div>
       </div>
 
+      <!-- Status Section -->
       <div class="status-section">
         <div class="status-badge" [ngClass]="getStatusBadge().class">
-          <span class="icon">{{ getStatusBadge().icon }}</span>
-          <span class="label">{{ getStatusBadge().label }}</span>
+          {{ getStatusBadge().label }}
         </div>
 
-        <div *ngIf="invitation.payment_status === 'paid'" class="status-info success">
-          <p>
-            <strong>✅ Pembayaran berhasil dikonfirmasi</strong><br>
-            Domain aktif hingga: <strong>{{ formatDate(invitation.domain_expires_at) }}</strong>
-          </p>
+        <div *ngIf="invitation.payment_status === 'paid'" class="status-message success">
+          <div class="message-title">Pembayaran Berhasil Dikonfirmasi</div>
+          <div class="message-content">
+            Domain aktif hingga <strong>{{ formatDate(invitation.domain_expires_at) }}</strong>
+          </div>
         </div>
 
-        <div *ngIf="invitation.payment_status === 'pending'" class="status-info warning">
-          <p>
-            Silakan lanjutkan pembayaran untuk mengaktifkan semua fitur undangan Anda.
-          </p>
+        <div *ngIf="invitation.payment_status === 'pending'" class="status-message pending">
+          <div class="message-content">
+            Silakan lanjutkan pembayaran untuk mengaktifkan semua fitur undangan Anda
+          </div>
         </div>
 
-        <div *ngIf="invitation.payment_status === 'failed'" class="status-info error">
-          <p>
-            Pembayaran sebelumnya gagal. Silakan coba lagi dengan metode pembayaran lain.
-          </p>
+        <div *ngIf="invitation.payment_status === 'failed'" class="status-message failed">
+          <div class="message-content">
+            Pembayaran sebelumnya gagal. Silakan coba lagi dengan metode pembayaran lain
+          </div>
         </div>
       </div>
 
+      <!-- Payment Actions -->
       <div class="payment-action">
         <button
           *ngIf="invitation.payment_status === 'pending' || invitation.payment_status === 'failed'"
           class="btn-pay"
           [disabled]="!canPay()"
           (click)="processPayment()">
-          <span *ngIf="!isProcessingPayment">💳 Bayar Sekarang</span>
+          <span *ngIf="!isProcessingPayment">Bayar Sekarang</span>
           <span *ngIf="isProcessingPayment">
             <span class="spinner-small"></span> Memproses...
           </span>
         </button>
 
-        <!-- Reopen Payment Buttons (shown when modal closed) -->
-        <div *ngIf="showReopenButtons" class="reopen-payment-section">
-          <div class="info-message">
-            <span class="icon">ℹ️</span>
-            <span class="text">Pembayaran belum selesai. Lanjutkan pembayaran Anda:</span>
+        <!-- Reopen Payment Section -->
+        <div *ngIf="showReopenButtons" class="reopen-section">
+          <div class="reopen-message">
+            Pembayaran belum selesai. Lanjutkan pembayaran Anda:
           </div>
 
           <div class="reopen-buttons">
             <button
-              class="btn-reopen-modal"
+              class="btn-reopen"
               (click)="reopenPaymentModal()"
               [disabled]="isProcessingPayment">
-              <span class="icon">🔄</span>
-              Buka Kembali Modal
+              Buka Kembali Pembayaran
             </button>
 
             <button
-              class="btn-open-tab"
+              class="btn-new-tab"
               (click)="openPaymentInNewTab()"
               [disabled]="isProcessingPayment">
-              <span class="icon">🪟</span>
               Buka di Tab Baru
             </button>
           </div>
 
-          <div class="help-text">
-            Token pembayaran Anda masih aktif selama 24 jam
+          <div class="token-validity">
+            Token pembayaran aktif selama 24 jam
           </div>
         </div>
 
-        <div *ngIf="errorMessage" class="error-message">
-          ⚠️ {{ errorMessage }}
+        <!-- Error Message -->
+        <div *ngIf="errorMessage" class="error-alert">
+          {{ errorMessage }}
         </div>
 
-        <div class="payment-methods-info">
-          <p>Metode pembayaran yang tersedia:</p>
-          <div class="payment-methods">
-            <span class="method">💳 Kartu Kredit</span>
-            <span class="method">🏦 Transfer Bank</span>
-            <span class="method">📱 E-Wallet</span>
-            <span class="method">🏪 Convenience Store</span>
+        <!-- Payment Methods -->
+        <div class="payment-methods">
+          <div class="methods-label">Metode pembayaran tersedia</div>
+          <div class="methods-grid">
+            <span class="method-tag">Kartu Kredit</span>
+            <span class="method-tag">Transfer Bank</span>
+            <span class="method-tag">E-Wallet</span>
+            <span class="method-tag">Convenience Store</span>
           </div>
         </div>
       </div>

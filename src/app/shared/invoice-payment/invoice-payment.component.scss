@@ -1,183 +1,224 @@
+// Modern Minimalist Invoice Payment - White Theme with Soft Shadows
+
+// Color Palette
+$color-white: #ffffff;
+$color-background: #fafafa;
+$color-text-primary: #1a1a1a;
+$color-text-secondary: #4a4a4a;
+$color-text-tertiary: #6b6b6b;
+$color-text-muted: #9ca3af;
+$color-border: #e5e7eb;
+
+// Status Colors (Subtle)
+$color-success: #10b981;
+$color-success-bg: #d1fae5;
+$color-pending: #f59e0b;
+$color-pending-bg: #fef3c7;
+$color-error: #ef4444;
+$color-error-bg: #fee2e2;
+
+// Shadows
+$shadow-card: 0 2px 8px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+$shadow-button: 0 2px 6px rgba(0, 0, 0, 0.1);
+$shadow-button-hover: 0 4px 12px rgba(0, 0, 0, 0.15);
+$shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.08);
+$shadow-inner: inset 0 1px 2px rgba(0, 0, 0, 0.06);
+
+// Spacing
+$spacing-xs: 8px;
+$spacing-sm: 12px;
+$spacing-md: 16px;
+$spacing-lg: 24px;
+$spacing-xl: 32px;
+$spacing-2xl: 48px;
+
+// Border Radius
+$radius-sm: 6px;
+$radius-md: 8px;
+$radius-lg: 12px;
+
+// Container
 .invoice-container {
+  width: 100%;
   max-width: 800px;
   margin: 0 auto;
-  padding: 1rem;
-  font-family: 'Segoe UI', 'Poppins', Tahoma, Geneva, Verdana, sans-serif;
-
-  @media (min-width: 768px) {
-    padding: 2rem 1rem;
-  }
+  padding: $spacing-lg;
+  background: $color-background;
+  min-height: 100vh;
 }
 
+// Loading State
 .loading-state {
-  text-align: center;
-  padding: 3rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-2xl;
+  background: $color-white;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-card;
 
   .spinner {
-    width: 50px;
-    height: 50px;
-    border: 4px solid #f3f3f3;
-    border-top: 4px solid #2563eb;
+    width: 40px;
+    height: 40px;
+    border: 3px solid $color-border;
+    border-top-color: $color-text-primary;
     border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin: 0 auto 1rem;
+    animation: spin 0.8s linear infinite;
   }
 
   p {
-    color: #666;
-    font-size: 0.9rem;
-  }
-
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    margin-top: $spacing-md;
+    color: $color-text-secondary;
+    font-size: 14px;
+    font-weight: 400;
   }
 }
 
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+// Main Card
 .invoice-card {
-  background: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background: $color-white;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-card;
   overflow: hidden;
 }
 
+// Header Section
 .invoice-header {
-  background: #ffffff;
-  color: #333;
-  padding: 1.5rem;
-  border-bottom: 1px solid #e0e0e0;
-
-  @media (min-width: 768px) {
-    padding: 2rem;
-  }
+  padding: $spacing-xl;
+  background: $color-white;
+  border-bottom: 1px solid $color-border;
 
   h1 {
-    margin: 0 0 1rem;
-    font-size: 1.5rem;
+    font-size: 24px;
     font-weight: 600;
-    color: #1e293b;
-
-    @media (min-width: 768px) {
-      font-size: 1.75rem;
-    }
+    color: $color-text-primary;
+    margin: 0 0 $spacing-lg 0;
+    letter-spacing: -0.02em;
   }
 
   .invoice-meta {
     display: flex;
-    gap: 1.5rem;
+    gap: $spacing-xl;
     flex-wrap: wrap;
-    font-size: 0.875rem;
+  }
 
-    @media (min-width: 768px) {
-      gap: 2rem;
+  .meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-xs / 2;
+
+    .label {
+      font-size: 12px;
+      font-weight: 500;
+      color: $color-text-tertiary;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
 
-    .meta-item {
-      .label {
-        opacity: 0.7;
-        display: block;
-        margin-bottom: 0.25rem;
-        font-size: 0.8rem;
-        color: #64748b;
-      }
+    code {
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+      font-size: 13px;
+      color: $color-text-secondary;
+      background: $color-background;
+      padding: $spacing-xs / 2 $spacing-sm;
+      border-radius: $radius-sm;
+      font-weight: 500;
+    }
 
-      code {
-        background: #f1f5f9;
-        padding: 0.25rem 0.5rem;
-        border-radius: 6px;
-        font-size: 0.85rem;
-        font-family: 'Courier New', monospace;
-        color: #1e293b;
-      }
-
-      span:not(.label) {
-        font-weight: 500;
-        color: #334155;
-      }
+    .value {
+      font-size: 14px;
+      color: $color-text-secondary;
+      font-weight: 500;
     }
   }
 }
 
+// Package Section
 .package-section {
-  padding: 1.5rem;
-  border-bottom: 1px solid #e0e0e0;
-
-  @media (min-width: 768px) {
-    padding: 2rem;
-  }
+  padding: $spacing-xl;
+  border-bottom: 1px solid $color-border;
 
   h2 {
-    font-size: 1.125rem;
-    margin: 0 0 1rem;
-    color: #333;
+    font-size: 16px;
     font-weight: 600;
+    color: $color-text-primary;
+    margin: 0 0 $spacing-lg 0;
+    letter-spacing: -0.01em;
+  }
 
-    @media (min-width: 768px) {
-      font-size: 1.25rem;
+  .package-info {
+    margin-bottom: $spacing-lg;
+
+    .package-name {
+      font-size: 20px;
+      font-weight: 600;
+      color: $color-text-primary;
+      margin-bottom: $spacing-sm;
+      letter-spacing: -0.02em;
+    }
+
+    .package-meta {
+      display: flex;
+      gap: $spacing-sm;
+      flex-wrap: wrap;
+
+      .meta-tag {
+        font-size: 13px;
+        font-weight: 500;
+        color: $color-text-tertiary;
+        background: $color-background;
+        padding: $spacing-xs / 2 $spacing-sm;
+        border-radius: $radius-sm;
+        box-shadow: $shadow-subtle;
+      }
     }
   }
 
-  .package-details {
-    .package-name {
-      font-size: 1.25rem;
+  .features-list {
+    h3 {
+      font-size: 14px;
       font-weight: 600;
-      color: #2563eb;
-      margin-bottom: 0.5rem;
-
-      @media (min-width: 768px) {
-        font-size: 1.5rem;
-      }
+      color: $color-text-secondary;
+      margin: 0 0 $spacing-md 0;
     }
 
-    .package-type,
-    .package-duration {
-      color: #666;
-      margin-bottom: 0.25rem;
-      font-size: 0.9rem;
-    }
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: $spacing-sm;
 
-    .features-list {
-      margin-top: 1.5rem;
+      li {
+        position: relative;
+        padding-left: $spacing-md;
+        font-size: 14px;
+        color: $color-text-secondary;
+        line-height: 1.6;
+        font-weight: 400;
 
-      h3 {
-        font-size: 0.95rem;
-        margin-bottom: 0.75rem;
-        color: #555;
-        font-weight: 600;
-      }
+        &::before {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 9px;
+          width: 5px;
+          height: 5px;
+          background: $color-text-primary;
+          border-radius: 50%;
+        }
 
-      ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
+        &.disabled {
+          color: $color-text-muted;
 
-        .feature-item {
-          padding: 0.5rem 0;
-          display: flex;
-          align-items: center;
-          font-size: 0.9rem;
-
-          .icon {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 24px;
-            height: 24px;
-            background: #4caf50;
-            color: white;
-            border-radius: 50%;
-            margin-right: 0.75rem;
-            font-weight: bold;
-            flex-shrink: 0;
-            font-size: 0.75rem;
-          }
-
-          &.disabled {
-            opacity: 0.5;
-
-            .icon {
-              background: #ccc;
-            }
+          &::before {
+            background: $color-text-muted;
           }
         }
       }
@@ -185,343 +226,357 @@
   }
 }
 
+// Price Section
 .price-section {
-  padding: 1.5rem;
-  border-bottom: 1px solid #e0e0e0;
+  padding: $spacing-xl;
+  border-bottom: 1px solid $color-border;
 
-  @media (min-width: 768px) {
-    padding: 2rem;
-  }
+  .price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: $spacing-sm 0;
 
-  h2 {
-    font-size: 1.125rem;
-    margin: 0 0 1rem;
-    color: #333;
-    font-weight: 600;
-
-    @media (min-width: 768px) {
-      font-size: 1.25rem;
+    .label {
+      font-size: 14px;
+      color: $color-text-secondary;
+      font-weight: 400;
     }
-  }
 
-  .price-breakdown {
-    .price-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.75rem 0;
+    .value {
+      font-size: 16px;
+      color: $color-text-primary;
+      font-weight: 600;
+    }
 
+    &.total {
       .label {
-        font-weight: 500;
-        color: #555;
-        font-size: 0.95rem;
+        font-size: 16px;
+        color: $color-text-primary;
+        font-weight: 600;
       }
 
       .value {
-        font-weight: 600;
-        color: #333;
-        font-size: 1rem;
-
-        @media (min-width: 768px) {
-          font-size: 1.125rem;
-        }
-      }
-
-      &.total {
-        padding-top: 1rem;
-
-        .label,
-        .value {
-          font-size: 1.125rem;
-          color: #2563eb;
-
-          @media (min-width: 768px) {
-            font-size: 1.25rem;
-          }
-        }
+        font-size: 24px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
       }
     }
+  }
 
-    .price-divider {
-      border-top: 2px solid #e0e0e0;
-      margin: 0.5rem 0;
-    }
+  .price-divider {
+    height: 1px;
+    background: $color-border;
+    margin: $spacing-md 0;
   }
 }
 
+// Status Section
 .status-section {
-  padding: 1.5rem;
-  border-bottom: 1px solid #e0e0e0;
-
-  @media (min-width: 768px) {
-    padding: 2rem;
-  }
+  padding: $spacing-xl;
+  border-bottom: 1px solid $color-border;
 
   .status-badge {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1.5rem;
-    border-radius: 50px;
+    padding: $spacing-sm $spacing-md;
+    border-radius: $radius-md;
+    font-size: 14px;
     font-weight: 600;
-    font-size: 0.95rem;
+    box-shadow: $shadow-subtle;
+    margin-bottom: $spacing-md;
 
     &.badge-success {
-      background: #d4edda;
-      color: #155724;
+      background: $color-success-bg;
+      color: darken($color-success, 10%);
     }
 
     &.badge-warning {
-      background: #fff3cd;
-      color: #856404;
+      background: $color-pending-bg;
+      color: darken($color-pending, 10%);
     }
 
     &.badge-danger {
-      background: #f8d7da;
-      color: #721c24;
+      background: $color-error-bg;
+      color: darken($color-error, 10%);
     }
 
     &.badge-info {
-      background: #d1ecf1;
-      color: #0c5460;
+      background: lighten($color-text-tertiary, 45%);
+      color: darken($color-text-tertiary, 10%);
     }
   }
 
-  .status-info {
-    margin-top: 1rem;
-    padding: 1rem;
-    border-radius: 8px;
+  .status-message {
+    padding: $spacing-md;
+    border-radius: $radius-md;
+    background: $color-white;
+    box-shadow: $shadow-subtle;
 
-    p {
-      margin: 0;
-      font-size: 0.9rem;
-      line-height: 1.5;
+    .message-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: $color-text-primary;
+      margin-bottom: $spacing-xs;
+    }
+
+    .message-content {
+      font-size: 14px;
+      color: $color-text-secondary;
+      line-height: 1.6;
+
+      strong {
+        font-weight: 600;
+        color: $color-text-primary;
+      }
     }
 
     &.success {
-      background: #d4edda;
-      color: #155724;
+      border-left: 3px solid $color-success;
     }
 
-    &.warning {
-      background: #fff3cd;
-      color: #856404;
+    &.pending {
+      border-left: 3px solid $color-pending;
     }
 
-    &.error {
-      background: #f8d7da;
-      color: #721c24;
+    &.failed {
+      border-left: 3px solid $color-error;
     }
   }
 }
 
+// Payment Action Section
 .payment-action {
-  padding: 1.5rem;
-  text-align: center;
-
-  @media (min-width: 768px) {
-    padding: 2rem;
-  }
+  padding: $spacing-xl;
 
   .btn-pay {
     width: 100%;
-    max-width: 400px;
-    padding: 1rem 2rem;
-    font-size: 1rem;
-    font-weight: 600;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s;
-    background: #2563eb;
+    padding: $spacing-md $spacing-lg;
+    background: black;
     color: white;
-
-    @media (min-width: 768px) {
-      font-size: 1.125rem;
-    }
+    border: 1px solid $color-border;
+    border-radius: $radius-md;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: $shadow-button;
+    letter-spacing: -0.01em;
 
     &:hover:not(:disabled) {
-      background: #1d4ed8;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+      box-shadow: $shadow-button-hover;
+      transform: translateY(-1px);
+      background: $color-background;
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+      box-shadow: $shadow-subtle;
     }
 
     &:disabled {
-      opacity: 0.6;
+      opacity: 0.5;
       cursor: not-allowed;
-      background: #93c5fd;
+      box-shadow: $shadow-subtle;
+    }
+
+    .spinner-small {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid $color-border;
+      border-top-color: $color-text-primary;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      margin-right: $spacing-xs;
+      vertical-align: middle;
     }
   }
 
-  .spinner-small {
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-    border: 2px solid #ffffff;
-    border-top: 2px solid transparent;
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-    margin-right: 0.5rem;
-    vertical-align: middle;
-  }
+  // Reopen Section
+  .reopen-section {
+    margin-top: $spacing-lg;
+    padding: $spacing-md;
+    background: $color-background;
+    border-radius: $radius-md;
+    box-shadow: $shadow-subtle;
 
-  .error-message {
-    margin-top: 1rem;
-    padding: 1rem;
-    background: #f8d7da;
-    color: #721c24;
-    border-radius: 8px;
-    font-weight: 500;
-    font-size: 0.9rem;
-  }
-
-  .payment-methods-info {
-    margin-top: 2rem;
-    color: #666;
-
-    p {
-      margin-bottom: 0.75rem;
-      font-size: 0.875rem;
-    }
-
-    .payment-methods {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      justify-content: center;
-
-      .method {
-        background: #f5f5f5;
-        padding: 0.5rem 1rem;
-        border-radius: 20px;
-        font-size: 0.8rem;
-        color: #555;
-
-        @media (min-width: 768px) {
-          font-size: 0.875rem;
-        }
-      }
-    }
-  }
-
-  // Reopen payment section (shown when Snap modal is closed)
-  .reopen-payment-section {
-    margin-top: 1.5rem;
-    padding: 1.25rem;
-    background: #fff3cd;
-    border: 1px solid #ffc107;
-    border-radius: 8px;
-    animation: slideIn 0.3s ease-out;
-
-    @media (min-width: 768px) {
-      padding: 1.5rem;
-    }
-
-    .info-message {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
+    .reopen-message {
+      font-size: 14px;
+      color: $color-text-secondary;
+      margin-bottom: $spacing-md;
       font-weight: 500;
-      color: #856404;
-      font-size: 0.9rem;
-
-      @media (min-width: 768px) {
-        font-size: 1rem;
-      }
-
-      .icon {
-        font-size: 1.25rem;
-        flex-shrink: 0;
-      }
-
-      .text {
-        line-height: 1.4;
-      }
     }
 
     .reopen-buttons {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      margin-bottom: 1rem;
-
-      @media (min-width: 600px) {
-        flex-direction: row;
-        gap: 1rem;
-      }
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: $spacing-sm;
+      margin-bottom: $spacing-md;
 
       button {
-        flex: 1;
-        padding: 0.875rem 1.5rem;
-        font-size: 0.95rem;
-        font-weight: 600;
-        border: none;
-        border-radius: 6px;
+        padding: $spacing-sm $spacing-md;
+        background: $color-white;
+        color: $color-text-primary;
+        border: 1px solid $color-border;
+        border-radius: $radius-md;
+        font-size: 14px;
+        font-weight: 500;
         cursor: pointer;
-        transition: all 0.3s;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
+        transition: all 0.2s ease;
+        box-shadow: $shadow-subtle;
 
-        @media (min-width: 768px) {
-          font-size: 1rem;
+        &:hover:not(:disabled) {
+          box-shadow: $shadow-button;
+          transform: translateY(-1px);
         }
 
         &:disabled {
-          opacity: 0.6;
+          opacity: 0.5;
           cursor: not-allowed;
-        }
-
-        .icon {
-          font-size: 1.125rem;
-        }
-      }
-
-      .btn-reopen-modal {
-        background: #2563eb;
-        color: white;
-
-        &:hover:not(:disabled) {
-          background: #1d4ed8;
-          transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
-        }
-      }
-
-      .btn-open-tab {
-        background: #16a34a;
-        color: white;
-
-        &:hover:not(:disabled) {
-          background: #15803d;
-          transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(22, 163, 74, 0.4);
         }
       }
     }
 
-    .help-text {
-      font-size: 0.8rem;
-      color: #856404;
+    .token-validity {
+      font-size: 12px;
+      color: $color-text-tertiary;
       text-align: center;
-      font-style: italic;
-
-      @media (min-width: 768px) {
-        font-size: 0.875rem;
-      }
+      font-weight: 400;
     }
   }
 
-  @keyframes slideIn {
-    from {
-      opacity: 0;
-      transform: translateY(-10px);
+  // Error Alert
+  .error-alert {
+    margin-top: $spacing-md;
+    padding: $spacing-md;
+    background: $color-error-bg;
+    color: darken($color-error, 10%);
+    border-radius: $radius-md;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: $shadow-subtle;
+    border-left: 3px solid $color-error;
+  }
+
+  // Payment Methods
+  .payment-methods {
+    margin-top: $spacing-xl;
+    padding-top: $spacing-lg;
+    border-top: 1px solid $color-border;
+
+    .methods-label {
+      font-size: 12px;
+      color: $color-text-tertiary;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 600;
+      margin-bottom: $spacing-sm;
     }
-    to {
-      opacity: 1;
-      transform: translateY(0);
+
+    .methods-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: $spacing-sm;
+
+      .method-tag {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: $spacing-sm;
+        background: $color-white;
+        border: 1px solid $color-border;
+        border-radius: $radius-sm;
+        font-size: 13px;
+        color: $color-text-secondary;
+        font-weight: 500;
+        box-shadow: $shadow-subtle;
+        transition: all 0.2s ease;
+
+        &:hover {
+          box-shadow: $shadow-button;
+          transform: translateY(-1px);
+        }
+      }
     }
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .invoice-container {
+    padding: $spacing-md;
+  }
+
+  .invoice-header {
+    padding: $spacing-lg;
+
+    h1 {
+      font-size: 20px;
+    }
+
+    .invoice-meta {
+      gap: $spacing-md;
+    }
+  }
+
+  .package-section,
+  .price-section,
+  .status-section,
+  .payment-action {
+    padding: $spacing-lg;
+  }
+
+  .package-section .package-info .package-name {
+    font-size: 18px;
+  }
+
+  .price-section .price-row.total .value {
+    font-size: 20px;
+  }
+
+  .payment-action .reopen-section .reopen-buttons {
+    grid-template-columns: 1fr;
+  }
+
+  .payment-methods .methods-grid {
+    grid-template-columns: repeat(2, 1fr);
+
+    .method-tag {
+      font-size: 12px;
+      padding: $spacing-xs;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .invoice-container {
+    padding: $spacing-sm;
+  }
+
+  .invoice-card {
+    border-radius: $radius-md;
+  }
+
+  .invoice-header,
+  .package-section,
+  .price-section,
+  .status-section,
+  .payment-action {
+    padding: $spacing-md;
+  }
+
+  .invoice-header h1 {
+    font-size: 18px;
+    margin-bottom: $spacing-md;
+  }
+
+  .package-section h2,
+  .price-section h2 {
+    font-size: 14px;
+  }
+
+  .payment-methods .methods-grid {
+    grid-template-columns: 1fr;
   }
 }
