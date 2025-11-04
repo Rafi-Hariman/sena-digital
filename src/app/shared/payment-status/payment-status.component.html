@@ -1,0 +1,68 @@
+<div class="status-container">
+  <div *ngIf="isChecking" class="checking">
+    <div class="spinner"></div>
+    <h2>Memverifikasi Pembayaran...</h2>
+    <p>Mohon tunggu sebentar</p>
+
+    <div class="progress-container">
+      <div class="progress-bar">
+        <div class="progress-fill" [style.width.%]="progress"></div>
+      </div>
+      <p class="progress-text">{{ progress | number:'1.0-0' }}%</p>
+    </div>
+  </div>
+
+  <div *ngIf="!isChecking && status === 'paid'" class="success">
+    <div class="icon">✅</div>
+    <h2>Pembayaran Berhasil!</h2>
+    <p>Terima kasih. Pembayaran Anda telah dikonfirmasi.</p>
+
+    <div *ngIf="isRedirecting" class="redirect-info">
+      <p>Mengalihkan ke dashboard dalam {{ redirectCountdown }} detik...</p>
+      <div class="button-group">
+        <button class="btn btn-primary" (click)="goToDashboard()">
+          Ke Dashboard Sekarang
+        </button>
+        <button class="btn btn-secondary" (click)="cancelRedirect()">
+          Batal
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="!isRedirecting">
+      <button class="btn btn-primary" (click)="goToDashboard()">
+        Ke Dashboard
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="!isChecking && status === 'pending'" class="pending">
+    <div class="icon">⏳</div>
+    <h2>Pembayaran Sedang Diproses</h2>
+    <p>Kami sedang menunggu konfirmasi dari bank.</p>
+    <p class="small-text">Order ID: {{ orderId }}</p>
+    <div class="button-group">
+      <button class="btn btn-primary" (click)="checkAgain()">
+        Cek Lagi
+      </button>
+      <button class="btn btn-secondary" (click)="goToDashboard()">
+        Ke Dashboard
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="!isChecking && (status === 'failed' || status === 'error')" class="failed">
+    <div class="icon">❌</div>
+    <h2>Pembayaran Gagal</h2>
+    <p>Mohon maaf, pembayaran Anda tidak berhasil.</p>
+    <p class="small-text" *ngIf="orderId">Order ID: {{ orderId }}</p>
+    <div class="button-group">
+      <button class="btn btn-primary" (click)="retry()">
+        Coba Lagi
+      </button>
+      <button class="btn btn-secondary" (click)="goToDashboard()">
+        Ke Dashboard
+      </button>
+    </div>
+  </div>
+</div>

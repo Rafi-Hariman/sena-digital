@@ -37,6 +37,7 @@ import { WeddingViewComponent } from './dashboard/wedding-view/wedding-view.comp
 import { ProfileComponent } from './dashboard/profile/profile.component';
 import { BillUserComponent } from './dashboard/bill-user/bill-user.component';
 import { ProfileAdminComponent } from './dashboard-admin/pengaturan/profile-admin/profile-admin.component';
+import { PaymentStatusComponent } from './shared/payment-status/payment-status.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -45,6 +46,8 @@ const routes: Routes = [
   { path: 'login', component: LoginPageComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'buat-undangan', component: GenerateUndanganComponent },
+  { path: 'payment-success', component: PaymentStatusComponent },
+  { path: 'payment-pending', component: PaymentStatusComponent },
   {
     path: 'dashboard',
     component: DashboardUserComponent,

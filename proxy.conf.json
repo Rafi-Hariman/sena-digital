@@ -1,6 +1,6 @@
 {
   "/api": {
-    "target": "https://cloud-api.sena-digital.com/api",
+    "target": "http://127.0.0.1:8000/api",
     "secure": true,
     "changeOrigin": true,
     "logLevel": "debug",

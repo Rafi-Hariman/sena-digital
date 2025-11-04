@@ -1,0 +1,81 @@
+.status-container {
+  max-width: 600px;
+  margin: 4rem auto;
+  padding: 2rem;
+  text-align: center;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+  @media (min-width: 768px) {
+    padding: 3rem;
+  }
+}
+
+.icon {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+
+  @media (min-width: 768px) {
+    font-size: 5rem;
+  }
+}
+
+h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #333;
+
+  @media (min-width: 768px) {
+    font-size: 2rem;
+  }
+}
+
+p {
+  color: #666;
+  margin-bottom: 2rem;
+  font-size: 0.95rem;
+}
+
+.btn {
+  padding: 0.875rem 2.5rem;
+  font-size: 1rem;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s;
+
+  @media (min-width: 768px) {
+    padding: 1rem 3rem;
+    font-size: 1.125rem;
+  }
+
+  &:hover {
+    background: #5568d3;
+    transform: translateY(-2px);
+  }
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 2rem;
+
+  @media (min-width: 768px) {
+    width: 60px;
+    height: 60px;
+    border-width: 6px;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+}

@@ -22,6 +22,8 @@ export class RegisPembayaranComponent implements OnInit {
   bill: any;
   manualBill: any;
   private notyf: Notyf
+  showInvoice = false;
+  invoiceData: any = null;
 
 
   selectOptions: any = {
@@ -49,6 +51,8 @@ export class RegisPembayaranComponent implements OnInit {
   ngOnInit(): void {
     this.getMasterPayment()
     const allDataFromStepsStr = localStorage.getItem('formData');
+    console.log(allDataFromStepsStr);
+
     if (allDataFromStepsStr) {
       const allDataFromSteps = JSON.parse(allDataFromStepsStr);
       if (allDataFromSteps?.registrasi?.formData) {
@@ -81,7 +85,17 @@ export class RegisPembayaranComponent implements OnInit {
   onMetodeSelect(event: any) {
     console.log(event);
     this.selectedMethod = event;
-    this.getDetailMethod();
+
+    if (event === 3 || event === '3') {
+      this.showInvoice = true;
+      const allDataFromStepsStr = localStorage.getItem('formData');
+      if (allDataFromStepsStr) {
+        this.invoiceData = JSON.parse(allDataFromStepsStr);
+      }
+    } else {
+      this.showInvoice = false;
+      this.getDetailMethod();
+    }
   }
 
   onBack() {
