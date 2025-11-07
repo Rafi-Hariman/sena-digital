@@ -1,10 +1,11 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import { WeddingEvent } from '../../../services/wedding-data.service';
 
 @Component({
   selector: 'wc-resepsi-view',
   templateUrl: './resepsi-view.component.html',
-  styleUrls: ['./resepsi-view.component.scss']
+  styleUrls: ['./resepsi-view.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ResepsiViewComponent implements OnInit {
   @Input() events: WeddingEvent[] | undefined = [];

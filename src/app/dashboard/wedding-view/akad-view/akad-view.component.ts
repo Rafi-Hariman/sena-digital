@@ -1,10 +1,11 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import { WeddingEvent } from '../../../services/wedding-data.service';
 
 @Component({
   selector: 'wc-akad-view',
   templateUrl: './akad-view.component.html',
-  styleUrls: ['./akad-view.component.scss']
+  styleUrls: ['./akad-view.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AkadViewComponent implements OnInit {
   @Input() events: WeddingEvent[] | undefined = [];

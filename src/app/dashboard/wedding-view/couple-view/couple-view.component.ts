@@ -1,10 +1,11 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import { WeddingData } from '../../../services/wedding-data.service';
 
 @Component({
   selector: 'wc-couple-view',
   templateUrl: './couple-view.component.html',
-  styleUrls: ['./couple-view.component.scss']
+  styleUrls: ['./couple-view.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CoupleViewComponent implements OnInit {
   @Input() weddingData: WeddingData | null = null;

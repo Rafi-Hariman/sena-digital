@@ -124,17 +124,27 @@
 
         <button
           class="side-icon-btn"
-          *ngIf="!isPlaying"
+          *ngIf="isAudioLoading"
+          aria-label="Loading audio"
+          disabled>
+          <i class="fas fa-spinner fa-spin"></i>
+        </button>
+
+        <button
+          class="side-icon-btn"
+          *ngIf="!isPlaying && !isAudioLoading"
           (click)="togglePlay()"
-          aria-label="Play audio">
+          [disabled]="isAudioLoading"
+          aria-label="Putar musik">
           <i class="fas fa-play"></i>
         </button>
 
         <button
           class="side-icon-btn"
-          *ngIf="isPlaying"
+          *ngIf="isPlaying && !isAudioLoading"
           (click)="togglePlay()"
-          aria-label="Pause audio">
+          [disabled]="isAudioLoading"
+          aria-label="Jeda musik">
           <i class="fas fa-pause"></i>
         </button>
       </div>

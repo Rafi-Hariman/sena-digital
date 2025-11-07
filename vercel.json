@@ -1,0 +1,62 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist/woocommerce"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*\\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|webp|webmanifest|json))",
+      "headers": {
+        "Cache-Control": "public, max-age=31536000, immutable"
+      },
+      "dest": "/$1"
+    },
+    {
+      "src": "/ngsw-worker.js",
+      "headers": {
+        "Cache-Control": "public, max-age=0, must-revalidate"
+      },
+      "dest": "/ngsw-worker.js"
+    },
+    {
+      "src": "/ngsw.json",
+      "headers": {
+        "Cache-Control": "public, max-age=0, must-revalidate"
+      },
+      "dest": "/ngsw.json"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        }
+      ]
+    }
+  ]
+}

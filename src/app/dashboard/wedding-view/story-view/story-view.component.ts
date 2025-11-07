@@ -1,10 +1,11 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import { WeddingStory } from '../../../services/wedding-data.service';
 
 @Component({
   selector: 'wc-story-view',
   templateUrl: './story-view.component.html',
-  styleUrls: ['./story-view.component.scss']
+  styleUrls: ['./story-view.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StoryViewComponent implements OnInit {
   @Input() stories: WeddingStory[] | undefined = [];

@@ -663,8 +663,65 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   /**
+   * Initialize audio specifically for mobile devices within user gesture
+   * This ensures audio context is unlocked properly on mobile browsers
+   */
+  private initializeAudioForMobile(): void {
+    if (!this.weddingData?.settings) {
+      console.warn('No wedding settings available for mobile audio initialization');
+      return;
+    }
+
+    const musicUrl = this.weddingData.settings.music_stream_url || this.weddingData.settings.musik;
+
+    if (!musicUrl) {
+      console.warn('No music URL available');
+      return;
+    }
+
+    try {
+      // Create audio element synchronously in user gesture
+      this.audioElement = new Audio();
+      this.audioElement.preload = 'auto';
+      this.audioElement.loop = true;
+      this.audioElement.volume = this.currentVolume;
+      this.audioElement.crossOrigin = 'anonymous';
+      this.audioElement.src = musicUrl;
+
+      // Setup listeners
+      this.setupAudioEventListeners();
+      this.audioInitialized = true;
+
+      // Load and play immediately while still in user gesture context
+      this.audioElement.load();
+
+      // Try to play immediately
+      const playPromise = this.audioElement.play();
+
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            console.log('Mobile audio initialized and playing');
+            this.isPlaying = true;
+            this.audioError = null;
+          })
+          .catch(error => {
+            console.error('Mobile audio play failed:', error);
+            // Don't show error - user can try again
+            this.isPlaying = false;
+          });
+      }
+
+    } catch (error) {
+      console.error('Mobile audio initialization error:', error);
+      this.audioError = 'Gagal menginisialisasi audio';
+    }
+  }
+
+  /**
    * Attempt to autoplay audio with fallback to muted playback
    * Handles browser autoplay restrictions gracefully
+   * NOTE: On mobile, this often fails. Use initializeAudioForMobile() instead.
    */
   private attemptAutoplay(): void {
     if (!this.audioElement) {
@@ -682,7 +739,7 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
         this.isMuted = false;
       })
       .catch((error) => {
-        console.warn('Autoplay blocked, attempting muted playback:', error);
+        console.warn('Autoplay blocked:', error);
 
         // Fallback: mute and try again
         if (this.audioElement) {
@@ -691,12 +748,13 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
           this.audioElement.play()
             .then(() => {
-              console.log('Muted autoplay successful');
+              console.log('Muted autoplay successful - user can unmute manually');
               this.isPlaying = true;
             })
             .catch((mutedError) => {
               console.error('Muted autoplay also failed:', mutedError);
-              this.audioError = 'Autoplay blocked by browser. Click play button to start music.';
+              // Don't set error - user can manually click play button
+              this.isPlaying = false;
             });
         }
       });
@@ -771,9 +829,10 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   togglePlay(): void {
+    // Mobile audio unlock - ensure we create/initialize audio directly in user gesture
     if (!this.audioElement) {
-      console.warn('Audio not initialized, cannot toggle play');
-      this.initializeAudio();
+      console.log('Audio not initialized, initializing now with user interaction');
+      this.initializeAudioForMobile();
       return;
     }
 
@@ -782,47 +841,93 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
-    if (this.audioError) {
-      console.warn('Audio error present, cannot play:', this.audioError);
-      return;
-    }
-
     try {
       if (this.isPlaying) {
         this.audioElement.pause();
+        this.isPlaying = false;
       } else {
-        // Handle browser autoplay policies
+        // Critical: Unmute first on mobile to ensure playback
+        if (this.audioElement.muted) {
+          this.audioElement.muted = false;
+          this.isMuted = false;
+        }
+
+        // IMPORTANT: Call play() directly in user gesture, not in promise chain
         const playPromise = this.audioElement.play();
 
         if (playPromise !== undefined) {
           playPromise
             .then(() => {
+              console.log('Audio playback started successfully');
+              this.isPlaying = true;
+              this.audioError = null;
             })
             .catch(error => {
-              this.audioError = 'Playback failed - please interact with the page first';
-              this.isPlaying = false;
+              console.error('Playback failed:', error);
+
+              // Try muted playback as fallback
+              if (this.audioElement && !this.audioElement.muted) {
+                console.log('Attempting muted playback...');
+                this.audioElement.muted = true;
+                this.isMuted = true;
+
+                this.audioElement.play()
+                  .then(() => {
+                    console.log('Muted playback successful - unmute manually');
+                    this.isPlaying = true;
+                    this.audioError = null;
+                  })
+                  .catch(mutedError => {
+                    console.error('Muted playback also failed:', mutedError);
+                    this.audioError = 'Tidak dapat memutar audio. Silakan coba lagi.';
+                    this.isPlaying = false;
+                  });
+              }
             });
         }
       }
     } catch (error) {
-      this.audioError = 'Playback control failed';
+      console.error('Toggle play error:', error);
+      this.audioError = 'Terjadi kesalahan saat memutar audio';
+      this.isPlaying = false;
     }
-
-    // State will be updated by event listeners
   }
 
   toggleMute(): void {
     if (!this.audioElement) {
       console.warn('Audio not initialized, cannot toggle mute');
-      this.initializeAudio();
+      // Try to initialize for mobile
+      this.initializeAudioForMobile();
       return;
     }
 
     try {
-      this.audioElement.muted = !this.audioElement.muted;
+      const newMutedState = !this.audioElement.muted;
+      this.audioElement.muted = newMutedState;
+      this.isMuted = newMutedState;
 
-      // State will be updated by volumechange event listener
+      // If unmuting and audio is not playing, try to start it
+      if (!newMutedState && !this.isPlaying) {
+        const playPromise = this.audioElement.play();
+
+        if (playPromise !== undefined) {
+          playPromise
+            .then(() => {
+              console.log('Audio started after unmute');
+              this.isPlaying = true;
+            })
+            .catch(error => {
+              console.error('Failed to start audio after unmute:', error);
+              // Re-mute if play failed
+              this.audioElement!.muted = true;
+              this.isMuted = true;
+            });
+        }
+      }
+
+      console.log('Audio muted state:', newMutedState);
     } catch (error) {
+      console.error('Toggle mute error:', error);
     }
   }
 
@@ -836,8 +941,61 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this.setCurrentView(ContentView.COUPLE);
     this.saveInvitationState();
 
-    // Initialize audio with autoplay enabled
-    this.initializeAudio(true);
+    // Critical: Try to initialize and play audio directly in this user gesture
+    // This is the best chance for mobile browsers to allow audio playback
+    if (!this.audioInitialized && this.weddingData?.settings) {
+      const musicUrl = this.weddingData.settings.music_stream_url || this.weddingData.settings.musik;
+
+      if (musicUrl) {
+        try {
+          // Initialize audio synchronously within user gesture
+          this.audioElement = new Audio();
+          this.audioElement.preload = 'auto';
+          this.audioElement.loop = true;
+          this.audioElement.volume = this.currentVolume;
+          this.audioElement.crossOrigin = 'anonymous';
+          this.audioElement.src = musicUrl;
+
+          // Setup event listeners
+          this.setupAudioEventListeners();
+          this.audioInitialized = true;
+
+          // Load the audio
+          this.audioElement.load();
+
+          // Try to play immediately (best chance on mobile)
+          this.audioElement.play()
+            .then(() => {
+              console.log('Audio started on invitation open');
+              this.isPlaying = true;
+              this.isMuted = false;
+            })
+            .catch(error => {
+              console.warn('Autoplay blocked on invitation open:', error);
+
+              // Try muted playback
+              if (this.audioElement) {
+                this.audioElement.muted = true;
+                this.isMuted = true;
+
+                this.audioElement.play()
+                  .then(() => {
+                    console.log('Muted audio started - user can unmute');
+                    this.isPlaying = true;
+                  })
+                  .catch(() => {
+                    // Silent fail - user can click play button
+                    console.log('Audio will need manual play button click');
+                    this.isPlaying = false;
+                  });
+              }
+            });
+
+        } catch (error) {
+          console.error('Error initializing audio on invitation open:', error);
+        }
+      }
+    }
 
     if (!wasAlreadyOpened) {
       this.submitAttendanceView();

@@ -1,10 +1,11 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import { WeddingData, BankAccount } from '../../../services/wedding-data.service';
 
 @Component({
   selector: 'wc-gift-view',
   templateUrl: './gift-view.component.html',
-  styleUrls: ['./gift-view.component.scss']
+  styleUrls: ['./gift-view.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GiftViewComponent implements OnInit {
   @Input() weddingData: WeddingData | undefined;
