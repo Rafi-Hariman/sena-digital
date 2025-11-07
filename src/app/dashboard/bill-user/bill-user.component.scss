@@ -234,8 +234,8 @@
   color: white;
 }
 
-/* Mobile adjustments (up to 480px) */
-@media (max-width: 480px) {
+/* Mobile adjustments (up to 767px) - Transform table to card layout */
+@media (max-width: 767px) {
   .bill-container {
     padding: 0.75rem;
   }
@@ -254,40 +254,169 @@
     height: 1.5rem;
   }
 
-  .invoice-table thead th {
-    padding: 0.75rem 0.5rem;
+  /* Transform table to card layout */
+  .invoice-table-container {
+    overflow-x: visible;
+  }
+
+  .table-responsive {
+    min-width: auto;
+  }
+
+  .invoice-table {
+    border: 0;
+  }
+
+  /* Hide table header on mobile */
+  .invoice-table thead {
+    display: none;
+  }
+
+  /* Display table rows as cards */
+  .invoice-table tbody tr {
+    display: block;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.75rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+  }
+
+  .invoice-table tbody tr:hover {
+    background: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+  }
+
+  /* Display table cells as rows with labels */
+  .invoice-table tbody td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.875rem 1rem;
+    border: none;
+    border-bottom: 1px solid #f3f4f6;
+    font-size: 0.875rem;
+    text-align: right;
+  }
+
+  .invoice-table tbody td:last-child {
+    border-bottom: none;
+  }
+
+  /* Add labels using ::before pseudo-element */
+  .invoice-table tbody td::before {
+    content: attr(data-label);
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+    text-align: left;
+    flex: 0 0 40%;
+  }
+
+  /* First cell (invoice number) - special styling as card header */
+  .invoice-table tbody td:nth-child(1) {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 1rem;
+  }
+
+  .invoice-table tbody td:nth-child(1)::before {
+    content: 'No Invoice';
+  }
+
+  .invoice-table tbody td:nth-child(2)::before {
+    content: 'Tanggal Transaksi';
+  }
+
+  .invoice-table tbody td:nth-child(3)::before {
+    content: 'Paket';
+  }
+
+  .invoice-table tbody td:nth-child(4)::before {
+    content: 'Harga';
+  }
+
+  .invoice-table tbody td:nth-child(5)::before {
+    content: 'Status';
+  }
+
+  /* Adjust cell-specific styling for card layout */
+  .invoice-id {
+    font-size: 0.875rem;
+  }
+
+  .transaction-date {
     font-size: 0.8rem;
   }
 
-  .invoice-table tbody td {
-    padding: 1rem 0.5rem;
-    font-size: 0.8rem;
+  .package-name {
+    font-size: 0.875rem;
+  }
+
+  .price-cell {
+    font-size: 0.875rem;
   }
 
   .status-badge {
-    padding: 0.375rem 0.75rem;
-    font-size: 0.8rem;
+    padding: 0.375rem 0.875rem;
+    font-size: 0.75rem;
+  }
+
+  .status-cell {
+    text-align: right;
   }
 }
 
-/* Tablet (481px - 767px) */
+/* Tablet specific adjustments (481px - 767px) */
 @media (min-width: 481px) and (max-width: 767px) {
   .bill-container {
     padding: 1rem;
   }
 
   .content-section {
-    padding: 1.75rem 1.25rem;
+    padding: 1.25rem 1rem;
   }
 
-  .invoice-table thead th {
-    padding: 1rem;
-    font-size: 0.9rem;
+  .section-title {
+    font-size: 1.375rem;
+  }
+
+  .invoice-table tbody tr {
+    margin-bottom: 1.125rem;
   }
 
   .invoice-table tbody td {
-    padding: 1.25rem 1rem;
+    padding: 1rem 1.125rem;
     font-size: 0.9rem;
+  }
+
+  .invoice-table tbody td::before {
+    font-size: 0.8rem;
+    flex: 0 0 45%;
+  }
+
+  .invoice-table tbody td:nth-child(1) {
+    padding: 1.125rem;
+  }
+
+  .invoice-id {
+    font-size: 0.9rem;
+  }
+
+  .transaction-date,
+  .package-name,
+  .price-cell {
+    font-size: 0.9rem;
+  }
+
+  .status-badge {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
   }
 }
 
@@ -363,10 +492,18 @@
 }
 
 /* Focus and hover states for accessibility */
-
 .invoice-row:focus-within {
   background-color: #f0f9ff;
   outline: 1px solid #3b82f6;
+}
+
+/* Card focus state for mobile */
+@media (max-width: 767px) {
+  .invoice-table tbody tr:focus-within {
+    background-color: #f0f9ff;
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+  }
 }
 
 /* High contrast mode support */
@@ -383,6 +520,12 @@
   .invoice-table tbody td {
     border-bottom: 1px solid #6b7280;
   }
+
+  @media (max-width: 767px) {
+    .invoice-table tbody tr {
+      border: 2px solid #6b7280;
+    }
+  }
 }
 
 /* Reduced motion support */
@@ -397,5 +540,15 @@
 
   .retry-button:active {
     transform: none;
+  }
+
+  @media (max-width: 767px) {
+    .invoice-table tbody tr {
+      transition: none;
+    }
+
+    .invoice-table tbody tr:hover {
+      transform: none;
+    }
   }
 }

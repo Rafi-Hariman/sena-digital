@@ -31,7 +31,8 @@
 
     <!-- Gallery view - properly isolated -->
     <wc-gallery-view
-      *ngIf="isCurrentView(ContentView.GALLERY)">
+      *ngIf="isCurrentView(ContentView.GALLERY)"
+      [userId]="weddingData?.user_info?.id">
     </wc-gallery-view>
 
     <!-- Main content - hidden when gallery is active -->

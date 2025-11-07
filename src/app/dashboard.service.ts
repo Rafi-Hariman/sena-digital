@@ -383,7 +383,7 @@ export class DashboardService {
       case DashboardServiceType.GALERY_SUBMIT:
         return `${this.BASE_URL_API}/v1/user/submission-galery`;
       case DashboardServiceType.GALERY_DATA:
-        return `${this.BASE_URL_API}/v1/user/list-galery`;
+        return `${this.BASE_URL_API}/v1/galery/public`;
       case DashboardServiceType.GALERY_DELETE:
         return `${this.BASE_URL_API}/v1/user/delete-galery`;
 

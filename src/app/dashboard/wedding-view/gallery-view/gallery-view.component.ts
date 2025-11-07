@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { GalleryItem } from '../../../services/wedding-data.service';
 import { DashboardService, DashboardServiceType } from '../../../dashboard.service';
 
@@ -8,6 +8,8 @@ import { DashboardService, DashboardServiceType } from '../../../dashboard.servi
   styleUrls: ['./gallery-view.component.scss']
 })
 export class GalleryViewComponent implements OnInit {
+  @Input() userId: number | undefined;
+
   galleryItems: GalleryItem[] = [];
   isLoading: boolean = true;
 
@@ -18,8 +20,17 @@ export class GalleryViewComponent implements OnInit {
   }
 
   private loadGalleryData(): void {
+    if (!this.userId) {
+      console.warn('Gallery: userId not provided, skipping gallery load');
+      this.isLoading = false;
+      this.galleryItems = [];
+      return;
+    }
+
     this.isLoading = true;
-    this.dashboardService.list(DashboardServiceType.GALERY_DATA).subscribe({
+    const params = { user_id: this.userId };
+
+    this.dashboardService.list(DashboardServiceType.GALERY_DATA, params).subscribe({
       next: (response: any) => {
         if (response && response.data) {
           this.galleryItems = response.data;
@@ -27,6 +38,7 @@ export class GalleryViewComponent implements OnInit {
         this.isLoading = false;
       },
       error: (error: any) => {
+        console.error('Gallery load error:', error);
         this.isLoading = false;
         this.galleryItems = [];
       }

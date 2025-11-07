@@ -4,16 +4,16 @@
       <div class="login-image">
         <img src="/assets/login.svg" alt="Beach" />
       </div>
-  
+
       <!-- Right Section with Form -->
       <div class="login-form">
         <h1>DAFTAR AKUN</h1>
-  
+
         <!-- Error Message Section -->
         <div *ngIf="errorMessage" class="error-message">
           {{ errorMessage }}
         </div>
-  
+
         <form [formGroup]="loginForm" (ngSubmit)="onRegister()">
           <!-- Email Input -->
           <div class="form-group">
@@ -22,11 +22,11 @@
               formControlName="email"
               placeholder="Email"
             />
-            <span *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid">
+            <span *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid" class="error-text">
               Email is required and must be valid.
             </span>
           </div>
-  
+
           <!-- Password Input -->
           <div class="form-group">
             <input
@@ -34,11 +34,11 @@
               formControlName="password"
               placeholder="Password"
             />
-            <span *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid">
+            <span *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid" class="error-text">
               Password is required and must be at least 6 characters.
             </span>
           </div>
-  
+
           <!-- Password Confirmation Input -->
           <div class="form-group">
             <input
@@ -51,11 +51,12 @@
                 loginForm.get('password_confirmation')?.touched &&
                 loginForm.get('password_confirmation')?.value !== loginForm.get('password')?.value
               "
+              class="error-text"
             >
               Passwords must match.
             </span>
           </div>
-  
+
           <!-- Phone Input -->
           <div class="form-group">
             <input
@@ -63,19 +64,20 @@
               formControlName="phone"
               placeholder="Phone"
             />
-            <span *ngIf="loginForm.get('phone')?.touched && loginForm.get('phone')?.invalid">
+            <span *ngIf="loginForm.get('phone')?.touched && loginForm.get('phone')?.invalid" class="error-text">
               Phone is required.
             </span>
           </div>
-  
+
+          <div class="account-prompt">
+            <p>Sudah punya akun? <a href="/login">Login</a></p>
+          </div>
+
           <!-- Submit Button -->
           <div class="login-actions">
             <button type="submit" [disabled]="loginForm.invalid">Daftar</button>
           </div>
         </form>
-  
-        <p>Sudah punya akun? <a href="/login"><b>Login.</b></a></p>
       </div>
     </div>
   </div>
-  

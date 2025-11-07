@@ -12,7 +12,7 @@ export class CoupleViewComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    console.log('CoupleViewComponent initialized with weddingData:', this.weddingData);
+    console.log(JSON.stringify(this.weddingData , null, 2));
   }
 
   getGroomName(): string {

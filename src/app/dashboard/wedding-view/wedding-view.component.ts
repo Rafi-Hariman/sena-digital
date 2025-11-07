@@ -108,6 +108,8 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit() {
     this.injectRippleStyles();
     this.initializeWeddingData();
+    console.log(this.weddingData);
+
   }
 
   ngAfterViewInit() {
