@@ -22,6 +22,8 @@ export class DataRegistrasiComponent implements OnInit {
   modalRef?: BsModalRef;
   paketOptions: any;
   selectedPrice: string = '';
+  domainError: string = '';
+  emailError: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -63,6 +65,14 @@ export class DataRegistrasiComponent implements OnInit {
     this.formRegis.valueChanges.subscribe((value) => {
       localStorage.setItem('formRegis', JSON.stringify(value));
     });
+
+    this.formRegis.get('domain')?.valueChanges.subscribe(() => {
+      this.domainError = '';
+    });
+
+    this.formRegis.get('email')?.valueChanges.subscribe(() => {
+      this.emailError = '';
+    });
     const savedData = localStorage.getItem('formData');
 
     if (savedData) {
@@ -97,6 +107,9 @@ export class DataRegistrasiComponent implements OnInit {
   }
 
   submit(): void {
+    this.domainError = '';
+    this.emailError = '';
+
     if (this.formRegis.valid) {
       const initialState = {
         message: 'Apakah anda ingin menyimpan data registrasi?',
@@ -136,7 +149,22 @@ export class DataRegistrasiComponent implements OnInit {
         this.notyf.success(res?.message || 'Data berhasil disimpan.');
       },
       error: (err) => {
-        this.notyf.error(err?.message || 'Ada kesalahan dalam sistem.');
+        this.modalRef?.hide();
+
+        const validationErrors = err?.error?.errors;
+
+        if (validationErrors) {
+          if (validationErrors.domain && validationErrors.domain.length > 0) {
+            this.domainError = 'Domain sudah diambil';
+          }
+
+          if (validationErrors.email && validationErrors.email.length > 0) {
+            this.emailError = 'Email sudah terdaftar';
+          }
+        } else {
+          const errorMessage = err?.error?.message || err?.message || 'Ada kesalahan dalam sistem.';
+          this.notyf.error(errorMessage);
+        }
       }
     })
   }

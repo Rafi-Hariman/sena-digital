@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { SeoService } from '../services/seo.service';
 
 @Component({
   selector: 'wc-generate-undangan',
@@ -17,12 +18,30 @@ export class GenerateUndanganComponent implements OnInit {
     step: 1,
   };
 
+  constructor(private seoService: SeoService) { }
+
   ngOnInit(): void {
+    this.setSeoTags();
     const saved = localStorage.getItem('formData');
     if (saved) {
       this.formData = JSON.parse(saved);
     }
     console.log('all formdata:', this.formData);
+  }
+
+  private setSeoTags(): void {
+    // Set SEO meta tags for generate invitation page
+    this.seoService.setMetaTags({
+      title: 'Buat Undangan Digital Pernikahan Gratis - Sena Digital',
+      description: 'Buat undangan digital pernikahan Anda sendiri dengan mudah dan gratis. Pilih template, customize desain, dan bagikan ke tamu undangan Anda.',
+      keywords: 'buat undangan digital, create wedding invitation, undangan gratis, buat undangan pernikahan, undangan online gratis',
+      url: 'https://sena-digital.com/buat-undangan',
+      image: 'https://sena-digital.com/assets/images/sena-digital-og-image.jpg',
+      type: 'website'
+    });
+
+    // Add Service structured data
+    this.seoService.addStructuredData(this.seoService.getServiceSchema());
   }
 
   get title(): string {

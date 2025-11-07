@@ -5,6 +5,7 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { DashboardService, DashboardServiceType } from 'src/app/dashboard.service';
 import { WeddingDataService, WeddingData } from '../../services/wedding-data.service';
 import { QRCodeModalComponent } from '../../shared/modal/qr-code-modal/qr-code-modal.component';
+import { SeoService } from '../../services/seo.service';
 
 // Attendance interface for type safety
 interface AttendanceRequest {
@@ -102,14 +103,34 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
     private router: Router,
     private dashboardService: DashboardService,
     private weddingDataService: WeddingDataService,
-    private modalService: BsModalService
+    private modalService: BsModalService,
+    private seoService: SeoService
   ) { }
 
   ngOnInit() {
     this.injectRippleStyles();
+    this.setSeoTags();
     this.initializeWeddingData();
     console.log(this.weddingData);
 
+  }
+
+  /**
+   * Set SEO meta tags for wedding view page
+   */
+  private setSeoTags(): void {
+    // Set generic wedding invitation meta tags
+    this.seoService.setMetaTags({
+      title: 'Undangan Pernikahan Digital - Sena Digital Wedding Invitation',
+      description: 'Undangan pernikahan digital dengan desain elegan. Lihat detail acara, RSVP, kirim ucapan, dan berikan hadiah digital.',
+      keywords: 'undangan pernikahan digital, undangan nikah, wedding invitation, RSVP online, amplop digital',
+      url: `https://sena-digital.com/wedding${this.domain ? '/' + this.domain : ''}`,
+      image: 'https://sena-digital.com/assets/images/sena-digital-og-image.jpg',
+      type: 'website'
+    });
+
+    // Add Event structured data for wedding
+    this.seoService.addStructuredData(this.seoService.getWeddingEventSchema());
   }
 
   ngAfterViewInit() {

@@ -206,7 +206,7 @@ Payment Success → Frontend calls status check → Backend queries Midtrans
 ## File Structure
 
 ```
-horuzt-app/
+sena-app/
 ├── PAYMENT_API_CONTRACT.md          # Complete API documentation
 ├── PAYMENT_CHANGES_SUMMARY.md       # Changes summary
 ├── angular-integration/

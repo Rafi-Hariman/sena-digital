@@ -1,5 +1,5 @@
 import { LOCALE_ID, NgModule } from '@angular/core';
-import { BrowserModule, Title } from '@angular/platform-browser';
+import { BrowserModule, Title, Meta } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -68,6 +68,7 @@ import { RegisCeritaComponent } from './generate-undangan/regis-cerita/regis-cer
 import { RegisPembayaranComponent } from './generate-undangan/regis-pembayaran/regis-pembayaran.component';
 import { ModalUploadGaleriComponent } from './generate-undangan/modal-upload-galeri/modal-upload-galeri.component';
 import { QueryService } from './dashboard.service';
+import { SeoService } from './services/seo.service';
 import { InvitationSectionComponent } from './home/features/feature-footer/invitation-section/invitation-section.component';
 import { PaymentConfirmComponent } from './shared/payment-confirm/payment-confirm.component';
 import { SuccessConfirmPaymentComponent } from './shared/success-confirm-payment/success-confirm-payment.component';
@@ -188,6 +189,8 @@ import { PaymentStatusComponent } from './shared/payment-status/payment-status.c
   ],
   providers: [
     Title,
+    Meta,
+    SeoService,
     { provide: LOCALE_ID, useValue: 'id' },
     {
       provide: HTTP_INTERCEPTORS,
