@@ -111,7 +111,6 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this.injectRippleStyles();
     this.setSeoTags();
     this.initializeWeddingData();
-    console.log(this.weddingData);
 
   }
 
