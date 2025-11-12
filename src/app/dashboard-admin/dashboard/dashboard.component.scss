@@ -889,6 +889,185 @@
   [style*="margin-bottom: 9px"] {
     margin-bottom: 0 !important;
   }
+
+  // Ultra-small phones (320px and below)
+  @media (max-width: 320px) {
+    :host {
+      --spacing-xs: 3px;
+      --spacing-sm: 4px;
+      --spacing-md: 6px;
+      --spacing-lg: 6px;
+    }
+
+    .dashboard-wrapper {
+      padding: 6px 0;
+    }
+
+    .container-fluid {
+      padding-left: 6px !important;
+      padding-right: 6px !important;
+
+      &.px-3,
+      &.px-md-4 {
+        padding-left: 6px !important;
+        padding-right: 6px !important;
+      }
+    }
+
+    .row {
+      margin-left: -3px !important;
+      margin-right: -3px !important;
+
+      &.g-3 > *,
+      &.g-md-4 > * {
+        padding-left: 3px !important;
+        padding-right: 3px !important;
+        margin-bottom: 4px !important;
+      }
+    }
+
+    .dashboard-card {
+      padding: 6px 8px;
+      margin-bottom: 0;
+    }
+
+    .card-content {
+      gap: 4px;
+    }
+
+    .left-border {
+      width: 2px;
+      height: 30px;
+    }
+
+    .card-details {
+      margin-left: 2px;
+
+      .title {
+        font-size: 0.65rem;
+        margin-bottom: 1px;
+        line-height: 1.2;
+      }
+
+      .amount {
+        font-size: 0.9rem;
+        line-height: 1.1;
+        word-break: break-word;
+      }
+    }
+
+    .card-icon {
+      min-width: 28px;
+
+      .icon {
+        font-size: 0.8rem;
+      }
+    }
+
+    .dashboard-stats {
+      margin-bottom: 4px;
+    }
+
+    .invoice-container {
+      padding: 6px 8px;
+    }
+
+    .invoice-header h2 {
+      font-size: 0.9rem;
+      padding-left: 2px;
+    }
+
+    .invoice-card {
+      padding: 6px 8px;
+      margin-top: 4px;
+    }
+
+    .invoice-card-header {
+      margin-bottom: 4px;
+
+      .invoice-number {
+        font-size: 0.85rem;
+      }
+    }
+
+    .invoice-card-body {
+      margin-bottom: 4px;
+    }
+
+    .invoice-detail {
+      margin-bottom: 3px;
+      font-size: 0.7rem;
+      word-break: break-word;
+
+      .label {
+        font-size: 0.7rem;
+        font-weight: 600;
+      }
+
+      .value {
+        font-size: 0.7rem;
+        word-break: break-all;
+      }
+    }
+
+    .status-badge {
+      font-size: 0.6rem;
+      padding: 0.2rem 0.4rem;
+      min-width: 60px;
+      height: 24px;
+      display: inline-flex;
+      align-items: center;
+
+      .dot {
+        width: 5px;
+        height: 5px;
+        margin-right: 2px;
+      }
+    }
+
+    .btn-konfirmasi {
+      font-size: 0.7rem;
+      padding: 5px 8px;
+      min-width: 70px;
+      min-height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &.mobile {
+        min-height: 36px;
+        padding: 6px 8px;
+        font-size: 0.75rem;
+      }
+    }
+
+    .invoice-table {
+      thead th {
+        font-size: 0.6rem;
+        padding: 3px 4px;
+      }
+
+      tbody td {
+        font-size: 0.6rem;
+        padding: 3px 4px;
+      }
+    }
+
+    .loading-spinner {
+      width: 28px;
+      height: 28px;
+      border-width: 2px;
+    }
+
+    .loading-container {
+      min-width: 140px;
+      padding: 10px;
+    }
+
+    .loading-text {
+      font-size: 0.7rem;
+    }
+  }
 }
 
 // Print Styles
