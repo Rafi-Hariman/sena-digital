@@ -42,7 +42,15 @@ export class InformasiMempelaiComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     try {
-      // Initialize form
+      // Get user ID first
+      const userID = this.storageService.getUserId();
+      if (userID) {
+        this.userId = userID;
+      } else {
+        console.warn('User ID not found in storage');
+      }
+
+      // Initialize form with photo fields as optional
       this.formGroup = this.fb.group({
         name_lengkap_pria: ['', Validators.required],
         name_panggilan_pria: ['', Validators.required],
@@ -52,24 +60,24 @@ export class InformasiMempelaiComponent implements OnInit {
         name_panggilan_wanita: ['', Validators.required],
         ayah_wanita: ['', Validators.required],
         ibu_wanita: ['', Validators.required],
-        user_id: ['', Validators.required],
+        user_id: [userID || '', Validators.required],
         status: [1],
         photo_pria: [null],
         photo_wanita: [null],
         cover_photo: [null]
       });
 
-      // Get user ID safely
-      const userID = this.storageService.getUserId();
-      if (userID) {
-        this.userId = userID;
-        this.formGroup.patchValue({ user_id: userID });
-      }
-
       // Load existing form data
       const existingFormData = this.storageService.getFormData();
       if (existingFormData?.informasiMempelai?.updatedData) {
-        this.formGroup.patchValue(existingFormData.informasiMempelai.updatedData);
+        const loadedData = existingFormData.informasiMempelai.updatedData;
+
+        // Preserve user_id if not set
+        if (!loadedData.user_id && userID) {
+          loadedData.user_id = userID;
+        }
+
+        this.formGroup.patchValue(loadedData);
       }
 
       // Load image previews from IndexedDB
@@ -93,10 +101,16 @@ export class InformasiMempelaiComponent implements OnInit {
           const storedImage = await this.storageService.getImage(field);
           if (storedImage) {
             this.imagePreviews[field] = `data:image/jpeg;base64,${storedImage}`;
+            // Set the form control value with the base64 data for submission
+            this.formGroup.patchValue({ [field]: storedImage });
+            this.formGroup.get(field)?.markAsTouched();
           }
         } else if (updatedData?.[field]) {
           // Handle legacy base64 data
           this.imagePreviews[field] = `data:image/jpeg;base64,${updatedData[field]}`;
+          // Set the form control value with the base64 data
+          this.formGroup.patchValue({ [field]: updatedData[field] });
+          this.formGroup.get(field)?.markAsTouched();
 
           // Migrate to IndexedDB
           await this.storageService.setImage(field, updatedData[field]);
@@ -138,7 +152,13 @@ export class InformasiMempelaiComponent implements OnInit {
 
         if (stored) {
           this.imagePreviews[controlName] = base64String;
+
+          // Store the base64 data temporarily in form for submission
           this.formGroup.patchValue({ [controlName]: base64Data });
+
+          // Mark image as stored in control value for validation
+          this.formGroup.get(controlName)?.markAsTouched();
+          this.formGroup.get(controlName)?.updateValueAndValidity();
 
           // Update form data without storing the actual image data
           await this.updateFormDataSafely();
@@ -238,27 +258,68 @@ export class InformasiMempelaiComponent implements OnInit {
     this.prev.emit();
   }
 
-  onNextClicked() {
+  async onNextClicked() {
+    // Check if all required fields are filled
+    if (this.formGroup.invalid) {
+      this.notyf.error('Silakan isi semua data yang diperlukan.');
+      return;
+    }
+
+    // Validate that all photos are uploaded
+    if (!this.imagePreviews['photo_pria'] || !this.imagePreviews['photo_wanita'] || !this.imagePreviews['cover_photo']) {
+      this.notyf.error('Silakan upload semua foto (Pria, Wanita, dan Sampul).');
+      return;
+    }
+
+    // Ensure all image data is loaded in form controls before submission
+    const imageFields = ['photo_pria', 'photo_wanita', 'cover_photo'];
+    for (const field of imageFields) {
+      const currentValue = this.formGroup.get(field)?.value;
+
+      // If form control is empty but preview exists, load from IndexedDB
+      if (!currentValue && this.imagePreviews[field]) {
+        try {
+          const storedImage = await this.storageService.getImage(field);
+          if (storedImage) {
+            this.formGroup.patchValue({ [field]: storedImage });
+          } else {
+            this.notyf.error(`Gagal memuat ${field}. Silakan upload ulang.`);
+            return;
+          }
+        } catch (error) {
+          console.error(`Error loading ${field} from storage:`, error);
+          this.notyf.error(`Gagal memuat ${field}. Silakan coba lagi.`);
+          return;
+        }
+      }
+    }
+
     const payload = new FormData();
 
     Object.keys(this.formGroup.value).forEach((key) => {
       const value = this.formGroup.get(key)?.value;
 
       if (key.includes('photo') && typeof value === 'string') {
-        const byteCharacters = atob(value);
-        const byteNumbers = new Array(byteCharacters.length);
-        for (let i = 0; i < byteCharacters.length; i++) {
-          byteNumbers[i] = byteCharacters.charCodeAt(i);
+        try {
+          const byteCharacters = atob(value);
+          const byteNumbers = new Array(byteCharacters.length);
+          for (let i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i);
+          }
+          const byteArray = new Uint8Array(byteNumbers);
+          const blob = new Blob([byteArray], { type: 'image/png' });
+          payload.append(key, blob, `${key}.png`);
+        } catch (error) {
+          console.error(`Error processing ${key}:`, error);
+          this.notyf.error(`Gagal memproses ${key}.`);
+          return;
         }
-        const byteArray = new Uint8Array(byteNumbers);
-        const blob = new Blob([byteArray], { type: 'image/png' });
-        payload.append(key, blob, `${key}.png`);
-      } else {
+      } else if (value !== null && value !== undefined) {
         payload.append(key, value);
       }
     });
 
-    this.dashboardSvc.create(DashboardServiceType.MNL_STEP_TWO, payload,).subscribe({
+    this.dashboardSvc.create(DashboardServiceType.MNL_STEP_TWO, payload).subscribe({
       next: (res) => {
         this.notyf.success(res?.message || 'Data berhasil disimpan.');
         setTimeout(() => this.onNext(), 1000);

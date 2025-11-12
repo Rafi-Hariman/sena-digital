@@ -366,7 +366,7 @@ $radius-lg: 12px;
     &:hover:not(:disabled) {
       box-shadow: $shadow-button-hover;
       transform: translateY(-1px);
-      background: $color-background;
+
     }
 
     &:active:not(:disabled) {
