@@ -28,6 +28,21 @@ export class InformasiMempelaiComponent implements OnInit {
   };
   userId: any;
 
+  // Getter to check if form is valid including photo uploads
+  get isFormValid(): boolean {
+    // Check if all text fields are valid
+    const textFieldsValid = this.formGroup?.valid;
+
+    // Check if all required photos are uploaded
+    const photosValid = !!(
+      this.imagePreviews['photo_pria'] &&
+      this.imagePreviews['photo_wanita'] &&
+      this.imagePreviews['cover_photo']
+    );
+
+    return textFieldsValid && photosValid;
+  }
+
   constructor(
     private fb: FormBuilder,
     private modalSvc: BsModalService,
@@ -60,7 +75,7 @@ export class InformasiMempelaiComponent implements OnInit {
         name_panggilan_wanita: ['', Validators.required],
         ayah_wanita: ['', Validators.required],
         ibu_wanita: ['', Validators.required],
-        user_id: [userID || '', Validators.required],
+        user_id: [userID || ''], // Removed Validators.required - this is a system field
         status: [1],
         photo_pria: [null],
         photo_wanita: [null],
@@ -269,6 +284,17 @@ export class InformasiMempelaiComponent implements OnInit {
     if (!this.imagePreviews['photo_pria'] || !this.imagePreviews['photo_wanita'] || !this.imagePreviews['cover_photo']) {
       this.notyf.error('Silakan upload semua foto (Pria, Wanita, dan Sampul).');
       return;
+    }
+
+    // Ensure user_id is set
+    if (!this.formGroup.get('user_id')?.value) {
+      const userID = this.storageService.getUserId();
+      if (userID) {
+        this.formGroup.patchValue({ user_id: userID });
+      } else {
+        this.notyf.error('User ID tidak ditemukan. Silakan login kembali.');
+        return;
+      }
     }
 
     // Ensure all image data is loaded in form controls before submission

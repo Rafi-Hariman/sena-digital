@@ -144,7 +144,7 @@
       <button type="button" class="im-btn im-btn-secondary" (click)="onBack()">
         Kembali
       </button>
-      <button type="button" class="im-btn im-btn-primary" [disabled]="formGroup.invalid" (click)="onNextClicked()">
+      <button type="button" class="im-btn im-btn-primary" [disabled]="!isFormValid" (click)="onNextClicked()">
         Lanjut
       </button>
     </div>
