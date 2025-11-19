@@ -4,7 +4,6 @@ import {
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DashboardService, DashboardServiceType } from '../../dashboard.service';
-import { StorageService } from '../../services/storage.service';
 import { Notyf } from 'notyf';
 
 @Component({
@@ -26,8 +25,7 @@ export class ModalUploadGaleriComponent implements OnInit {
   constructor(
     public bsModalRef: BsModalRef,
     private fb: FormBuilder,
-    private dashboardSvc: DashboardService,
-    private storageService: StorageService
+    private dashboardSvc: DashboardService
   ) {
     this.notyf = new Notyf({
       duration: 3000,
@@ -35,7 +33,7 @@ export class ModalUploadGaleriComponent implements OnInit {
     });
   }
 
-  async ngOnInit(): Promise<void> {
+  ngOnInit(): void {
     try {
       // Initialize form first
       this.uploadForm = this.fb.group({
@@ -44,38 +42,22 @@ export class ModalUploadGaleriComponent implements OnInit {
         user_id: ['', Validators.required]
       });
 
-      // Get form data safely
-      const existingFormData = this.storageService.getFormData();
-      const galeriData = existingFormData?.informasiMempelai?.updatedData || this.formData || {};
+      // Get user ID from formData input (passed from parent)
+      const userID = this.formData?.user_id;
 
-      // Get user ID safely
-      const userID = this.storageService.getUserId();
       if (userID) {
         this.uploadForm.patchValue({
           user_id: userID
         });
       } else {
-        console.warn('User ID not found in storage');
+        console.warn('User ID not found in formData');
       }
 
-      // Load existing image from IndexedDB if it exists
-      if (galeriData.photo_stored) {
-        const storedImage = await this.storageService.getImage('photo');
-        if (storedImage) {
-          this.imagePreviews['photo'] = `data:image/png;base64,${storedImage}`;
-          this.uploadForm.patchValue({ photo: storedImage });
-        }
-      } else if (galeriData.photo) {
-        // Handle legacy base64 data
-        this.imagePreviews['photo'] = `data:image/png;base64,${galeriData.photo}`;
-        this.uploadForm.patchValue({ photo: galeriData.photo });
-
-        // Migrate to IndexedDB
-        await this.storageService.setImage('photo', galeriData.photo);
+      // Load existing photo from formData input if available
+      if (this.formData?.photo) {
+        this.imagePreviews['photo'] = `data:image/png;base64,${this.formData.photo}`;
+        this.uploadForm.patchValue({ photo: this.formData.photo });
       }
-
-      // Clean up old images
-      this.storageService.cleanupOldImages();
     } catch (error) {
       console.error('Error initializing modal:', error);
       this.notyf.error('Gagal memuat data. Silakan coba lagi.');
@@ -108,20 +90,13 @@ export class ModalUploadGaleriComponent implements OnInit {
     }
 
     const reader = new FileReader();
-    reader.onload = async () => {
+    reader.onload = () => {
       try {
         const base64String = reader.result as string;
         const base64Data = base64String.split(',')[1];
 
-        // Store image in IndexedDB
-        const stored = await this.storageService.setImage(controlName, base64Data, file.type);
-
-        if (stored) {
-          this.imagePreviews[controlName] = base64String;
-          this.uploadForm.patchValue({ [controlName]: base64Data });
-        } else {
-          this.notyf.error('Gagal menyimpan gambar. Silakan coba lagi.');
-        }
+        this.imagePreviews[controlName] = base64String;
+        this.uploadForm.patchValue({ [controlName]: base64Data });
       } catch (error) {
         console.error('Error processing file:', error);
         this.notyf.error('Gagal memproses gambar.');
@@ -166,7 +141,7 @@ export class ModalUploadGaleriComponent implements OnInit {
     }
   }
 
-  async removePhoto(controlName: string): Promise<void> {
+  removePhoto(controlName: string): void {
     try {
       delete this.imagePreviews[controlName];
       this.uploadForm.patchValue({ [controlName]: '' });
@@ -174,9 +149,6 @@ export class ModalUploadGaleriComponent implements OnInit {
       if (this.fileInput) {
         this.fileInput.nativeElement.value = '';
       }
-
-      // Remove from IndexedDB
-      await this.storageService.deleteImage(controlName);
     } catch (error) {
       console.error('Error removing photo:', error);
     }
@@ -190,26 +162,6 @@ export class ModalUploadGaleriComponent implements OnInit {
         ...this.uploadForm.value,
         status: this.uploadForm.value.status ? 1 : 0
       };
-
-      // Update form data safely without storing large images
-      const existingFormData = this.storageService.getFormData();
-      const updatedFormData = {
-        ...existingFormData,
-        informasiMempelai: {
-          ...existingFormData.informasiMempelai,
-          updatedData: {
-            ...existingFormData.informasiMempelai?.updatedData,
-            ...updatedData,
-            // Mark that photo is stored in IndexedDB
-            photo_stored: !!updatedData.photo
-          }
-        }
-      };
-
-      const success = this.storageService.setFormData(updatedFormData);
-      if (!success) {
-        console.warn('Failed to store form data');
-      }
 
       this.closeModal();
       this.next.emit(updatedData);

@@ -42,28 +42,15 @@ export class RegisCeritaComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const local = this.getLocalStorageData();
-    if (Array.isArray(local?.cerita)) {
-      this.formData = {
-        title: local.cerita.map((c: any) => c.title),
-        lead_cerita: local.cerita.map((c: any) => c.lead_cerita),
-        tanggal_cerita: local.cerita.map((c: any) => c.tanggal_cerita),
-        status: local.status || false
-      };
-    }
+    // Get user ID from formData (passed from parent component)
+    const userID = this.formData?.user_id || this.formData?.response?.user?.id;
+
     this.form = this.fb.group({
       stories: this.fb.array([]),
-      user_id: ['',Validators.required],
+      user_id: [userID || '', Validators.required],
       status: new FormControl(this.formData?.status || false)
     });
-    const step1LocalStorage = localStorage.getItem('formData');
-    if (step1LocalStorage) {
-      const allDataFromSteps = JSON.parse(step1LocalStorage);
-      const userID = allDataFromSteps?.registrasi?.response?.user?.id;
-      this.form.patchValue({
-        user_id: userID
-      });
-    }
+
     if (this.formData?.title?.length) {
       for (let i = 0; i < this.formData.title.length; i++) {
         this.addStory({
@@ -75,54 +62,6 @@ export class RegisCeritaComponent implements OnInit {
     } else {
       this.addStory();
     }
-    this.form.valueChanges.subscribe(() => {
-      this.saveFormToLocalStorage();
-    });
-  }
-
-
-  saveFormToLocalStorage() {
-    const local = this.getLocalStorageData();
-
-    const rawStories = this.stories.value;
-    const storiesMapped = rawStories.map((story: any) => {
-      const rawDate = story.tanggal_cerita;
-      console.log(rawDate);
-
-      if (!rawDate) {
-        return {
-          ...story,
-          tanggal_cerita: ''
-        };
-      }
-      const parsedDate = rawDate instanceof Date ? rawDate : new Date(rawDate);
-      return {
-        ...story,
-        tanggal_cerita: isNaN(parsedDate.getTime())
-          ? ''
-          : parsedDate.toISOString().split('T')[0]
-      };
-    });
-
-
-    const updatedData = {
-      ...local,
-      cerita: storiesMapped,
-      status: this.form.get('status')?.value
-    };
-
-    this.setLocalStorageData(updatedData);
-  }
-
-
-
-  getLocalStorageData() {
-    const raw = localStorage.getItem('formData');
-    return raw ? JSON.parse(raw) : {};
-  }
-
-  setLocalStorageData(data: any) {
-    localStorage.setItem('formData', JSON.stringify(data));
   }
 
   get stories(): FormArray {
@@ -207,18 +146,6 @@ export class RegisCeritaComponent implements OnInit {
       next: (res) => {
         this.notyf.success(res?.message || 'Data berhasil disimpan.');
         this.next.emit(rawStories);
-
-        const local = this.getLocalStorageData();
-        const updatedLocal = {
-          ...local,
-          cerita: rawStories.map((item: any) => ({
-            ...item,
-            tanggal_cerita: new Date(item.tanggal_cerita).toISOString().split('T')[0]
-          })),
-          status,
-          step: 4
-        };
-        this.setLocalStorageData(updatedLocal);
       },
       error: (err) => {
         this.notyf.error(err?.message || 'Ada kesalahan dalam sistem.');

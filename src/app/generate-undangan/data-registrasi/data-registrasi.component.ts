@@ -56,15 +56,7 @@ export class DataRegistrasiComponent implements OnInit {
 
     if (this.formData && Object.keys(this.formData).length > 0) {
       this.formRegis.patchValue(this.formData.formData);
-      localStorage.setItem('formData', JSON.stringify(this.formData));
     }
-    const savedFormData = localStorage.getItem('formRegis');
-    if (savedFormData) {
-      this.formRegis.patchValue(JSON.parse(savedFormData));
-    }
-    this.formRegis.valueChanges.subscribe((value) => {
-      localStorage.setItem('formRegis', JSON.stringify(value));
-    });
 
     this.formRegis.get('domain')?.valueChanges.subscribe(() => {
       this.domainError = '';
@@ -73,15 +65,6 @@ export class DataRegistrasiComponent implements OnInit {
     this.formRegis.get('email')?.valueChanges.subscribe(() => {
       this.emailError = '';
     });
-    const savedData = localStorage.getItem('formData');
-
-    if (savedData) {
-      this.formData = JSON.parse(savedData);
-      this.formRegis.patchValue(this.formData.formData);
-      this.formRegis.patchValue({
-        kode_pemesanan: JSON.parse(savedData).response.user.kode_pemesanan,
-      });
-    }
 
   }
 
@@ -138,7 +121,6 @@ export class DataRegistrasiComponent implements OnInit {
     Object.keys(this.formRegis.value).forEach((key) => {
       payload.append(key, this.formRegis.get(key)?.value);
     });
-    localStorage.setItem('formData', JSON.stringify(this.formData));
 
     this.dashboardSvc.create(DashboardServiceType.MNL_STEP_ONE, payload).subscribe({
       next: (res) => {

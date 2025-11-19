@@ -49,17 +49,17 @@ export class RegisPembayaranComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getMasterPayment()
-    const allDataFromStepsStr = localStorage.getItem('formData');
-    console.log(allDataFromStepsStr);
+    this.getMasterPayment();
 
-    if (allDataFromStepsStr) {
-      const allDataFromSteps = JSON.parse(allDataFromStepsStr);
-      if (allDataFromSteps?.registrasi?.formData) {
-        this.manualBill = allDataFromSteps.registrasi.formData.price;
+    // Get data from formData (passed from parent component)
+    if (this.formData) {
+      // Get userId from registrasi response
+      this.userId = this.formData?.response?.user?.id;
+
+      // Get price from registrasi formData
+      if (this.formData?.formData?.price) {
+        this.manualBill = this.formData.formData.price;
       }
-      const userId = allDataFromSteps?.registrasi?.response?.user?.id;
-      this.userId = userId;
     }
   }
 
@@ -88,10 +88,6 @@ export class RegisPembayaranComponent implements OnInit {
 
     if (event === 3 || event === '3') {
       this.showInvoice = true;
-      const allDataFromStepsStr = localStorage.getItem('formData');
-      if (allDataFromStepsStr) {
-        this.invoiceData = JSON.parse(allDataFromStepsStr);
-      }
     } else {
       this.showInvoice = false;
       this.getDetailMethod();
