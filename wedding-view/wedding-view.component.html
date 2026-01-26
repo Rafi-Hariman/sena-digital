@@ -1,0 +1,145 @@
+<div class="wedding-container">
+ 
+  <!-- Loading State -->
+  <div class="wedding-loading" *ngIf="isLoading">
+    <div class="loading-spinner">
+      <i class="fas fa-heart fa-beat" style="color: #e91e63; font-size: 2rem;"></i>
+    </div>
+    <h3 style="margin-top: 1rem; color: #666;">Loading Wedding Invitation...</h3>
+    <p style="color: #888;">Please wait while we prepare your special moment</p>
+  </div>
+
+    <!-- Error State -->
+  <div class="wedding-error" *ngIf="errorMessage && !isLoading">
+    <div class="error-icon" style="font-size: 3rem; color: #dc3545; margin-bottom: 1rem;">
+      <i class="fas fa-exclamation-triangle"></i>
+    </div>
+    <h3 style="color: #dc3545; margin-bottom: 1rem;">Oops! Something went wrong</h3>
+    <p class="error-message">{{ errorMessage }}</p>
+    <button class="retry-button" (click)="retryLoadData()">
+      <i class="fas fa-redo-alt" style="margin-right: 0.5rem;"></i>
+      Try Again
+    </button>
+    <p style="margin-top: 1rem; color: #666; font-size: 0.9rem;">
+      If the problem persists, please contact support or
+      <a href="/" style="color: #007bff; text-decoration: none;">return to homepage</a>
+    </p>
+  </div>
+
+  <div *ngIf="hasWeddingData() && !isLoading && !errorMessage">
+    <div class="floral-bg"></div>
+
+      <!-- Main content - hidden when gallery is active -->
+      <div  class="content">
+        <div class="wrap mt-5" *ngIf="isCurrentView(ContentView.MAIN)">
+          <p class="wedding-header">The Wedding Of</p>
+          <h1 class="couple-names">{{ getCoupleDisplayName() }}</h1>
+          <div class="card-weedings">
+            <p class="greeting">Kepada Yth.</p>
+            <p class="formal-address">Bapak/Ibu/Saudara/i</p>
+            <p class="guest-name">{{ guestName }}</p>
+            <button class="open-invitation-btn" (click)="openInvitation()">Buka Undangan</button>
+          </div>
+        </div>
+      
+          <div *ngIf="isCurrentView(ContentView.COUPLE)" class="content fade-section">
+            <section class="full-section" id="section-1">
+              <wc-couple-view
+              [weddingData]="weddingData">
+            </wc-couple-view>
+          </section>
+          
+          <section class="full-section" id="section-2">
+            <wc-akad-view
+              [events]="weddingData?.events">
+            </wc-akad-view>
+          </section>
+
+          <section class="full-section" id="section-3">
+            <wc-resepsi-view
+            [events]="weddingData?.events">
+          </wc-resepsi-view>
+          </section>
+
+          <section class="full-section" id="section-4">
+            <wc-story-view
+              [stories]="weddingData?.stories">
+            </wc-story-view>
+          </section>
+
+          <section class="full-section" id="section-5">
+            <wc-gallery-view
+              [galleryItems]="weddingData?.gallery">
+            </wc-gallery-view>
+          </section>
+
+          <section class="full-section" id="section-6">
+            <wc-gift-view
+              [weddingData]="weddingData || undefined">
+            </wc-gift-view>
+          </section>
+
+          <section class="full-section mt-3" id="section-7">
+            <wc-presence-view
+            [weddingData]="weddingData || undefined">
+          </wc-presence-view>
+          </section>
+          </div>
+      </div>
+        <!-- Side icons - collapsible group (hidden until invitation opened) -->
+    <div
+      class="side-icons-container"
+      *ngIf="invitationOpened"
+      role="complementary"
+      aria-label="Side icon controls">
+      <!-- Main toggle button - always visible -->
+      <button
+        class="side-icon-toggle"
+        (click)="toggleSideIcons()"
+        [attr.aria-expanded]="sideIconsVisible"
+        [attr.aria-label]="sideIconsVisible ? 'Hide control options' : 'Show control options'"
+        [class.expanded]="sideIconsVisible">
+        <i class="fas fa-ellipsis-v" [class.rotated]="sideIconsVisible"></i>
+      </button>
+
+      <!-- Collapsible icons group -->
+      <div class="side-icons-group" [class.visible]="sideIconsVisible" *ngIf="sideIconsVisible">
+        <button class="side-icon-btn" aria-label="QR code" (click)="openQRCodeModal()">
+          <i class="fas fa-qrcode"></i>
+        </button>
+
+        <button
+          class="side-icon-btn"
+          *ngIf="isMuted"
+          (click)="toggleMute()"
+          aria-label="Unmute audio">
+          <i class="fas fa-volume-mute"></i>
+        </button>
+
+        <button
+          class="side-icon-btn"
+          *ngIf="!isMuted"
+          (click)="toggleMute()"
+          aria-label="Mute audio">
+          <i class="fas fa-volume-up"></i>
+        </button>
+
+        <button
+          class="side-icon-btn"
+          *ngIf="!isPlaying"
+          (click)="togglePlay()"
+          aria-label="Play audio">
+          <i class="fas fa-play"></i>
+        </button>
+
+        <button
+          class="side-icon-btn"
+          *ngIf="isPlaying"
+          (click)="togglePlay()"
+          aria-label="Pause audio">
+          <i class="fas fa-pause"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

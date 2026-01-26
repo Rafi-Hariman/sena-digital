@@ -1,0 +1,291 @@
+<div class="buku-tamu-container">
+  <!-- Header -->
+  <div class="page-header">
+    <h1 class="page-title">Buku Tamu</h1>
+    <p class="page-subtitle">Kelola ucapan dan konfirmasi kehadiran tamu undangan</p>
+  </div>
+
+  <!-- Statistics Cards -->
+  <div class="statistics-section" *ngIf="statistics">
+    <div class="row">
+      <div class="col-md-3 col-sm-6 mb-3">
+        <div class="stat-card stat-total">
+          <div class="stat-number">{{ statistics.total_ucapan }}</div>
+          <div class="stat-label">Total Ucapan</div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6 mb-3">
+        <div class="stat-card stat-hadir">
+          <div class="stat-number">{{ statistics.total_hadir }}</div>
+          <div class="stat-label">Hadir ({{ statistics.percentage_hadir }}%)</div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6 mb-3">
+        <div class="stat-card stat-tidak">
+          <div class="stat-number">{{ statistics.total_tidak_hadir }}</div>
+          <div class="stat-label">Tidak Hadir ({{ statistics.percentage_tidak_hadir }}%)</div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6 mb-3">
+        <div class="stat-card stat-ragu">
+          <div class="stat-number">{{ statistics.total_ragu }}</div>
+          <div class="stat-label">Masih Ragu ({{ statistics.percentage_ragu }}%)</div>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-2">
+      <div class="col-12">
+        <div class="total-guests-info">
+          <i class="fas fa-users"></i>
+          Total Tamu Hadir: <strong>{{ statistics.total_tamu_hadir }} orang</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters and Search -->
+  <div class="filter-section">
+    <div class="row align-items-end">
+      <div class="col-md-4 mb-3">
+        <label>Cari</label>
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Cari nama, email, atau ucapan..."
+          [(ngModel)]="searchQuery"
+          (input)="onSearch()">
+      </div>
+      <div class="col-md-2 mb-3">
+        <label>Status Kehadiran</label>
+        <select class="form-control" [(ngModel)]="statusFilter" (change)="onFilterChange()">
+          <option value="all">Semua</option>
+          <option value="hadir">Hadir</option>
+          <option value="tidak_hadir">Tidak Hadir</option>
+          <option value="ragu">Masih Ragu</option>
+        </select>
+      </div>
+      <div class="col-md-2 mb-3">
+        <label>Approval</label>
+        <select class="form-control" [(ngModel)]="approvalFilter" (change)="onFilterChange()">
+          <option value="all">Semua</option>
+          <option value="approved">Disetujui</option>
+          <option value="pending">Menunggu</option>
+        </select>
+      </div>
+      <div class="col-md-2 mb-3">
+        <label>Urutkan</label>
+        <select class="form-control" [(ngModel)]="sortOrder" (change)="onFilterChange()">
+          <option value="newest">Terbaru</option>
+          <option value="oldest">Terlama</option>
+        </select>
+      </div>
+      <div class="col-md-2 mb-3">
+        <button class="btn btn-primary btn-block" (click)="exportData()">
+          <i class="fas fa-download"></i> Export
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bulk Actions -->
+  <div class="bulk-actions-section" *ngIf="filteredDataList.length > 0">
+    <div class="row align-items-center">
+      <div class="col-md-6">
+        <div class="custom-control custom-checkbox">
+          <input
+            type="checkbox"
+            class="custom-control-input"
+            id="selectAll"
+            [(ngModel)]="selectAll"
+            (change)="toggleSelectAll()">
+          <label class="custom-control-label" for="selectAll">
+            Pilih Semua
+          </label>
+          <span class="ml-3 text-muted">Terpilih: {{ selectedIds.size }}</span>
+        </div>
+      </div>
+      <div class="col-md-6 text-right">
+        <button class="btn btn-sm btn-success mr-2" (click)="bulkApprove()" [disabled]="selectedIds.size === 0">
+          <i class="fas fa-check"></i> Setujui
+        </button>
+        <button class="btn btn-sm btn-warning mr-2" (click)="bulkHide()" [disabled]="selectedIds.size === 0">
+          <i class="fas fa-eye-slash"></i> Sembunyikan
+        </button>
+        <button class="btn btn-sm btn-danger mr-2" (click)="bulkDelete()" [disabled]="selectedIds.size === 0">
+          <i class="fas fa-trash"></i> Hapus
+        </button>
+        <button class="btn btn-sm btn-danger" (click)="deleteAll()">
+          <i class="fas fa-trash-alt"></i> Hapus Semua
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-state">
+    <div class="spinner-border text-primary" role="status">
+      <span class="sr-only">Memuat...</span>
+    </div>
+    <p>Memuat data...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="apiError && !isLoading" class="alert alert-danger">
+    <i class="fas fa-exclamation-triangle"></i> {{ apiError }}
+  </div>
+
+  <!-- Data Table -->
+  <div class="table-responsive" *ngIf="!isLoading && !apiError">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th width="40"></th>
+          <th>No</th>
+          <th>Nama</th>
+          <th>Kontak</th>
+          <th>Status</th>
+          <th>Jumlah</th>
+          <th>Ucapan</th>
+          <th>Waktu</th>
+          <th>Approval</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let entry of filteredDataList; let i = index">
+          <td>
+            <input
+              type="checkbox"
+              [checked]="isSelected(entry.id)"
+              (change)="toggleSelection(entry.id)">
+          </td>
+          <td>{{ i + 1 }}</td>
+          <td>
+            <strong>{{ entry.nama }}</strong>
+          </td>
+          <td>
+            <div class="contact-info">
+              <div *ngIf="entry.email">
+                <i class="fas fa-envelope"></i> {{ entry.email }}
+              </div>
+              <div *ngIf="entry.telepon">
+                <i class="fas fa-phone"></i> {{ entry.telepon }}
+              </div>
+            </div>
+          </td>
+          <td>
+            <span class="badge" [ngClass]="getStatusBadgeClass(entry.status_kehadiran)">
+              {{ getStatusLabel(entry.status_kehadiran) }}
+            </span>
+          </td>
+          <td>
+            <span *ngIf="entry.status_kehadiran === 'hadir' && entry.jumlah_tamu">
+              {{ entry.jumlah_tamu }} orang
+            </span>
+            <span *ngIf="entry.status_kehadiran !== 'hadir'">-</span>
+          </td>
+          <td>{{ truncateText(entry.ucapan, 50) }}</td>
+          <td>{{ getRelativeTime(entry.created_at) }}</td>
+          <td>
+            <span class="badge" [ngClass]="entry.is_approved ? 'badge-success' : 'badge-secondary'">
+              {{ entry.is_approved ? 'Disetujui' : 'Menunggu' }}
+            </span>
+          </td>
+          <td>
+            <div class="btn-group" role="group">
+              <button class="btn btn-sm btn-info" (click)="openDetailModal(detailModal, entry)" title="Lihat Detail">
+                <i class="fas fa-eye"></i>
+              </button>
+              <button
+                class="btn btn-sm"
+                [ngClass]="entry.is_approved ? 'btn-warning' : 'btn-success'"
+                (click)="toggleApproval(entry)"
+                [title]="entry.is_approved ? 'Sembunyikan' : 'Setujui'">
+                <i class="fas" [ngClass]="entry.is_approved ? 'fa-eye-slash' : 'fa-check'"></i>
+              </button>
+              <button class="btn btn-sm btn-danger" (click)="deleteSingle(entry)" title="Hapus">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Empty State -->
+    <div *ngIf="filteredDataList.length === 0" class="empty-state">
+      <i class="fas fa-inbox fa-3x text-muted"></i>
+      <p class="mt-3">{{ searchQuery || statusFilter !== 'all' || approvalFilter !== 'all' ? 'Tidak ada data yang sesuai dengan pencarian' : 'Belum ada ucapan dari tamu' }}</p>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  <div class="pagination-section" *ngIf="totalItems > pageSize && !isLoading">
+    <p class="pagination-info">
+      Menampilkan {{ (currentPage - 1) * pageSize + 1 }} - {{ Math.min(currentPage * pageSize, totalItems) }} dari {{ totalItems }}
+    </p>
+  </div>
+</div>
+
+<!-- Detail Modal -->
+<ng-template #detailModal>
+  <div class="modal-header">
+    <h5 class="modal-title">Detail Ucapan</h5>
+    <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body" *ngIf="selectedEntry">
+    <div class="detail-row">
+      <label>Nama:</label>
+      <span>{{ selectedEntry.nama }}</span>
+    </div>
+    <div class="detail-row" *ngIf="selectedEntry.email">
+      <label>Email:</label>
+      <span>{{ selectedEntry.email }}</span>
+    </div>
+    <div class="detail-row" *ngIf="selectedEntry.telepon">
+      <label>Telepon:</label>
+      <span>{{ selectedEntry.telepon }}</span>
+    </div>
+    <div class="detail-row">
+      <label>Status Kehadiran:</label>
+      <span class="badge" [ngClass]="getStatusBadgeClass(selectedEntry.status_kehadiran)">
+        {{ getStatusLabel(selectedEntry.status_kehadiran) }}
+      </span>
+    </div>
+    <div class="detail-row" *ngIf="selectedEntry.status_kehadiran === 'hadir'">
+      <label>Jumlah Tamu:</label>
+      <span>{{ selectedEntry.jumlah_tamu }} orang</span>
+    </div>
+    <div class="detail-row">
+      <label>Waktu:</label>
+      <span>{{ selectedEntry.created_at | date: 'dd MMM yyyy, HH:mm' }} WIB</span>
+    </div>
+    <div class="detail-row">
+      <label>Status Approval:</label>
+      <span class="badge" [ngClass]="selectedEntry.is_approved ? 'badge-success' : 'badge-secondary'">
+        {{ selectedEntry.is_approved ? 'Disetujui' : 'Menunggu' }}
+      </span>
+    </div>
+    <div class="detail-row">
+      <label>Ucapan:</label>
+      <div class="ucapan-text">{{ selectedEntry.ucapan }}</div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn"
+      [ngClass]="selectedEntry?.is_approved ? 'btn-warning' : 'btn-success'"
+      (click)="selectedEntry && toggleApproval(selectedEntry); closeModal()">
+      {{ selectedEntry?.is_approved ? 'Sembunyikan' : 'Setujui' }}
+    </button>
+    <button type="button" class="btn btn-danger" (click)="selectedEntry && deleteSingle(selectedEntry); closeModal()">
+      Hapus
+    </button>
+    <button type="button" class="btn btn-secondary" (click)="closeModal()">
+      Tutup
+    </button>
+  </div>
+</ng-template>

@@ -23,6 +23,7 @@ import { SettingsAplicationComponent } from './pengaturan/settings-aplication/se
 import { SettingsBundleComponent } from './pengaturan/settings-bundle/settings-bundle.component';
 import { SettingsPaymentComponent } from './pengaturan/settings-payment/settings-payment.component';
 import { ProfileAdminComponent } from './pengaturan/profile-admin/profile-admin.component';
+import { BukuTamuAdminComponent } from './buku-tamu-admin/buku-tamu-admin.component';
 import { AuthGuard } from '../auth.guard';
 
 const routes: Routes = [
@@ -40,6 +41,7 @@ const routes: Routes = [
       { path: 'testimoni', component: TestimoniesComponent },
       { path: 'website', component: WebsiteComponent },
       { path: 'video', component: VideoComponent },
+      { path: 'buku-tamu', component: BukuTamuAdminComponent },
       {
         path: 'pengaturan',
         children: [
@@ -66,6 +68,7 @@ const routes: Routes = [
     SettingsBundleComponent,
     SettingsPaymentComponent,
     ProfileAdminComponent,
+    BukuTamuAdminComponent,
   ],
   imports: [
     CommonModule,

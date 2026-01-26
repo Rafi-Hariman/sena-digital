@@ -1,0 +1,97 @@
+<div class="buku-tamu-public-container">
+  <div class="section-header">
+    <h2>BUKU TAMU & UCAPAN</h2>
+    <p>Berikan ucapan dan doa untuk kami</p>
+  </div>
+
+  <form [formGroup]="bukuTamuForm" (ngSubmit)="onSubmit()" class="buku-tamu-form">
+    <div class="form-group">
+      <label>Nama Lengkap <span class="required">*</span></label>
+      <input type="text" class="form-control" formControlName="nama" placeholder="Masukkan nama lengkap" [class.is-invalid]="bukuTamuForm.get('nama')?.invalid && bukuTamuForm.get('nama')?.touched">
+      <div class="invalid-feedback" *ngIf="bukuTamuForm.get('nama')?.errors?.['required']">Nama wajib diisi</div>
+      <div class="invalid-feedback" *ngIf="bukuTamuForm.get('nama')?.errors?.['minlength']">Nama minimal 2 karakter</div>
+    </div>
+
+    <div class="form-group">
+      <label>Email (Opsional)</label>
+      <input type="email" class="form-control" formControlName="email" placeholder="email@example.com" [class.is-invalid]="bukuTamuForm.get('email')?.invalid && bukuTamuForm.get('email')?.touched">
+      <div class="invalid-feedback">Format email tidak valid</div>
+    </div>
+
+    <div class="form-group">
+      <label>Nomor Telepon (Opsional)</label>
+      <input type="tel" class="form-control" formControlName="telepon" placeholder="08xxxxxxxxxx">
+    </div>
+
+    <div class="form-group">
+      <label>Konfirmasi Kehadiran <span class="required">*</span></label>
+      <div class="radio-group">
+        <label class="radio-label"><input type="radio" formControlName="status_kehadiran" value="hadir"> Hadir</label>
+        <label class="radio-label"><input type="radio" formControlName="status_kehadiran" value="tidak_hadir"> Tidak Hadir</label>
+        <label class="radio-label"><input type="radio" formControlName="status_kehadiran" value="ragu"> Masih Ragu</label>
+      </div>
+      <div class="error-msg" *ngIf="bukuTamuForm.get('status_kehadiran')?.invalid && bukuTamuForm.get('status_kehadiran')?.touched">Pilih status kehadiran</div>
+    </div>
+
+    <div class="form-group" *ngIf="bukuTamuForm.get('status_kehadiran')?.value === 'hadir'">
+      <label>Jumlah Tamu (jika hadir)</label>
+      <input type="number" class="form-control" formControlName="jumlah_tamu" min="1" max="20" [class.is-invalid]="bukuTamuForm.get('jumlah_tamu')?.invalid && bukuTamuForm.get('jumlah_tamu')?.touched">
+      <div class="invalid-feedback">Masukkan jumlah 1-20</div>
+    </div>
+
+    <div class="form-group">
+      <label>Ucapan & Doa <span class="required">*</span></label>
+      <textarea class="form-control" formControlName="ucapan" rows="4" placeholder="Tulis ucapan dan doa untuk kedua mempelai..." [class.is-invalid]="bukuTamuForm.get('ucapan')?.invalid && bukuTamuForm.get('ucapan')?.touched"></textarea>
+      <div class="char-counter">{{ ucapanLength }}/1000</div>
+      <div class="invalid-feedback">Ucapan minimal 5 karakter</div>
+    </div>
+
+    <button type="submit" class="btn-submit" [disabled]="isSubmitting">
+      <span *ngIf="!isSubmitting">KIRIM UCAPAN</span>
+      <span *ngIf="isSubmitting">MENGIRIM...</span>
+    </button>
+  </form>
+
+  <div class="statistics-section" *ngIf="statistics">
+    <h3>STATISTIK KEHADIRAN</h3>
+    <div class="stats-grid">
+      <div class="stat-box hadir"><div class="number">{{ statistics.total_hadir }}</div><div class="label">Hadir<br>({{ statistics.percentage_hadir }}%)</div></div>
+      <div class="stat-box tidak"><div class="number">{{ statistics.total_tidak_hadir }}</div><div class="label">Tidak Hadir<br>({{ statistics.percentage_tidak_hadir }}%)</div></div>
+      <div class="stat-box ragu"><div class="number">{{ statistics.total_ragu }}</div><div class="label">Masih Ragu<br>({{ statistics.percentage_ragu }}%)</div></div>
+    </div>
+    <div class="total-info">Total Tamu Hadir: <strong>{{ statistics.total_tamu_hadir }} orang</strong></div>
+  </div>
+
+  <div class="entries-section">
+    <div class="entries-header">
+      <h3>UCAPAN DARI TAMU ({{ entries.length }})</h3>
+      <select [(ngModel)]="statusFilter" class="filter-select">
+        <option value="all">Semua</option>
+        <option value="hadir">Hadir</option>
+        <option value="tidak_hadir">Tidak Hadir</option>
+        <option value="ragu">Masih Ragu</option>
+      </select>
+    </div>
+
+    <div class="entries-list">
+      <div class="entry-card" *ngFor="let entry of filteredEntries">
+        <div class="entry-header">
+          <div class="avatar">{{ entry.nama.charAt(0).toUpperCase() }}</div>
+          <div class="entry-info">
+            <div class="name">{{ entry.nama }}</div>
+            <div class="meta">
+              <span class="badge" [ngClass]="getStatusBadgeClass(entry.status_kehadiran)">{{ getStatusLabel(entry.status_kehadiran) }}</span>
+              <span *ngIf="entry.status_kehadiran === 'hadir' && entry.jumlah_tamu"> ({{ entry.jumlah_tamu }} orang)</span>
+              <span class="time">{{ getRelativeTime(entry.created_at) }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="entry-message">{{ entry.ucapan }}</div>
+      </div>
+    </div>
+
+    <button class="btn-load-more" (click)="loadMore()" *ngIf="filteredEntries.length < entries.length">
+      MUAT LEBIH BANYAK
+    </button>
+  </div>
+</div>

@@ -28,6 +28,7 @@ import { CeritaQuoteComponent } from './website/cerita-quote/cerita-quote.compon
 import { RekeningComponent } from './website/rekening/rekening.component';
 import { RiwayatComponent } from './pengunjung/riwayat/riwayat.component';
 import { UcapanComponent } from './pengunjung/ucapan/ucapan.component';
+import { BukuTamuComponent } from './buku-tamu/buku-tamu.component';
 import { BillUserComponent } from './bill-user/bill-user.component';
 import { WeddingViewComponent } from './wedding-view/wedding-view.component';
 import { CoupleViewComponent } from './wedding-view/couple-view/couple-view.component';
@@ -38,6 +39,8 @@ import { StoryViewComponent } from './wedding-view/story-view/story-view.compone
 import { GalleryViewComponent } from './wedding-view/gallery-view/gallery-view.component';
 import { PresenceViewComponent } from './wedding-view/presence-view/presence-view.component';
 import { GiftViewComponent } from './wedding-view/gift-view/gift-view.component';
+import { CommentViewComponent } from './wedding-view/comment-view/comment-view.component';
+import { BukuTamuViewComponent } from './wedding-view/buku-tamu-view/buku-tamu-view.component';
 import { AuthGuard } from '../auth.guard';
 
 const routes: Routes = [
@@ -72,6 +75,7 @@ const routes: Routes = [
           { path: 'ucapan', component: UcapanComponent },
         ],
       },
+      { path: 'buku-tamu', component: BukuTamuComponent },
       { path: 'testimoni', component: TestimoniComponent },
       { path: 'hubungi-kami', component: HubungiKamiComponent },
     ],
@@ -97,6 +101,7 @@ const routes: Routes = [
     RekeningComponent,
     RiwayatComponent,
     UcapanComponent,
+    BukuTamuComponent,
     BillUserComponent,
     WeddingViewComponent,
     CoupleViewComponent,
@@ -107,6 +112,8 @@ const routes: Routes = [
     GalleryViewComponent,
     PresenceViewComponent,
     GiftViewComponent,
+    CommentViewComponent,
+    BukuTamuViewComponent,
   ],
   imports: [
     CommonModule,

@@ -189,6 +189,27 @@ export enum DashboardServiceType {
   // === User Contact Settings Endpoints ===
   // Allows users to view admin contact information.
   USER_CONTACT_SETTINGS_GET,
+
+  // === Komentar (Comments) Endpoints ===
+  // Handles public comments on wedding invitations.
+  KOMENTAR_CREATE,
+  KOMENTAR_LIST,
+  KOMENTAR_STATISTICS,
+
+  // === Buku Tamu (Guest Book with RSVP) Endpoints ===
+  // Handles guest book entries with attendance confirmation.
+  BUKUTAMU_PUBLIC_LIST,
+  BUKUTAMU_PUBLIC_CREATE,
+  BUKUTAMU_PUBLIC_STATISTICS,
+  BUKUTAMU_USER_LIST,
+  BUKUTAMU_USER_STATISTICS,
+  BUKUTAMU_USER_UPDATE_APPROVAL,
+  BUKUTAMU_USER_DELETE,
+  BUKUTAMU_USER_DELETE_ALL,
+  BUKUTAMU_USER_EXPORT,
+  BUKUTAMU_ADMIN_LIST,
+  BUKUTAMU_ADMIN_STATISTICS,
+  BUKUTAMU_ADMIN_DELETE,
 }
 
 // Testimonial Interfaces
@@ -250,6 +271,99 @@ export interface TestimonialStatusUpdateRequest {
 export interface TestimonialBulkStatusRequest {
   ids: number[];
   status: boolean;
+}
+
+// Buku Tamu Interfaces
+// Interfaces for handling guest book (buku tamu) with RSVP functionality
+export interface BukuTamuEntry {
+  id: number;
+  user_id: number;
+  nama: string;
+  email?: string | null;
+  telepon?: string | null;
+  status_kehadiran: 'hadir' | 'tidak_hadir' | 'ragu';
+  jumlah_tamu?: number | null;
+  ucapan: string;
+  is_approved: boolean;
+  ip_address?: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface BukuTamuUser {
+  id: number;
+  name: string | null;
+  email: string;
+  kode_pemesanan: string | null;
+  domain: string | null;
+}
+
+export interface BukuTamuAdminEntry extends BukuTamuEntry {
+  user: BukuTamuUser;
+}
+
+export interface BukuTamuStatistics {
+  total_ucapan: number;
+  total_hadir: number;
+  total_tidak_hadir: number;
+  total_ragu: number;
+  total_tamu_hadir: number;
+  percentage_hadir: number;
+  percentage_tidak_hadir: number;
+  percentage_ragu: number;
+}
+
+export interface BukuTamuMeta {
+  current_page: number;
+  from: number | null;
+  last_page: number;
+  per_page: number;
+  to: number | null;
+  total: number;
+}
+
+export interface BukuTamuResponse {
+  data: BukuTamuEntry[];
+  meta?: BukuTamuMeta;
+  links?: {
+    first: string;
+    last: string;
+    prev: string | null;
+    next: string | null;
+  };
+}
+
+export interface BukuTamuAdminResponse {
+  data: BukuTamuAdminEntry[];
+  meta?: BukuTamuMeta;
+  links?: {
+    first: string;
+    last: string;
+    prev: string | null;
+    next: string | null;
+  };
+}
+
+export interface BukuTamuStatisticsResponse {
+  data: BukuTamuStatistics;
+}
+
+export interface BukuTamuCreateRequest {
+  user_id: number;
+  nama: string;
+  email?: string;
+  telepon?: string;
+  status_kehadiran: 'hadir' | 'tidak_hadir' | 'ragu';
+  jumlah_tamu?: number;
+  ucapan: string;
+}
+
+export interface BukuTamuUpdateApprovalRequest {
+  is_approved: boolean;
+}
+
+export interface BukuTamuDeleteResponse {
+  message: string;
 }
 
 @Injectable({
@@ -591,6 +705,40 @@ export class DashboardService {
       // User Contact Settings
       case DashboardServiceType.USER_CONTACT_SETTINGS_GET:
         return `${this.BASE_URL_API}/v1/user/contact-settings`;
+
+      // Komentar (Comments) API endpoints
+      case DashboardServiceType.KOMENTAR_CREATE:
+        return `${this.BASE_URL_API}/v1/komentars`;
+      case DashboardServiceType.KOMENTAR_LIST:
+        return `${this.BASE_URL_API}/v1/komentars`;
+      case DashboardServiceType.KOMENTAR_STATISTICS:
+        return `${this.BASE_URL_API}/v1/komentars/statistics`;
+
+      // Buku Tamu (Guest Book with RSVP) API endpoints
+      case DashboardServiceType.BUKUTAMU_PUBLIC_LIST:
+        return `${this.BASE_URL_API}/v1/buku-tamu`;
+      case DashboardServiceType.BUKUTAMU_PUBLIC_CREATE:
+        return `${this.BASE_URL_API}/v1/buku-tamu`;
+      case DashboardServiceType.BUKUTAMU_PUBLIC_STATISTICS:
+        return `${this.BASE_URL_API}/v1/buku-tamu/statistics`;
+      case DashboardServiceType.BUKUTAMU_USER_LIST:
+        return `${this.BASE_URL_API}/v1/user/result-bukutamu`;
+      case DashboardServiceType.BUKUTAMU_USER_STATISTICS:
+        return `${this.BASE_URL_API}/v1/user/result-bukutamu/statistics`;
+      case DashboardServiceType.BUKUTAMU_USER_UPDATE_APPROVAL:
+        return `${this.BASE_URL_API}/v1/user/buku-tamu`;
+      case DashboardServiceType.BUKUTAMU_USER_DELETE:
+        return `${this.BASE_URL_API}/v1/user/buku-tamu`;
+      case DashboardServiceType.BUKUTAMU_USER_DELETE_ALL:
+        return `${this.BASE_URL_API}/v1/user/buku-tamu/delete-all`;
+      case DashboardServiceType.BUKUTAMU_USER_EXPORT:
+        return `${this.BASE_URL_API}/v1/user/buku-tamu/export`;
+      case DashboardServiceType.BUKUTAMU_ADMIN_LIST:
+        return `${this.BASE_URL_API}/v1/admin/buku-tamu`;
+      case DashboardServiceType.BUKUTAMU_ADMIN_STATISTICS:
+        return `${this.BASE_URL_API}/v1/admin/buku-tamu/statistics`;
+      case DashboardServiceType.BUKUTAMU_ADMIN_DELETE:
+        return `${this.BASE_URL_API}/v1/admin/buku-tamu`;
 
       default:
         return '';
@@ -1454,6 +1602,50 @@ export interface UserContactSettingsResponse {
   success: boolean;
   message: string;
   data: UserContactSettingsData | null;
+}
+
+// === Komentar (Comments) API Interfaces ===
+export interface KomentarItem {
+  id: number;
+  nama: string;
+  komentar: string;
+  created_at: string;
+}
+
+export interface KomentarMeta {
+  total: number;
+  current_page: number;
+  per_page: number;
+  last_page: number;
+}
+
+export interface KomentarListResponse {
+  data: KomentarItem[];
+  meta: KomentarMeta;
+}
+
+export interface KomentarCreateRequest {
+  domain?: string;      // Optional - use if user_id not available
+  user_id?: number;     // Optional - prefer this from localStorage
+  nama: string;         // Required
+  komentar: string;     // Required
+}
+
+export interface KomentarCreateResponse {
+  message: string;
+  data: {
+    id: number;
+    nama: string;
+    komentar: string;
+    created_at: string;
+  };
+}
+
+export interface KomentarStatisticsResponse {
+  data: {
+    domain: string;
+    total_komentars: number;
+  };
 }
 
 // Generic API Response Interface

@@ -1,0 +1,25 @@
+<div class="resepsi-container">
+  <h1 class="resepsi-title">{{ eventType === 'resepsi' ? 'Resepsi' : 'Akad' }}</h1>
+
+  <div class="event-details" *ngIf="hasValidEvent(); else noEventTemplate">
+    <div class="date">{{ getFormattedDate() }}</div>
+    <div class="time">{{ getFormattedTime() }}</div>
+    <div class="location">di {{ getLocation() }}</div>
+  </div>
+
+  <ng-template #noEventTemplate>
+    <div class="event-details">
+      <div class="date">Tanggal akan diumumkan</div>
+      <div class="time">Waktu akan diumumkan</div>
+      <div class="location">Lokasi akan diumumkan</div>
+    </div>
+  </ng-template>
+
+  <div class="flower-bouquet">
+    <img src="assets/flower.png" alt="Flower bouquet" style="width: 130px;">
+  </div>
+
+  <button class="location-button" *ngIf="getMapsLink()" (click)="openMapsLocation()">
+    Petunjuk Lokasi
+  </button>
+</div>

@@ -1,0 +1,116 @@
+<div class="comment-container">
+  <!-- Statistics Header -->
+  <div class="comment-header">
+    <h1 class="comment-title">Komentar Tamu</h1>
+    <div class="comment-count" *ngIf="totalComments > 0">
+      {{ totalComments }} komentar
+    </div>
+  </div>
+
+  <!-- Comment Form (MOVED TO TOP - Social Media Style) -->
+  <div class="form-container">
+    <h2 class="form-title">Tulis Komentar</h2>
+
+    <form class="comment-form" (ngSubmit)="onSubmit()" #commentForm="ngForm">
+      <!-- Nama field -->
+      <div class="form-group">
+        <label for="nama" class="form-label">
+          Nama
+          <span class="char-counter">
+            {{ formData.nama.length }}/{{ MAX_NAMA_LENGTH }}
+          </span>
+        </label>
+        <input
+          type="text"
+          id="nama"
+          name="nama"
+          class="form-input"
+          placeholder="Masukkan nama Anda (min 2 karakter)"
+          [(ngModel)]="formData.nama"
+          required
+          [minlength]="MIN_NAMA_LENGTH"
+          [maxlength]="MAX_NAMA_LENGTH"
+          #namaField="ngModel"
+          [class.invalid]="namaField.invalid && namaField.touched">
+        <div class="validation-hint" *ngIf="namaField.invalid && namaField.touched">
+          Nama harus {{ MIN_NAMA_LENGTH }}-{{ MAX_NAMA_LENGTH }} karakter
+        </div>
+      </div>
+
+      <!-- Komentar textarea -->
+      <div class="form-group">
+        <label for="komentar" class="form-label">
+          Komentar
+          <span class="char-counter">
+            {{ formData.komentar.length }}/{{ MAX_KOMENTAR_LENGTH }}
+          </span>
+        </label>
+        <textarea
+          id="komentar"
+          name="komentar"
+          class="form-textarea"
+          placeholder="Tuliskan komentar Anda (min 5 karakter)..."
+          [(ngModel)]="formData.komentar"
+          required
+          [minlength]="MIN_KOMENTAR_LENGTH"
+          [maxlength]="MAX_KOMENTAR_LENGTH"
+          rows="4"
+          #komentarField="ngModel"
+          [class.invalid]="komentarField.invalid && komentarField.touched">
+        </textarea>
+        <div class="validation-hint" *ngIf="komentarField.invalid && komentarField.touched">
+          Komentar harus {{ MIN_KOMENTAR_LENGTH }}-{{ MAX_KOMENTAR_LENGTH }} karakter
+        </div>
+      </div>
+
+      <button
+        type="submit"
+        class="submit-button"
+        [disabled]="commentForm.invalid || isSubmitting">
+        <i class="fas fa-paper-plane" *ngIf="!isSubmitting"></i>
+        <i class="fas fa-spinner fa-spin" *ngIf="isSubmitting"></i>
+        {{ isSubmitting ? 'Mengirim...' : 'Kirim Komentar' }}
+      </button>
+    </form>
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading-state" *ngIf="isLoadingComments">
+    <i class="fas fa-spinner fa-spin"></i>
+    <p>Memuat komentar...</p>
+  </div>
+
+  <!-- Comments List (MOVED TO BOTTOM - Social Media Style) -->
+  <div class="comments-scroll-container" *ngIf="!isLoadingComments">
+    <div class="comments-list" *ngIf="hasComments(); else noCommentsTemplate">
+      <div
+        class="comment-card"
+        *ngFor="let comment of comments; trackBy: trackByCommentId">
+        <div class="comment-header-card">
+          <div class="commenter-name">{{ comment.nama }}</div>
+          <div class="comment-date">{{ getFormattedDate(comment.created_at) }}</div>
+        </div>
+        <div class="comment-content">{{ comment.komentar }}</div>
+      </div>
+
+      <!-- Load More Button -->
+      <div class="load-more-container" *ngIf="hasMore">
+        <button
+          class="load-more-btn"
+          (click)="loadMore()"
+          [disabled]="isLoadingMore">
+          <i class="fas fa-spinner fa-spin" *ngIf="isLoadingMore"></i>
+          {{ isLoadingMore ? 'Memuat...' : 'Muat Lebih Banyak' }}
+        </button>
+      </div>
+    </div>
+
+    <ng-template #noCommentsTemplate>
+      <div class="no-comments">
+        <i class="fas fa-comments" style="font-size: 3rem; color: #bdc3c7;"></i>
+        <p>Belum ada komentar.</p>
+        <p>Jadilah yang pertama memberikan komentar!</p>
+      </div>
+    </ng-template>
+  </div>
+</div>

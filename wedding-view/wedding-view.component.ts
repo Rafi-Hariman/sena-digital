@@ -1,11 +1,11 @@
-import { Component, OnInit, AfterViewInit, ElementRef, Renderer2, OnDestroy } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ElementRef, Renderer2, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { DashboardService, DashboardServiceType } from 'src/app/dashboard.service';
 import { WeddingDataService, WeddingData } from '../../services/wedding-data.service';
 import { QRCodeModalComponent } from '../../shared/modal/qr-code-modal/qr-code-modal.component';
-import { SeoService } from '../../services/seo.service';
+import { ChangeDetectorRef } from '@angular/core';
 
 // Attendance interface for type safety
 interface AttendanceRequest {
@@ -57,8 +57,7 @@ enum ContentView {
   CHAT = 'chat',
   GALLERY = 'gallery',
   PROFILE = 'profile',
-  GIFT = 'gift',
-  COMMENT = 'comment'
+  GIFT = 'gift'
 }
 
 @Component({
@@ -67,19 +66,16 @@ enum ContentView {
   styleUrls: ['./wedding-view.component.scss']
 })
 export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild('weddingContainer') weddingContainer!: ElementRef;
 
   ContentView = ContentView;
-
+  guestName: string = "Nama Tamu"; // default
   isPlaying: boolean = false;
   isMuted: boolean = false;
   sideIconsVisible: boolean = false;
   invitationOpened: boolean = false;
 
   currentView: ContentView = ContentView.MAIN;
-
-  // Scroll navigation tracking
-  currentActiveSection: string = 'section-couple';
-  private sectionObserver: IntersectionObserver | null = null;
 
   // Wedding data properties
   weddingData: WeddingData | null = null;
@@ -90,7 +86,6 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
   // Audio management properties
   private audioElement: HTMLAudioElement | null = null;
   private audioInitialized: boolean = false;
-  private autoplayRequested: boolean = false;
   isAudioLoading: boolean = false;
   audioError: string | null = null;
   currentVolume: number = 0.7; // Default volume (70%)
@@ -101,6 +96,18 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
   // QR Code Modal
   private qrModalRef?: BsModalRef;
 
+  // LocalStorage keys - Updated to use domain instead of couple name
+  private readonly STORAGE_KEYS = {
+    CURRENT_VIEW: 'wedding_current_view',
+    INVITATION_OPENED: 'wedding_invitation_opened',
+    SIDE_ICONS_VISIBLE: 'wedding_side_icons_visible',
+    IS_PLAYING: 'wedding_is_playing',
+    IS_MUTED: 'wedding_is_muted',
+    WEDDING_DATA: 'wedding_data',
+    DOMAIN: 'wedding_domain', // Changed from couple_name to domain
+    AUDIO_VOLUME: 'wedding_audio_volume'
+  };
+
   constructor(
     private elementRef: ElementRef,
     private renderer: Renderer2,
@@ -108,33 +115,15 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
     private router: Router,
     private dashboardService: DashboardService,
     private weddingDataService: WeddingDataService,
-    private modalService: BsModalService,
-    private seoService: SeoService
+    private modalService: BsModalService, 
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
     this.injectRippleStyles();
-    this.setSeoTags();
+    this.loadStateFromLocalStorage();
     this.initializeWeddingData();
-
-  }
-
-  /**
-   * Set SEO meta tags for wedding view page
-   */
-  private setSeoTags(): void {
-    // Set generic wedding invitation meta tags
-    this.seoService.setMetaTags({
-      title: 'Undangan Pernikahan Digital - Sena Digital Wedding Invitation',
-      description: 'Undangan pernikahan digital dengan desain elegan. Lihat detail acara, RSVP, kirim ucapan, dan berikan hadiah digital.',
-      keywords: 'undangan pernikahan digital, undangan nikah, wedding invitation, RSVP online, amplop digital',
-      url: `https://sena-digital.com/wedding${this.domain ? '/' + this.domain : ''}`,
-      image: 'https://sena-digital.com/assets/images/sena-digital-og-image.jpg',
-      type: 'website'
-    });
-
-    // Add Event structured data for wedding
-    this.seoService.addStructuredData(this.seoService.getWeddingEventSchema());
+    this.loadGuestName();
   }
 
   ngAfterViewInit() {
@@ -142,105 +131,221 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this.addClickFunctionality();
     this.addTouchSupport();
     this.addSideIconClickFunctionality();
-
-    // Setup scroll tracking if invitation is opened
-    if (this.invitationOpened && this.isCurrentView(ContentView.COUPLE)) {
+    // Jika invitationOpened awalnya true, langsung scroll
+    if (this.invitationOpened) {
       setTimeout(() => {
-        this.setupSectionObserver();
-
-        const lastSection = this.restoreCurrentActiveSection();
-        if (lastSection !== 'section-couple') {
-          this.scrollToSection(lastSection);
-        }
-      }, 500);
-    }
+        this.scrollToSideIcons();
+      }, 100);
+  }
   }
 
   ngOnDestroy() {
     this.subscriptions.unsubscribe();
+    // Save current state before component destruction
+    this.saveStateToLocalStorage();
+    // Cleanup audio resources
     this.cleanupAudio();
-    this.cleanupSectionObserver();
+    // Clean up QR modal subscription
     if (this.qrModalRef) {
       this.qrModalRef.hide();
     }
   }
 
-  /**
-   * Get session storage key with domain scope
-   */
-  private getStorageKey(key: string): string {
-    return this.domain ? `wedding_${this.domain}_${key}` : `wedding_${key}`;
-  }
+  loadGuestName(): void {
+  this.route.queryParams.subscribe(params => {
+    const guest = params['guest'];
+    console.log('Guest name from query params:', guest);
+    this.guestName = guest ? guest : "Nama Tamu";
+    console.log('Set guestName to:', this.guestName);
+  });
+}
 
   /**
-   * Save invitation opened state to session storage
+   * Load component state from localStorage
    */
-  private saveInvitationState(): void {
-    if (typeof sessionStorage !== 'undefined') {
-      sessionStorage.setItem(this.getStorageKey('invitationOpened'), 'true');
-    }
-  }
-
-  /**
-   * Save current view to session storage
-   */
-  private saveCurrentView(view: ContentView): void {
-    if (typeof sessionStorage !== 'undefined') {
-      sessionStorage.setItem(this.getStorageKey('currentView'), view);
-    }
-  }
-
-  /**
-   * Restore session state from storage
-   */
-  private restoreSessionState(): void {
-    if (typeof sessionStorage === 'undefined' || !this.domain) {
-      return;
-    }
-
-    const invitationOpenedStr = sessionStorage.getItem(this.getStorageKey('invitationOpened'));
-    const savedView = sessionStorage.getItem(this.getStorageKey('currentView'));
-
-    if (invitationOpenedStr === 'true') {
-      this.invitationOpened = true;
-      this.initializeAudio();
-
-      if (savedView && Object.values(ContentView).includes(savedView as ContentView)) {
-        this.currentView = savedView as ContentView;
-      } else {
-        this.currentView = ContentView.COUPLE;
+  private loadStateFromLocalStorage(): void {
+    try {
+      // Validate localStorage data first
+      if (!this.validateLocalStorageData()) {
+        console.log('localStorage data invalid, clearing...');
+        this.clearLocalStorage();
+        return;
       }
+
+      // Load basic state
+      const savedCurrentView = localStorage.getItem(this.STORAGE_KEYS.CURRENT_VIEW) as ContentView;
+      const savedInvitationOpened = localStorage.getItem(this.STORAGE_KEYS.INVITATION_OPENED);
+      const savedSideIconsVisible = localStorage.getItem(this.STORAGE_KEYS.SIDE_ICONS_VISIBLE);
+      const savedIsPlaying = localStorage.getItem(this.STORAGE_KEYS.IS_PLAYING);
+      const savedIsMuted = localStorage.getItem(this.STORAGE_KEYS.IS_MUTED);
+      const savedDomain = localStorage.getItem(this.STORAGE_KEYS.DOMAIN);
+      const savedWeddingData = localStorage.getItem(this.STORAGE_KEYS.WEDDING_DATA);
+
+      // Restore state if exists
+      if (savedCurrentView && Object.values(ContentView).includes(savedCurrentView)) {
+        this.currentView = savedCurrentView;
+        console.log('Restored current view from localStorage:', savedCurrentView);
+      }
+
+      if (savedInvitationOpened !== null) {
+        this.invitationOpened = savedInvitationOpened === 'true';
+        console.log('Restored invitation opened state:', this.invitationOpened);
+      }
+
+      if (savedSideIconsVisible !== null) {
+        this.sideIconsVisible = savedSideIconsVisible === 'true';
+      }
+
+      if (savedIsPlaying !== null) {
+        this.isPlaying = savedIsPlaying === 'true';
+      }
+
+      if (savedIsMuted !== null) {
+        this.isMuted = savedIsMuted === 'true';
+      }
+
+      // Load saved volume
+      const savedVolume = localStorage.getItem(this.STORAGE_KEYS.AUDIO_VOLUME);
+      if (savedVolume !== null) {
+        this.currentVolume = parseFloat(savedVolume);
+      }
+
+      if (savedDomain) {
+        this.domain = savedDomain;
+        console.log('Restored domain from localStorage:', savedDomain);
+      }
+
+      // Restore wedding data if exists and is valid
+      if (savedWeddingData) {
+        try {
+          const parsedWeddingData = JSON.parse(savedWeddingData);
+          this.weddingData = parsedWeddingData;
+            if (parsedWeddingData) {
+              this.weddingDataService.setWeddingData(parsedWeddingData as WeddingData);
+            }
+        } catch (parseError) {
+          console.error('Failed to parse saved wedding data:', parseError);
+          localStorage.removeItem(this.STORAGE_KEYS.WEDDING_DATA);
+        }
+      }
+
+    } catch (error) {
+      console.error('Failed to load state from localStorage:', error);
+      this.clearLocalStorage();
     }
   }
 
+  /**
+   * Save component state to localStorage
+   */
+  private saveStateToLocalStorage(): void {
+    try {
+      localStorage.setItem(this.STORAGE_KEYS.CURRENT_VIEW, this.currentView);
+      localStorage.setItem(this.STORAGE_KEYS.INVITATION_OPENED, this.invitationOpened.toString());
+      localStorage.setItem(this.STORAGE_KEYS.SIDE_ICONS_VISIBLE, this.sideIconsVisible.toString());
+      localStorage.setItem(this.STORAGE_KEYS.IS_PLAYING, this.isPlaying.toString());
+      localStorage.setItem(this.STORAGE_KEYS.IS_MUTED, this.isMuted.toString());
+      localStorage.setItem(this.STORAGE_KEYS.AUDIO_VOLUME, this.currentVolume.toString());
 
+      if (this.domain) {
+        localStorage.setItem(this.STORAGE_KEYS.DOMAIN, this.domain);
+      }
 
+      if (this.weddingData) {
+        localStorage.setItem(this.STORAGE_KEYS.WEDDING_DATA, JSON.stringify(this.weddingData));
+      }
 
+      console.log('State saved to localStorage');
+    } catch (error) {
+      console.error('Failed to save state to localStorage:', error);
+    }
+  }
 
+  /**
+   * Clear localStorage data (useful for testing or logout)
+   */
+  private clearLocalStorage(): void {
+    Object.values(this.STORAGE_KEYS).forEach(key => {
+      localStorage.removeItem(key);
+    });
+    console.log('localStorage cleared');
+  }
 
+  /**
+   * Check if wedding data exists in localStorage
+   */
+  private hasLocalStorageData(): boolean {
+    return localStorage.getItem(this.STORAGE_KEYS.WEDDING_DATA) !== null;
+  }
 
+  /**
+   * Validate localStorage data integrity
+   */
+  private validateLocalStorageData(): boolean {
+    try {
+      const savedWeddingData = localStorage.getItem(this.STORAGE_KEYS.WEDDING_DATA);
+      const savedDomain = localStorage.getItem(this.STORAGE_KEYS.DOMAIN);
 
+      if (!savedWeddingData || !savedDomain) {
+        return false;
+      }
 
+      const parsedData = JSON.parse(savedWeddingData);
+      return !!(parsedData && parsedData.user_info && parsedData.mempelai);
+    } catch (error) {
+      console.error('localStorage validation failed:', error);
+      return false;
+    }
+  }
 
-
-
+  /**
+   * Debug method to export localStorage data (development only)
+   */
+  public exportLocalStorageData(): any {
+    const data: any = {};
+    Object.entries(this.STORAGE_KEYS).forEach(([key, storageKey]) => {
+      const value = localStorage.getItem(storageKey);
+      data[key] = value;
+    });
+    console.log('LocalStorage Data Export:', data);
+    return data;
+  }
 
   /**
    * Initialize wedding data using domain-based approach
    * New implementation: Always gets domain first from SETTINGS_GET_FILTER or route params
    */
   private initializeWeddingData(): void {
+    console.log('Initializing wedding data with domain-based approach');
 
     // Get route params first (check if domain is passed via route)
     const routeSubscription = this.route.params.subscribe(params => {
-      const routeDomain = params['coupleName'] || params['domain'] || null;
+      const routeDomain = params['coupleName'] || params['domain'] || null; // Support both old and new param names
 
+      // console.log('Route params:', {
+      //   coupleName: params['coupleName'],
+      //   domain: params['domain'],
+      //   routeDomain
+      // });
+
+      // Priority: route domain > localStorage domain > get from settings
       if (routeDomain) {
         this.domain = routeDomain;
-        this.restoreSessionState();
-        this.loadWeddingDataFromAPI(this.domain!);
+        console.log('Using domain from route params:', routeDomain);
+
+        // Check if we have valid wedding data in localStorage for this domain
+        if (this.weddingData && this.domain === routeDomain) {
+          console.log('Using wedding data from localStorage for domain:', this.domain);
+          this.updateWeddingContent(this.weddingData);
+          // Still fetch fresh data in background for updates
+          this.loadWeddingDataFromAPI(this.domain!, true);
+        } else {
+          // Load fresh data from API using domain
+          this.loadWeddingDataFromAPI(this.domain!);
+        }
       } else if (this.domain) {
-        this.restoreSessionState();
+        console.log('Using domain from localStorage:', this.domain);
+        // Use stored domain
         if (this.weddingData) {
           this.updateWeddingContent(this.weddingData);
           this.loadWeddingDataFromAPI(this.domain!, true);
@@ -248,6 +353,8 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
           this.loadWeddingDataFromAPI(this.domain!);
         }
       } else {
+        // No domain available, get it from settings
+        console.log('No domain available, fetching from SETTINGS_GET_FILTER');
         this.loadDomainFromSettings();
       }
     });
@@ -263,8 +370,11 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this.isLoading = true;
     this.errorMessage = null;
 
+    console.log('Fetching domain from SETTINGS_GET_FILTER API');
+
     const settingsSubscription = this.dashboardService.list(DashboardServiceType.SETTINGS_GET_FILTER).subscribe({
       next: (response: SettingsResponse) => {
+        console.log('SETTINGS_GET_FILTER response:', response);
 
         try {
           const domain = response?.setting?.domain;
@@ -275,16 +385,19 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
             return;
           }
 
+          console.log('Domain extracted from settings:', domain);
           this.domain = domain;
-          this.restoreSessionState();
 
+          // Now load wedding data using the domain
           this.loadWeddingDataFromAPI(domain);
 
         } catch (error) {
+          console.error('Error processing domain from settings:', error);
           this.handleDataNotFound('Error processing domain from settings');
         }
       },
       error: (error) => {
+        console.error('Error fetching settings for domain:', error);
         this.handleAPIError(error);
       }
     });
@@ -304,17 +417,26 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
       this.errorMessage = null;
     }
 
+    console.log('Loading fresh wedding data from API for domain:', domain, isBackgroundUpdate ? '(background)' : '');
+
+    // Use the endpoint: v1/wedding-profile/couple/{domain}
     const apiSubscription = this.dashboardService.getParam(DashboardServiceType.WEDDING_VIEW_COUPLE, `/${domain}`).subscribe({
       next: (response) => {
+        console.log('API Response:', response);
+        console.log('API Response (formatted):', JSON.stringify(response, null, 2));
 
         if (response && response.data) {
+          console.log('Wedding Data from API:', JSON.stringify(response.data, null, 2));
 
           this.weddingData = response.data;
-          this.weddingDataService.setWeddingData(response.data);
+          this.weddingDataService.setWeddingData(response.data as WeddingData);
 
           this.updateWeddingContent(response.data);
 
+          // Save to localStorage after successful API call
+          this.saveStateToLocalStorage();
 
+          console.log('Fresh wedding data loaded successfully from API using domain:', domain);
         } else {
           if (!isBackgroundUpdate) {
             this.handleDataNotFound('No data returned from API');
@@ -322,6 +444,9 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       },
       error: (error) => {
+        console.error('API Error:', error);
+        console.error('API Error (formatted):', JSON.stringify(error, null, 2));
+
         if (!isBackgroundUpdate) {
           // Enhanced error handling for domain-based requests
           if (error.status === 404) {
@@ -349,6 +474,7 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
       if (data) {
         this.weddingData = data;
         this.updateWeddingContent(data);
+        console.log('Wedding data loaded from service');
       } else {
         this.handleDataNotFound('No data available in service');
       }
@@ -368,11 +494,12 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
     console.warn('Wedding data not found:', reason);
 
     // Clear localStorage if data is not found
-
+    this.clearLocalStorage();
 
     // Optional: Redirect to home after 5 seconds
     setTimeout(() => {
       if (!this.weddingData) {
+        console.log('Redirecting to home due to missing wedding data');
         this.router.navigate(['/']);
       }
     }, 5000);
@@ -396,6 +523,7 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     this.errorMessage = errorMsg;
+    console.error('API Error details:', error);
   }
 
   /**
@@ -404,13 +532,27 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   private updateWeddingContent(data: WeddingData): void {
     try {
-      this.weddingData = data;
-      this.weddingDataService.setWeddingData(data);
+      console.log('Updating wedding content with fresh data:', JSON.stringify(data, null, 2));
+      console.log('Updating wedding content for:', {
+        groom: data.mempelai?.pria?.nama_lengkap || 'Unknown',
+        bride: data.mempelai?.wanita?.nama_lengkap || 'Unknown',
+        user: data.user_info?.email || 'Unknown',
+        domain: this.domain
+      });
 
       // Initialize audio when wedding data is updated
       this.initializeAudio();
 
+      // Here you would update component properties based on wedding data
+      // Example implementation for when you add UI binding:
+      // this.groomName = data.mempelai.pria.nama_lengkap;
+      // this.brideName = data.mempelai.wanita.nama_lengkap;
+      // this.coverPhoto = data.mempelai.cover_photo;
+      // this.weddingDate = data.acara?.tanggal;
+      // etc.
+
     } catch (error) {
+      console.error('Error updating wedding content:', error);
       this.errorMessage = 'Error displaying wedding content';
     }
   }
@@ -434,8 +576,10 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   refreshWeddingData(): void {
     if (this.domain) {
+      console.log('Refreshing wedding data for domain:', this.domain);
       this.loadWeddingDataFromAPI(this.domain);
     } else {
+      console.log('No domain available, fetching from settings');
       this.loadDomainFromSettings();
     }
   }
@@ -501,9 +645,8 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Initialize audio system with wedding music settings
    * Sets up HTML5 Audio element with proper event listeners
-   * @param autoplay - Whether to attempt autoplay when audio is ready
    */
-  private initializeAudio(autoplay: boolean = false): void {
+  private initializeAudio(): void {
     // Don't reinitialize if already done
     if (this.audioInitialized) {
       return;
@@ -514,9 +657,6 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
-    // Store autoplay request
-    this.autoplayRequested = autoplay;
-
     // Try to get music URL - prefer stream URL, fallback to direct musik URL
     const musicUrl = this.weddingData.settings.music_stream_url || this.weddingData.settings.musik;
 
@@ -526,6 +666,7 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     try {
+      console.log('Initializing audio with URL:', musicUrl);
       this.isAudioLoading = true;
       this.audioError = null;
 
@@ -546,12 +687,12 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
       // Mark as initialized
       this.audioInitialized = true;
 
-      console.log('Audio initialized', { musicUrl, autoplay });
+      console.log('Audio system initialized successfully');
 
     } catch (error) {
+      console.error('Error initializing audio:', error);
       this.audioError = 'Failed to initialize audio system';
       this.isAudioLoading = false;
-      console.error('Audio initialization error:', error);
     }
   }
 
@@ -562,40 +703,58 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
   private setupAudioEventListeners(): void {
     if (!this.audioElement) return;
 
-    // Audio loaded and ready to play
+    // Loop audio terus
+    this.audioElement.loop = true;
+
+    // Flag untuk error agar tidak spam
+    let hasAudioError = false;
+
+    // Debounce untuk menyimpan state
+    const saveAudioStateDebounced = debounce(() => this.saveStateToLocalStorage(), 200);
+
+    // ------------------------
+    // Event listeners
+    // ------------------------
+
+    // Audio siap dimainkan
     this.audioElement.addEventListener('canplay', () => {
+      console.log('Audio can start playing');
       this.isAudioLoading = false;
       this.audioError = null;
-
-      // Attempt autoplay if requested
-      if (this.autoplayRequested) {
-        this.autoplayRequested = false; // Reset flag to prevent repeated attempts
-        this.attemptAutoplay();
-      }
     });
 
-    // Audio is playing
+    // Audio mulai dimainkan
     this.audioElement.addEventListener('play', () => {
+      console.log('Audio started playing');
       this.isPlaying = true;
+      saveAudioStateDebounced();
     });
 
-    // Audio is paused
+    // Audio di-pause
     this.audioElement.addEventListener('pause', () => {
+      console.log('Audio paused');
       this.isPlaying = false;
+      saveAudioStateDebounced();
     });
 
-    // Audio loading started
+    // Mulai loading audio
     this.audioElement.addEventListener('loadstart', () => {
+      console.log('Audio loading started');
       this.isAudioLoading = true;
     });
 
-    // Audio metadata loaded
+    // Metadata audio selesai dimuat
     this.audioElement.addEventListener('loadedmetadata', () => {
+      console.log('Audio metadata loaded, duration:', this.audioElement?.duration);
     });
 
-    // Audio loading error
-    this.audioElement.addEventListener('error', (event) => {
+    // Audio error
+    this.audioElement.addEventListener('error', () => {
+      if (hasAudioError) return;
+      hasAudioError = true;
+
       const error = this.audioElement?.error;
+      console.error('Audio loading error:', error);
 
       let errorMessage = 'Audio loading failed';
       if (error) {
@@ -618,35 +777,63 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
       this.audioError = errorMessage;
       this.isAudioLoading = false;
       this.isPlaying = false;
+
+      // Coba reload audio setelah 1 detik
+      setTimeout(() => {
+        hasAudioError = false; // reset flag
+        console.log('Retrying audio load...');
+        this.audioElement?.load();
+        this.audioElement?.play().catch(err => console.error('Retry failed:', err));
+      }, 1000);
     });
 
-    // Audio volume changed
+    // Volume berubah
     this.audioElement.addEventListener('volumechange', () => {
       if (this.audioElement) {
         this.currentVolume = this.audioElement.volume;
         this.isMuted = this.audioElement.muted;
+        saveAudioStateDebounced();
       }
     });
 
-    // Audio ended (shouldn't happen with loop=true)
+    // Audio selesai dimainkan (tidak akan terjadi karena loop)
     this.audioElement.addEventListener('ended', () => {
+      console.log('Audio ended');
       this.isPlaying = false;
+      saveAudioStateDebounced();
     });
 
     // Audio stalled
     this.audioElement.addEventListener('stalled', () => {
-      console.warn('Audio loading stalled');
+      console.warn('Audio loading stalled, retrying...');
+      setTimeout(() => {
+        this.audioElement?.load();
+        this.audioElement?.play().catch(err => console.error(err));
+      }, 1000);
     });
 
-    // Audio waiting for data
+    // Audio menunggu data
     this.audioElement.addEventListener('waiting', () => {
+      console.log('Audio waiting for data');
       this.isAudioLoading = true;
     });
 
-    // Audio can play through
+    // Audio bisa diputar sepenuhnya
     this.audioElement.addEventListener('canplaythrough', () => {
+      console.log('Audio can play through');
       this.isAudioLoading = false;
     });
+
+    // ------------------------
+    // Debounce helper
+    // ------------------------
+    function debounce(func: Function, wait: number) {
+      let timeout: any;
+      return () => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func(), wait);
+      };
+    }
   }
 
   /**
@@ -655,6 +842,7 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   private cleanupAudio(): void {
     if (this.audioElement) {
+      console.log('Cleaning up audio resources');
 
       // Pause and reset
       this.audioElement.pause();
@@ -680,104 +868,6 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   /**
-   * Initialize audio specifically for mobile devices within user gesture
-   * This ensures audio context is unlocked properly on mobile browsers
-   */
-  private initializeAudioForMobile(): void {
-    if (!this.weddingData?.settings) {
-      console.warn('No wedding settings available for mobile audio initialization');
-      return;
-    }
-
-    const musicUrl = this.weddingData.settings.music_stream_url || this.weddingData.settings.musik;
-
-    if (!musicUrl) {
-      console.warn('No music URL available');
-      return;
-    }
-
-    try {
-      // Create audio element synchronously in user gesture
-      this.audioElement = new Audio();
-      this.audioElement.preload = 'auto';
-      this.audioElement.loop = true;
-      this.audioElement.volume = this.currentVolume;
-      this.audioElement.crossOrigin = 'anonymous';
-      this.audioElement.src = musicUrl;
-
-      // Setup listeners
-      this.setupAudioEventListeners();
-      this.audioInitialized = true;
-
-      // Load and play immediately while still in user gesture context
-      this.audioElement.load();
-
-      // Try to play immediately
-      const playPromise = this.audioElement.play();
-
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => {
-            console.log('Mobile audio initialized and playing');
-            this.isPlaying = true;
-            this.audioError = null;
-          })
-          .catch(error => {
-            console.error('Mobile audio play failed:', error);
-            // Don't show error - user can try again
-            this.isPlaying = false;
-          });
-      }
-
-    } catch (error) {
-      console.error('Mobile audio initialization error:', error);
-      this.audioError = 'Gagal menginisialisasi audio';
-    }
-  }
-
-  /**
-   * Attempt to autoplay audio with fallback to muted playback
-   * Handles browser autoplay restrictions gracefully
-   * NOTE: On mobile, this often fails. Use initializeAudioForMobile() instead.
-   */
-  private attemptAutoplay(): void {
-    if (!this.audioElement) {
-      console.warn('Cannot autoplay: audio element not available');
-      return;
-    }
-
-    console.log('Attempting autoplay...');
-
-    // First attempt: play with sound
-    this.audioElement.play()
-      .then(() => {
-        console.log('Autoplay successful');
-        this.isPlaying = true;
-        this.isMuted = false;
-      })
-      .catch((error) => {
-        console.warn('Autoplay blocked:', error);
-
-        // Fallback: mute and try again
-        if (this.audioElement) {
-          this.audioElement.muted = true;
-          this.isMuted = true;
-
-          this.audioElement.play()
-            .then(() => {
-              console.log('Muted autoplay successful - user can unmute manually');
-              this.isPlaying = true;
-            })
-            .catch((mutedError) => {
-              console.error('Muted autoplay also failed:', mutedError);
-              // Don't set error - user can manually click play button
-              this.isPlaying = false;
-            });
-        }
-      });
-  }
-
-  /**
    * Set audio volume
    * @param volume - Volume level (0.0 to 1.0)
    */
@@ -793,6 +883,8 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
       this.audioElement.volume = volume;
     }
 
+    this.saveStateToLocalStorage();
+    console.log('Volume set to:', volume);
   }
 
   /**
@@ -846,10 +938,9 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   togglePlay(): void {
-    // Mobile audio unlock - ensure we create/initialize audio directly in user gesture
     if (!this.audioElement) {
-      console.log('Audio not initialized, initializing now with user interaction');
-      this.initializeAudioForMobile();
+      console.warn('Audio not initialized, cannot toggle play');
+      this.initializeAudio();
       return;
     }
 
@@ -858,174 +949,91 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
+    if (this.audioError) {
+      console.warn('Audio error present, cannot play:', this.audioError);
+      return;
+    }
+
     try {
       if (this.isPlaying) {
         this.audioElement.pause();
-        this.isPlaying = false;
+        console.log('Audio paused by user');
       } else {
-        // Critical: Unmute first on mobile to ensure playback
-        if (this.audioElement.muted) {
-          this.audioElement.muted = false;
-          this.isMuted = false;
-        }
-
-        // IMPORTANT: Call play() directly in user gesture, not in promise chain
+        // Handle browser autoplay policies
         const playPromise = this.audioElement.play();
 
         if (playPromise !== undefined) {
           playPromise
             .then(() => {
-              console.log('Audio playback started successfully');
-              this.isPlaying = true;
-              this.audioError = null;
+              console.log('Audio started playing successfully');
             })
             .catch(error => {
-              console.error('Playback failed:', error);
-
-              // Try muted playback as fallback
-              if (this.audioElement && !this.audioElement.muted) {
-                console.log('Attempting muted playback...');
-                this.audioElement.muted = true;
-                this.isMuted = true;
-
-                this.audioElement.play()
-                  .then(() => {
-                    console.log('Muted playback successful - unmute manually');
-                    this.isPlaying = true;
-                    this.audioError = null;
-                  })
-                  .catch(mutedError => {
-                    console.error('Muted playback also failed:', mutedError);
-                    this.audioError = 'Tidak dapat memutar audio. Silakan coba lagi.';
-                    this.isPlaying = false;
-                  });
-              }
+              console.error('Audio play failed:', error);
+              this.audioError = 'Playback failed - please interact with the page first';
+              this.isPlaying = false;
             });
         }
       }
     } catch (error) {
-      console.error('Toggle play error:', error);
-      this.audioError = 'Terjadi kesalahan saat memutar audio';
-      this.isPlaying = false;
+      console.error('Error toggling audio play:', error);
+      this.audioError = 'Playback control failed';
     }
+
+    // State will be updated by event listeners
   }
 
   toggleMute(): void {
     if (!this.audioElement) {
       console.warn('Audio not initialized, cannot toggle mute');
-      // Try to initialize for mobile
-      this.initializeAudioForMobile();
+      this.initializeAudio();
       return;
     }
 
     try {
-      const newMutedState = !this.audioElement.muted;
-      this.audioElement.muted = newMutedState;
-      this.isMuted = newMutedState;
+      this.audioElement.muted = !this.audioElement.muted;
+      console.log('Audio muted:', this.audioElement.muted);
 
-      // If unmuting and audio is not playing, try to start it
-      if (!newMutedState && !this.isPlaying) {
-        const playPromise = this.audioElement.play();
-
-        if (playPromise !== undefined) {
-          playPromise
-            .then(() => {
-              console.log('Audio started after unmute');
-              this.isPlaying = true;
-            })
-            .catch(error => {
-              console.error('Failed to start audio after unmute:', error);
-              // Re-mute if play failed
-              this.audioElement!.muted = true;
-              this.isMuted = true;
-            });
-        }
-      }
-
-      console.log('Audio muted state:', newMutedState);
+      // State will be updated by volumechange event listener
     } catch (error) {
-      console.error('Toggle mute error:', error);
+      console.error('Error toggling audio mute:', error);
     }
   }
 
   toggleSideIcons(): void {
     this.sideIconsVisible = !this.sideIconsVisible;
+    this.saveStateToLocalStorage();
   }
 
   openInvitation(): void {
-    const wasAlreadyOpened = this.invitationOpened;
     this.invitationOpened = true;
     this.setCurrentView(ContentView.COUPLE);
-    this.saveInvitationState();
+    this.submitAttendanceView();
+    this.cdr.detectChanges();
+    this.saveStateToLocalStorage();
 
-    // Critical: Try to initialize and play audio directly in this user gesture
-    // This is the best chance for mobile browsers to allow audio playback
-    if (!this.audioInitialized && this.weddingData?.settings) {
-      const musicUrl = this.weddingData.settings.music_stream_url || this.weddingData.settings.musik;
-
-      if (musicUrl) {
-        try {
-          // Initialize audio synchronously within user gesture
-          this.audioElement = new Audio();
-          this.audioElement.preload = 'auto';
-          this.audioElement.loop = true;
-          this.audioElement.volume = this.currentVolume;
-          this.audioElement.crossOrigin = 'anonymous';
-          this.audioElement.src = musicUrl;
-
-          // Setup event listeners
-          this.setupAudioEventListeners();
-          this.audioInitialized = true;
-
-          // Load the audio
-          this.audioElement.load();
-
-          // Try to play immediately (best chance on mobile)
-          this.audioElement.play()
-            .then(() => {
-              console.log('Audio started on invitation open');
-              this.isPlaying = true;
-              this.isMuted = false;
-            })
-            .catch(error => {
-              console.warn('Autoplay blocked on invitation open:', error);
-
-              // Try muted playback
-              if (this.audioElement) {
-                this.audioElement.muted = true;
-                this.isMuted = true;
-
-                this.audioElement.play()
-                  .then(() => {
-                    console.log('Muted audio started - user can unmute');
-                    this.isPlaying = true;
-                  })
-                  .catch(() => {
-                    // Silent fail - user can click play button
-                    console.log('Audio will need manual play button click');
-                    this.isPlaying = false;
-                  });
-              }
-            });
-
-        } catch (error) {
-          console.error('Error initializing audio on invitation open:', error);
-        }
-      }
+    // 🔥 WAJIB: putar audio langsung dari klik user
+    try {
+      this.audioElement?.play();
+      this.isPlaying = true;
+      this.isMuted = false;
+    } catch (err) {
+      console.warn("Browser blocked autoplay", err);
     }
 
-    if (!wasAlreadyOpened) {
-      this.submitAttendanceView();
-    }
-
-    // Setup scroll and navigate to first section
+    // Scroll setelah view berubah
     setTimeout(() => {
-      this.setupSectionObserver();
-
-      const firstSection = this.getFirstVisibleSection();
-      this.scrollToSection(firstSection);
+      const firstSection = document.getElementById("section-1");
+      firstSection?.scrollIntoView({ behavior: "smooth" });
     }, 300);
   }
+
+
+  private scrollToSideIcons(): void {
+  const sideIcons = document.querySelector('.side-icons-container') as HTMLElement;
+  if (sideIcons) {
+    sideIcons.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
 
   /**
    * Submit attendance record for view tracking
@@ -1044,26 +1052,33 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
       pesan: `Undangan ${this.domain} telah dilihat` // Include domain in tracking message
     };
 
+    console.log('Tracking invitation view with attendance data:', attendanceData);
 
     const attendanceSubscription = this.dashboardService.create(
       DashboardServiceType.ATTENDANCE,
       attendanceData
     ).subscribe({
       next: (response: AttendanceResponse) => {
+        console.log('Attendance view tracked successfully:', response);
         if (response.data) {
+          console.log('View tracking record created with ID:', response.data.id);
         }
       },
       error: (error) => {
+        console.error('Failed to track attendance view:', error);
 
         // Log specific error details without blocking the user experience
         if (error.status === 422) {
+          console.error('Validation error for attendance tracking:', error.error?.errors);
         } else if (error.status === 500) {
+          console.error('Server error during attendance tracking:', error.error?.error);
         }
 
         // Don't show error to user since this is background tracking
         // The invitation should still open normally
       },
       complete: () => {
+        console.log('Attendance view tracking request completed');
       }
     });
 
@@ -1072,135 +1087,39 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
   setCurrentView(view: ContentView): void {
     this.currentView = view;
-    this.saveCurrentView(view);
+    this.saveStateToLocalStorage();
   }
 
-  /**
-   * Scroll to a specific section by ID with smooth animation
-   * @param sectionId - Section ID to scroll to (e.g., 'section-messages')
-   */
-  scrollToSection(sectionId: string): void {
-    // Handle gallery exit
-    if (this.isCurrentView(ContentView.GALLERY)) {
-      this.setCurrentView(ContentView.COUPLE);
-      setTimeout(() => {
-        this.performScroll(sectionId);
-      }, 100);
-      return;
-    }
-
-    this.performScroll(sectionId);
+  showMessages(): void {
+    this.setCurrentView(ContentView.MESSAGE);
   }
 
-  /**
-   * Perform scroll to section
-   * @param sectionId - Section ID to scroll to
-   */
-  private performScroll(sectionId: string): void {
-    const section = document.getElementById(sectionId);
-
-    if (!section) {
-      console.warn(`Section ${sectionId} not found`);
-      return;
-    }
-
-    section.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start',
-      inline: 'nearest'
-    });
-
-    this.currentActiveSection = sectionId;
-    this.saveCurrentActiveSection(sectionId);
+  toggleFavorite(event: MouseEvent): void {
+    this.currentView = this.currentView === ContentView.COUPLE ? ContentView.MAIN : ContentView.COUPLE;
   }
 
-  /**
-   * Setup Intersection Observer to track visible section
-   */
-  private setupSectionObserver(): void {
-    if (typeof IntersectionObserver === 'undefined') {
-      return;
-    }
-
-    const options: IntersectionObserverInit = {
-      root: document.querySelector('.scrollable-content'),
-      rootMargin: '-50% 0px -50% 0px',
-      threshold: 0
-    };
-
-    this.sectionObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          this.currentActiveSection = entry.target.id;
-          this.saveCurrentActiveSection(entry.target.id);
-        }
-      });
-    }, options);
-
-    // Observe all sections
-    const sections = document.querySelectorAll('.full-section');
-    sections.forEach(section => {
-      this.sectionObserver?.observe(section);
-    });
+  showCalendar(): void {
+    this.setCurrentView(ContentView.CALENDAR);
   }
 
-  /**
-   * Cleanup Intersection Observer
-   */
-  private cleanupSectionObserver(): void {
-    if (this.sectionObserver) {
-      this.sectionObserver.disconnect();
-      this.sectionObserver = null;
-    }
+  showBirthday(): void {
+    this.setCurrentView(ContentView.BIRTHDAY);
   }
 
-  /**
-   * Save current active section to session storage
-   */
-  private saveCurrentActiveSection(sectionId: string): void {
-    if (typeof sessionStorage !== 'undefined') {
-      sessionStorage.setItem(
-        this.getStorageKey('currentActiveSection'),
-        sectionId
-      );
-    }
+  showChat(): void {
+    this.setCurrentView(ContentView.CHAT);
   }
 
-  /**
-   * Restore current active section from session storage
-   */
-  private restoreCurrentActiveSection(): string {
-    if (typeof sessionStorage !== 'undefined') {
-      const saved = sessionStorage.getItem(
-        this.getStorageKey('currentActiveSection')
-      );
-      return saved || 'section-couple';
-    }
-    return 'section-couple';
-  }
-
-  /**
-   * Get first visible section ID for fallback
-   */
-  private getFirstVisibleSection(): string {
-    const checks = [
-      { id: 'section-couple', visible: this.isCoupleVisible() },
-      { id: 'section-messages', visible: this.isMessagesVisible() },
-      { id: 'section-akad', visible: this.isCalendarVisible() },
-      { id: 'section-resepsi', visible: this.isBirthdayVisible() },
-      { id: 'section-story', visible: this.isChatVisible() },
-      { id: 'section-presence', visible: this.isProfileVisible() },
-      { id: 'section-gift', visible: this.isGiftsVisible() },
-      { id: 'section-comment', visible: this.isCommentsVisible() }
-    ];
-
-    const firstVisible = checks.find(check => check.visible);
-    return firstVisible?.id || 'section-couple';
-  }
-
-  // Keep gallery discrete view behavior
   showGallery(): void {
     this.setCurrentView(ContentView.GALLERY);
+  }
+
+  showProfile(): void {
+    this.setCurrentView(ContentView.PROFILE);
+  }
+
+  showGifts(): void {
+    this.setCurrentView(ContentView.GIFT);
   }
 
   isCurrentView(view: ContentView): boolean {
@@ -1211,8 +1130,11 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
    * Open QR Code modal for sharing wedding URL
    */
   openQRCodeModal(): void {
+    console.log('openQRCodeModal called');
+    console.log('Current domain:', this.domain);
 
     if (!this.domain) {
+      console.error('No domain available for QR code generation');
       alert('No domain available for QR code generation');
       return;
     }
@@ -1220,6 +1142,8 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
     const weddingUrl = this.getWeddingUrl();
     const coupleNames = this.getCoupleDisplayName();
 
+    console.log('Wedding URL:', weddingUrl);
+    console.log('Couple names:', coupleNames);
 
     const initialState = {
       url: weddingUrl,
@@ -1227,6 +1151,8 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
       description: 'Scan this QR code to view our wedding invitation'
     };
 
+    console.log('Modal initial state:', initialState);
+    console.log('Modal service:', this.modalService);
 
     try {
       this.qrModalRef = this.modalService.show(QRCodeModalComponent, {
@@ -1237,13 +1163,17 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
         animated: true
       });
 
+      console.log('Modal ref created:', this.qrModalRef);
 
       // Handle modal close event
       this.qrModalRef.onHide?.subscribe(() => {
+        console.log('QR Code modal closed');
         this.qrModalRef = undefined;
       });
 
+      console.log('QR Code modal opened successfully');
     } catch (error) {
+      console.error('Error opening QR modal:', error);
       alert('Error opening QR modal: ' + error);
     }
   }
@@ -1252,6 +1182,9 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
    * Test modal opening for debugging
    */
   testModal(): void {
+    console.log('Test modal button clicked');
+    console.log('Modal service available:', !!this.modalService);
+    console.log('QRCodeModalComponent:', QRCodeModalComponent);
 
     try {
       const testModalRef = this.modalService.show(QRCodeModalComponent, {
@@ -1263,81 +1196,67 @@ export class WeddingViewComponent implements OnInit, AfterViewInit, OnDestroy {
         class: 'modal-lg'
       });
 
+      console.log('Test modal opened:', testModalRef);
     } catch (error) {
+      console.error('Test modal error:', error);
       alert('Test modal error: ' + error);
     }
-  }
-
-  /**
-   * Check if couple/mempelai section should be visible
-   * Always true by default, but follows filter pattern for consistency
-   */
-  isCoupleVisible(): boolean {
-    return String(this.weddingData?.filter_undangan?.halaman_mempelai) === "1";
   }
 
   /**
    * Check if messages page should be visible based on filter_undangan.halaman_ucapan
    */
   isMessagesVisible(): boolean {
-    return String(this.weddingData?.filter_undangan?.halaman_ucapan) === "1";
+    return Number(this.weddingData?.filter_undangan?.halaman_ucapan) === 1;
   }
 
   /**
    * Check if calendar page should be visible based on filter_undangan.halaman_acara
    */
   isCalendarVisible(): boolean {
-    return String(this.weddingData?.filter_undangan?.halaman_acara) === "1";
+    return Number(this.weddingData?.filter_undangan?.halaman_acara) === 1;
   }
 
   /**
    * Check if birthday/events page should be visible based on filter_undangan.halaman_acara
    */
   isBirthdayVisible(): boolean {
-    return String(this.weddingData?.filter_undangan?.halaman_acara) === "1";
+    return Number(this.weddingData?.filter_undangan?.halaman_acara) === 1;
   }
 
   /**
    * Check if chat/stories page should be visible based on filter_undangan.halaman_cerita
    */
   isChatVisible(): boolean {
-    return String(this.weddingData?.filter_undangan?.halaman_cerita) === "1";
+    return Number(this.weddingData?.filter_undangan?.halaman_cerita) === 1;
   }
 
   /**
    * Check if gallery page should be visible based on filter_undangan.halaman_galery
    */
   isGalleryVisible(): boolean {
-    return String(this.weddingData?.filter_undangan?.halaman_galery) === "1";
+    return Number(this.weddingData?.filter_undangan?.halaman_galery) === 1;
   }
 
   /**
    * Check if profile/location page should be visible based on filter_undangan.halaman_lokasi
    */
   isProfileVisible(): boolean {
-    return String(this.weddingData?.filter_undangan?.halaman_lokasi) === "1";
+    return Number(this.weddingData?.filter_undangan?.halaman_lokasi) === 1;
   }
 
   /**
    * Check if gifts page should be visible based on filter_undangan.halaman_send_gift
    */
   isGiftsVisible(): boolean {
-    return String(this.weddingData?.filter_undangan?.halaman_send_gift) === "1";
+    return Number(this.weddingData?.filter_undangan?.halaman_send_gift) === 1;
   }
 
   /**
-   * Check if comments page should be visible based on filter_undangan.halaman_ucapan
-   * Shares flag with messages section
-   */
-  isCommentsVisible(): boolean {
-    return String(this.weddingData?.filter_undangan?.halaman_ucapan) === "1";
-  }
-
-  /**
-   * Check if favorite button should be visible based on filter_undangan.halaman_sampul
+   * Check if favorite button should be visible (always visible when invitation is opened)
    */
   isFavoriteVisible(): boolean {
-    return String(this.weddingData?.filter_undangan?.halaman_sampul) === "1";
+    return Number(this.weddingData?.filter_undangan?.halaman_sampul) === 1;
   }
 
   private initializeBootstrapTooltips(): void {

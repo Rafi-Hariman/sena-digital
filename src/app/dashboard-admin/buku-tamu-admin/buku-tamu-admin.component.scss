@@ -1,0 +1,76 @@
+.buku-tamu-admin-container {
+  padding: 20px;
+
+  .page-header {
+    margin-bottom: 30px;
+    .page-title { font-size: 28px; font-weight: 700; color: #2c3e50; }
+    .page-subtitle { color: #7f8c8d; }
+  }
+
+  .statistics-section {
+    margin-bottom: 30px;
+    .stat-card {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      .stat-number { font-size: 32px; font-weight: 700; }
+      .stat-label { font-size: 14px; color: #7f8c8d; }
+      &.stat-total { border-left: 4px solid #3498db; .stat-number { color: #3498db; } }
+      &.stat-hadir { border-left: 4px solid #27ae60; .stat-number { color: #27ae60; } }
+      &.stat-tidak { border-left: 4px solid #e74c3c; .stat-number { color: #e74c3c; } }
+      &.stat-ragu { border-left: 4px solid #f39c12; .stat-number { color: #f39c12; } }
+    }
+  }
+
+  .filter-section {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+
+  .table-responsive {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    .badge {
+      &.badge-success { background-color: #27ae60; }
+      &.badge-danger { background-color: #e74c3c; }
+      &.badge-warning { background-color: #f39c12; color: white; }
+    }
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 60px;
+    color: #95a5a6;
+  }
+}
+
+::ng-deep .modal-content {
+  .modal-header {
+    background: #e74c3c;
+    color: white;
+    .close { color: white; opacity: 0.8; }
+  }
+  .modal-body {
+    .detail-row {
+      display: flex;
+      margin-bottom: 15px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #ecf0f1;
+      &:last-child { border-bottom: none; }
+      label { font-weight: 600; color: #2c3e50; min-width: 150px; }
+      .ucapan-text {
+        flex: 1;
+        background: #f8f9fa;
+        padding: 12px;
+        border-radius: 6px;
+        white-space: pre-wrap;
+      }
+    }
+  }
+}
