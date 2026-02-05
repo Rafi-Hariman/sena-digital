@@ -7,7 +7,7 @@
   <!-- Statistics -->
   <div class="statistics-section" *ngIf="statistics">
     <div class="row">
-      <div class="col-md-3"><div class="stat-card stat-total"><div class="stat-number">{{ statistics.total_ucapan }}</div><div class="stat-label">Total Entries</div></div></div>
+      <div class="col-md-3"><div class="stat-card stat-total"><div class="stat-number">{{ statistics.total_entries }}</div><div class="stat-label">Total Entries</div></div></div>
       <div class="col-md-3"><div class="stat-card stat-hadir"><div class="stat-number">{{ statistics.total_hadir }}</div><div class="stat-label">Hadir ({{ statistics.percentage_hadir }}%)</div></div></div>
       <div class="col-md-3"><div class="stat-card stat-tidak"><div class="stat-number">{{ statistics.total_tidak_hadir }}</div><div class="stat-label">Tidak ({{ statistics.percentage_tidak_hadir }}%)</div></div></div>
       <div class="col-md-3"><div class="stat-card stat-ragu"><div class="stat-number">{{ statistics.total_ragu }}</div><div class="stat-label">Ragu ({{ statistics.percentage_ragu }}%)</div></div></div>
@@ -35,7 +35,7 @@
           <td><strong>{{ entry.nama }}</strong></td>
           <td><span class="badge" [ngClass]="getStatusBadgeClass(entry.status_kehadiran)">{{ getStatusLabel(entry.status_kehadiran) }}</span></td>
           <td>{{ entry.status_kehadiran === 'hadir' && entry.jumlah_tamu ? entry.jumlah_tamu + ' orang' : '-' }}</td>
-          <td>{{ truncateText(entry.ucapan, 40) }}</td>
+          <td>{{ truncateText(entry.ucapan || '', 40) }}</td>
           <td>{{ getRelativeTime(entry.created_at) }}</td>
           <td>
             <button class="btn btn-sm btn-info mr-1" (click)="openDetailModal(detailModal, entry)"><i class="fas fa-eye"></i></button>

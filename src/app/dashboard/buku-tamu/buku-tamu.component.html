@@ -10,7 +10,7 @@
     <div class="row">
       <div class="col-md-3 col-sm-6 mb-3">
         <div class="stat-card stat-total">
-          <div class="stat-number">{{ statistics.total_ucapan }}</div>
+          <div class="stat-number">{{ statistics.total_entries }}</div>
           <div class="stat-label">Total Ucapan</div>
         </div>
       </div>
@@ -184,7 +184,7 @@
             </span>
             <span *ngIf="entry.status_kehadiran !== 'hadir'">-</span>
           </td>
-          <td>{{ truncateText(entry.ucapan, 50) }}</td>
+          <td>{{ truncateText(entry.ucapan || '', 50) }}</td>
           <td>{{ getRelativeTime(entry.created_at) }}</td>
           <td>
             <span class="badge" [ngClass]="entry.is_approved ? 'badge-success' : 'badge-secondary'">

@@ -18,15 +18,15 @@
   align-items: center;
   justify-content: center;
   min-height: calc(100vh - 80px);
-  padding: 20px 15px;
-  padding-bottom: 100px;
+  padding: 12px 10px;
+  padding-bottom: 60px;
   box-sizing: border-box;
 }
 
 .form-container {
   background: linear-gradient(135deg, #E0DADE 0%, #E0DADE 100%);
   border-radius: 16px;
-  padding: 30px 20px;
+  padding: 20px 15px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: calc(100vw - 30px);
@@ -47,7 +47,7 @@
   font-weight: 600;
   color: #2c5530;
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 18px;
   letter-spacing: 0.5px;
   line-height: 1.2;
   word-break: break-word;
@@ -64,7 +64,7 @@
 }
 
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 14px;
   position: relative;
   transition: transform 0.2s ease;
 
@@ -94,7 +94,7 @@
   font-size: 15px;
   font-weight: 500;
   color: #5a5a5a;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   letter-spacing: 0.3px;
 }
 
@@ -176,7 +176,7 @@
   transition: all 0.3s ease;
   box-shadow: 0 6px 20px rgba(199, 119, 119, 0.3);
   letter-spacing: 0.5px;
-  margin-top: 12px;
+  margin-top: 8px;
   position: relative;
   overflow: hidden;
   min-height: 48px;

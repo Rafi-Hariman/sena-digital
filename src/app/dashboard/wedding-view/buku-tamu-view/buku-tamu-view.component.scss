@@ -1,5 +1,5 @@
 .buku-tamu-public-container {
-  max-width: 800px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 40px 20px;
 
@@ -118,13 +118,47 @@
       }
     }
 
+    .entries-scroll-container {
+      max-height: 600px;
+      overflow-y: auto;
+      padding-right: 8px;
+      margin-right: -8px;
+      
+      &::-webkit-scrollbar {
+        width: 6px;
+      }
+      
+      &::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 3px;
+      }
+      
+      &::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+        border-radius: 3px;
+        
+        &:hover {
+          background: #a8a8a8;
+        }
+      }
+      
+      scrollbar-width: thin;
+      scrollbar-color: #c1c1c1 #f1f1f1;
+    }
+    
     .entries-list {
       .entry-card {
         background: white;
-        padding: 20px;
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        margin-bottom: 15px;
+        padding: 25px;
+        border-radius: 16px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+        margin-bottom: 20px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba(0,0,0,0.16);
+        }
 
         .entry-header {
           display: flex;
@@ -176,17 +210,16 @@
       }
     }
 
-    .btn-load-more {
-      width: 100%;
-      padding: 12px;
-      background: white;
-      border: 2px solid #3498db;
-      color: #3498db;
-      border-radius: 6px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s;
-      &:hover { background: #3498db; color: white; }
+    .loading-indicator {
+      text-align: center;
+      padding: 20px;
+      color: #7f8c8d;
+      font-style: italic;
+      
+      p {
+        margin: 0;
+        font-size: 14px;
+      }
     }
   }
 }

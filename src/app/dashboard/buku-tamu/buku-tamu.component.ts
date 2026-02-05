@@ -8,7 +8,10 @@ import {
   BukuTamuStatistics,
   BukuTamuStatisticsResponse,
   BukuTamuDeleteResponse,
-  BukuTamuUpdateApprovalRequest
+  BukuTamuUpdateApprovalRequest,
+  BukuTamuBulkApprovalRequest,
+  BukuTamuBulkResponse,
+  BukuTamuExportResponse
 } from 'src/app/dashboard.service';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { catchError, of, forkJoin } from 'rxjs';
@@ -45,6 +48,9 @@ export class BukuTamuComponent implements OnInit {
 
   // Modal
   modalRef?: BsModalRef;
+
+  // Expose Math for template
+  Math = Math;
   selectedEntry: BukuTamuEntry | null = null;
 
   constructor(
@@ -101,7 +107,7 @@ export class BukuTamuComponent implements OnInit {
         if (results.bukuTamuList) {
           const response = results.bukuTamuList as BukuTamuResponse;
           this.dataList = response.data || [];
-          this.totalItems = response.meta?.total || 0;
+          this.totalItems = response.pagination?.total || 0;
           this.applyFilters();
         }
 
@@ -130,7 +136,7 @@ export class BukuTamuComponent implements OnInit {
       filtered = filtered.filter(entry =>
         entry.nama.toLowerCase().includes(query) ||
         entry.email?.toLowerCase().includes(query) ||
-        entry.ucapan.toLowerCase().includes(query)
+        (entry.ucapan?.toLowerCase().includes(query))
       );
     }
 
@@ -246,8 +252,27 @@ export class BukuTamuComponent implements OnInit {
       return;
     }
 
-    // Implementation depends on backend bulk update API
-    this.notyf.info('Fitur bulk approve sedang dalam pengembangan');
+    const body: BukuTamuBulkApprovalRequest = {
+      ids: Array.from(this.selectedIds),
+      is_approved: true
+    };
+
+    this.dashBoardSvc.patch(
+      DashboardServiceType.BUKUTAMU_USER_BULK_APPROVAL,
+      '',
+      body
+    ).subscribe(
+      (response: BukuTamuBulkResponse) => {
+        this.notyf.success(`${response.data.updated_count} data berhasil disetujui`);
+        this.selectedIds.clear();
+        this.selectAll = false;
+        this.loadData();
+      },
+      (error: any) => {
+        console.error('Error bulk approve:', error);
+        this.notyf.error('Gagal menyetujui data');
+      }
+    );
   }
 
   bulkHide(): void {
@@ -256,8 +281,27 @@ export class BukuTamuComponent implements OnInit {
       return;
     }
 
-    // Implementation depends on backend bulk update API
-    this.notyf.info('Fitur bulk hide sedang dalam pengembangan');
+    const body: BukuTamuBulkApprovalRequest = {
+      ids: Array.from(this.selectedIds),
+      is_approved: false
+    };
+
+    this.dashBoardSvc.patch(
+      DashboardServiceType.BUKUTAMU_USER_BULK_APPROVAL,
+      '',
+      body
+    ).subscribe(
+      (response: BukuTamuBulkResponse) => {
+        this.notyf.success(`${response.data.updated_count} data berhasil disembunyikan`);
+        this.selectedIds.clear();
+        this.selectAll = false;
+        this.loadData();
+      },
+      (error: any) => {
+        console.error('Error bulk hide:', error);
+        this.notyf.error('Gagal menyembunyikan data');
+      }
+    );
   }
 
   bulkDelete(): void {
@@ -270,8 +314,24 @@ export class BukuTamuComponent implements OnInit {
       return;
     }
 
-    // Implementation depends on backend bulk delete API
-    this.notyf.info('Fitur bulk delete sedang dalam pengembangan');
+    const deletePromises = Array.from(this.selectedIds).map(id =>
+      this.dashBoardSvc.deleteV2(
+        DashboardServiceType.BUKUTAMU_USER_DELETE,
+        id
+      ).toPromise()
+    );
+
+    Promise.all(deletePromises)
+      .then(() => {
+        this.notyf.success(`${this.selectedIds.size} data berhasil dihapus`);
+        this.selectedIds.clear();
+        this.selectAll = false;
+        this.loadData();
+      })
+      .catch((error) => {
+        console.error('Error bulk delete:', error);
+        this.notyf.error('Gagal menghapus data');
+      });
   }
 
   deleteAll(): void {
@@ -292,8 +352,40 @@ export class BukuTamuComponent implements OnInit {
   }
 
   exportData(): void {
-    // Implementation for data export
-    this.notyf.info('Fitur export sedang dalam pengembangan');
+    this.isLoading = true;
+
+    this.dashBoardSvc.list(
+      DashboardServiceType.BUKUTAMU_USER_EXPORT,
+      { format: 'csv' }
+    ).subscribe(
+      (response: BukuTamuExportResponse) => {
+        const blob = this.base64ToBlob(response.data.content, response.data.mime_type);
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = response.data.filename;
+        link.click();
+        window.URL.revokeObjectURL(url);
+
+        this.notyf.success('Data berhasil diekspor');
+        this.isLoading = false;
+      },
+      (error) => {
+        console.error('Error exporting data:', error);
+        this.notyf.error('Gagal mengekspor data');
+        this.isLoading = false;
+      }
+    );
+  }
+
+  private base64ToBlob(base64: string, mimeType: string): Blob {
+    const byteCharacters = atob(base64);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    return new Blob([byteArray], { type: mimeType });
   }
 
   getStatusBadgeClass(status: string): string {

@@ -51,7 +51,7 @@
   overflow-y: auto;
   overflow-x: hidden;
   scroll-behavior: smooth;
-  padding-bottom: 120px;
+  padding-bottom: 60px;
   position: relative;
   z-index: 1;
 
@@ -81,12 +81,12 @@
 
 /* Full-section wrapper for each component */
 .full-section {
-  min-height: 100vh;
+  min-height: auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 40px 20px;
+  padding: 20px 12px;
   opacity: 0;
   animation: fadeInUpSection 1000ms ease-out forwards;
 
@@ -101,11 +101,11 @@
 
   @media (max-width: 768px) {
     min-height: auto;
-    padding: 30px 15px;
+    padding: 15px 8px;
   }
 
   @media (max-width: 576px) {
-    padding: 20px 10px;
+    padding: 12px 6px;
   }
 }
 
@@ -417,7 +417,7 @@
 .profile-view,
 .gift-view {
   text-align: center;
-  padding: 40px 20px;
+  padding: 20px 12px;
   color: #2c5530;
 
   h2 {
@@ -443,7 +443,7 @@
   .gallery-view,
   .profile-view,
   .gift-view {
-    padding: 30px 15px;
+    padding: 15px 8px;
 
     h2 {
       font-size: 2rem;
@@ -463,7 +463,7 @@
   .gallery-view,
   .profile-view,
   .gift-view {
-    padding: 20px 10px;
+    padding: 10px 6px;
 
     h2 {
       font-size: 1.8rem;

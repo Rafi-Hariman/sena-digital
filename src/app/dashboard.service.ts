@@ -202,14 +202,21 @@ export enum DashboardServiceType {
   BUKUTAMU_PUBLIC_CREATE,
   BUKUTAMU_PUBLIC_STATISTICS,
   BUKUTAMU_USER_LIST,
+  BUKUTAMU_USER_DETAIL,
   BUKUTAMU_USER_STATISTICS,
   BUKUTAMU_USER_UPDATE_APPROVAL,
+  BUKUTAMU_USER_BULK_APPROVAL,
   BUKUTAMU_USER_DELETE,
   BUKUTAMU_USER_DELETE_ALL,
   BUKUTAMU_USER_EXPORT,
   BUKUTAMU_ADMIN_LIST,
+  BUKUTAMU_ADMIN_DETAIL,
   BUKUTAMU_ADMIN_STATISTICS,
+  BUKUTAMU_ADMIN_UPDATE_APPROVAL,
+  BUKUTAMU_ADMIN_BULK_APPROVAL,
   BUKUTAMU_ADMIN_DELETE,
+  BUKUTAMU_ADMIN_BULK_DELETE,
+  BUKUTAMU_ADMIN_DELETE_BY_USER,
 }
 
 // Testimonial Interfaces
@@ -275,19 +282,23 @@ export interface TestimonialBulkStatusRequest {
 
 // Buku Tamu Interfaces
 // Interfaces for handling guest book (buku tamu) with RSVP functionality
+// Based on API Contract v1.0.0
+
 export interface BukuTamuEntry {
   id: number;
   user_id: number;
   nama: string;
   email?: string | null;
   telepon?: string | null;
+  ucapan?: string | null;
   status_kehadiran: 'hadir' | 'tidak_hadir' | 'ragu';
-  jumlah_tamu?: number | null;
-  ucapan: string;
+  status_kehadiran_label: string;
+  jumlah_tamu: number;
   is_approved: boolean;
   ip_address?: string | null;
   created_at: string;
   updated_at: string;
+  created_at_human: string;
 }
 
 export interface BukuTamuUser {
@@ -303,7 +314,7 @@ export interface BukuTamuAdminEntry extends BukuTamuEntry {
 }
 
 export interface BukuTamuStatistics {
-  total_ucapan: number;
+  total_entries: number;
   total_hadir: number;
   total_tidak_hadir: number;
   total_ragu: number;
@@ -311,59 +322,103 @@ export interface BukuTamuStatistics {
   percentage_hadir: number;
   percentage_tidak_hadir: number;
   percentage_ragu: number;
+  today_entries?: number;
+  approved_entries?: number;
+  pending_entries?: number;
+  total_users_with_entries?: number;
+  entries_per_user?: Array<{ user_id: number; total: number }>;
 }
 
-export interface BukuTamuMeta {
-  current_page: number;
-  from: number | null;
-  last_page: number;
-  per_page: number;
-  to: number | null;
+export interface BukuTamuPagination {
   total: number;
+  per_page: number;
+  current_page: number;
+  last_page: number;
+  from?: number | null;
+  to?: number | null;
 }
 
 export interface BukuTamuResponse {
+  status: number;
+  message: string;
   data: BukuTamuEntry[];
-  meta?: BukuTamuMeta;
-  links?: {
-    first: string;
-    last: string;
-    prev: string | null;
-    next: string | null;
-  };
+  pagination?: BukuTamuPagination;
+  statistics?: BukuTamuStatistics;
 }
 
 export interface BukuTamuAdminResponse {
+  status: number;
+  message: string;
   data: BukuTamuAdminEntry[];
-  meta?: BukuTamuMeta;
-  links?: {
-    first: string;
-    last: string;
-    prev: string | null;
-    next: string | null;
-  };
+  pagination?: BukuTamuPagination;
 }
 
 export interface BukuTamuStatisticsResponse {
+  status: number;
+  message: string;
   data: BukuTamuStatistics;
+}
+
+export interface BukuTamuDetailResponse {
+  status: number;
+  message: string;
+  data: BukuTamuEntry;
+}
+
+export interface BukuTamuAdminDetailResponse {
+  status: number;
+  message: string;
+  data: BukuTamuAdminEntry;
 }
 
 export interface BukuTamuCreateRequest {
   user_id: number;
   nama: string;
-  email?: string;
-  telepon?: string;
+  email?: string | null;
+  telepon?: string | null;
+  ucapan?: string | null;
   status_kehadiran: 'hadir' | 'tidak_hadir' | 'ragu';
-  jumlah_tamu?: number;
-  ucapan: string;
+  jumlah_tamu?: number | null;
 }
 
 export interface BukuTamuUpdateApprovalRequest {
   is_approved: boolean;
 }
 
-export interface BukuTamuDeleteResponse {
+export interface BukuTamuBulkApprovalRequest {
+  ids: number[];
+  is_approved: boolean;
+}
+
+export interface BukuTamuBulkDeleteRequest {
+  ids: number[];
+}
+
+export interface BukuTamuBulkResponse {
+  status: number;
   message: string;
+  data: {
+    updated_count?: number;
+    deleted_count?: number;
+  };
+}
+
+export interface BukuTamuDeleteResponse {
+  status: number;
+  message: string;
+  data?: {
+    deleted_count?: number;
+  };
+}
+
+export interface BukuTamuExportResponse {
+  status: number;
+  message: string;
+  data: {
+    content: string;
+    filename: string;
+    mime_type: string;
+  };
 }
 
 @Injectable({
@@ -715,30 +770,49 @@ export class DashboardService {
         return `${this.BASE_URL_API}/v1/komentars/statistics`;
 
       // Buku Tamu (Guest Book with RSVP) API endpoints
+      // Public endpoints - no authentication required
       case DashboardServiceType.BUKUTAMU_PUBLIC_LIST:
         return `${this.BASE_URL_API}/v1/buku-tamu`;
       case DashboardServiceType.BUKUTAMU_PUBLIC_CREATE:
         return `${this.BASE_URL_API}/v1/buku-tamu`;
       case DashboardServiceType.BUKUTAMU_PUBLIC_STATISTICS:
         return `${this.BASE_URL_API}/v1/buku-tamu/statistics`;
+
+      // User endpoints - authentication required
       case DashboardServiceType.BUKUTAMU_USER_LIST:
         return `${this.BASE_URL_API}/v1/user/result-bukutamu`;
+      case DashboardServiceType.BUKUTAMU_USER_DETAIL:
+        return `${this.BASE_URL_API}/v1/user/buku-tamu`;
       case DashboardServiceType.BUKUTAMU_USER_STATISTICS:
-        return `${this.BASE_URL_API}/v1/user/result-bukutamu/statistics`;
+        return `${this.BASE_URL_API}/v1/user/buku-tamu/statistics`;
       case DashboardServiceType.BUKUTAMU_USER_UPDATE_APPROVAL:
         return `${this.BASE_URL_API}/v1/user/buku-tamu`;
+      case DashboardServiceType.BUKUTAMU_USER_BULK_APPROVAL:
+        return `${this.BASE_URL_API}/v1/user/buku-tamu/bulk-approval`;
       case DashboardServiceType.BUKUTAMU_USER_DELETE:
         return `${this.BASE_URL_API}/v1/user/buku-tamu`;
       case DashboardServiceType.BUKUTAMU_USER_DELETE_ALL:
         return `${this.BASE_URL_API}/v1/user/buku-tamu/delete-all`;
       case DashboardServiceType.BUKUTAMU_USER_EXPORT:
         return `${this.BASE_URL_API}/v1/user/buku-tamu/export`;
+
+      // Admin endpoints - authentication + admin role required
       case DashboardServiceType.BUKUTAMU_ADMIN_LIST:
+        return `${this.BASE_URL_API}/v1/admin/buku-tamu`;
+      case DashboardServiceType.BUKUTAMU_ADMIN_DETAIL:
         return `${this.BASE_URL_API}/v1/admin/buku-tamu`;
       case DashboardServiceType.BUKUTAMU_ADMIN_STATISTICS:
         return `${this.BASE_URL_API}/v1/admin/buku-tamu/statistics`;
+      case DashboardServiceType.BUKUTAMU_ADMIN_UPDATE_APPROVAL:
+        return `${this.BASE_URL_API}/v1/admin/buku-tamu`;
+      case DashboardServiceType.BUKUTAMU_ADMIN_BULK_APPROVAL:
+        return `${this.BASE_URL_API}/v1/admin/buku-tamu/bulk-approval`;
       case DashboardServiceType.BUKUTAMU_ADMIN_DELETE:
         return `${this.BASE_URL_API}/v1/admin/buku-tamu`;
+      case DashboardServiceType.BUKUTAMU_ADMIN_BULK_DELETE:
+        return `${this.BASE_URL_API}/v1/admin/buku-tamu/bulk-delete`;
+      case DashboardServiceType.BUKUTAMU_ADMIN_DELETE_BY_USER:
+        return `${this.BASE_URL_API}/v1/admin/buku-tamu/user`;
 
       default:
         return '';
@@ -926,6 +1000,18 @@ export class DashboardService {
 
   update(serviceType: DashboardServiceType, param: string, body: any): Observable<any> {
     return this.httpSvc.put(`${this.getUrl(serviceType)}${param}`, body);
+  }
+
+  patch(serviceType: DashboardServiceType, id: number | string, body: any): Observable<any> {
+    const baseUrl = this.getUrl(serviceType);
+    const url = id ? `${baseUrl}/${id}` : baseUrl;
+    return this.httpSvc.patch(url, body);
+  }
+
+  deleteWithBody(serviceType: DashboardServiceType, id: number | string, body: any): Observable<any> {
+    const baseUrl = this.getUrl(serviceType);
+    const url = id ? `${baseUrl}/${id}` : baseUrl;
+    return this.httpSvc.request('DELETE', url, { body });
   }
 
   getParam(serviceType: DashboardServiceType, parameter: string, params?: any): Observable<any> {

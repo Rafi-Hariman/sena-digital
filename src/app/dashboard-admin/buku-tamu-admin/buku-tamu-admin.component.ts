@@ -6,7 +6,11 @@ import {
   BukuTamuAdminEntry,
   BukuTamuAdminResponse,
   BukuTamuStatistics,
-  BukuTamuStatisticsResponse
+  BukuTamuStatisticsResponse,
+  BukuTamuBulkDeleteRequest,
+  BukuTamuBulkResponse,
+  BukuTamuBulkApprovalRequest,
+  BukuTamuUpdateApprovalRequest
 } from 'src/app/dashboard.service';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { catchError, of, forkJoin } from 'rxjs';
@@ -100,7 +104,7 @@ export class BukuTamuAdminComponent implements OnInit {
         if (results.bukuTamuList) {
           const response = results.bukuTamuList as BukuTamuAdminResponse;
           this.dataList = response.data || [];
-          this.totalItems = response.meta?.total || 0;
+          this.totalItems = response.pagination?.total || 0;
           this.applyFilters();
         }
 
@@ -219,7 +223,78 @@ export class BukuTamuAdminComponent implements OnInit {
       return;
     }
 
-    this.notyf.info('Fitur bulk delete sedang dalam pengembangan');
+    const body: BukuTamuBulkDeleteRequest = {
+      ids: Array.from(this.selectedIds)
+    };
+
+    this.dashBoardSvc.deleteWithBody(
+      DashboardServiceType.BUKUTAMU_ADMIN_BULK_DELETE,
+      '',
+      body
+    ).subscribe(
+      (response: BukuTamuBulkResponse) => {
+        this.notyf.success(`${response.data.deleted_count} data berhasil dihapus`);
+        this.selectedIds.clear();
+        this.selectAll = false;
+        this.loadData();
+      },
+      (error: any) => {
+        console.error('Error bulk delete:', error);
+        this.notyf.error('Gagal menghapus data');
+      }
+    );
+  }
+
+  bulkApprove(approve: boolean): void {
+    if (this.selectedIds.size === 0) {
+      this.notyf.error('Pilih data terlebih dahulu');
+      return;
+    }
+
+    const body: BukuTamuBulkApprovalRequest = {
+      ids: Array.from(this.selectedIds),
+      is_approved: approve
+    };
+
+    this.dashBoardSvc.patch(
+      DashboardServiceType.BUKUTAMU_ADMIN_BULK_APPROVAL,
+      '',
+      body
+    ).subscribe(
+      (response: BukuTamuBulkResponse) => {
+        const action = approve ? 'disetujui' : 'ditolak';
+        this.notyf.success(`${response.data.updated_count} data berhasil ${action}`);
+        this.selectedIds.clear();
+        this.selectAll = false;
+        this.loadData();
+      },
+      (error: any) => {
+        console.error('Error bulk approval:', error);
+        this.notyf.error('Gagal mengubah status approval');
+      }
+    );
+  }
+
+  toggleApproval(entry: BukuTamuAdminEntry): void {
+    const body: BukuTamuUpdateApprovalRequest = {
+      is_approved: !entry.is_approved
+    };
+
+    this.dashBoardSvc.patch(
+      DashboardServiceType.BUKUTAMU_ADMIN_UPDATE_APPROVAL,
+      entry.id,
+      body
+    ).subscribe(
+      () => {
+        entry.is_approved = !entry.is_approved;
+        const status = entry.is_approved ? 'ditampilkan' : 'disembunyikan';
+        this.notyf.success(`Ucapan berhasil ${status}`);
+      },
+      (error: any) => {
+        console.error('Error toggle approval:', error);
+        this.notyf.error('Gagal mengubah status approval');
+      }
+    );
   }
 
   getStatusBadgeClass(status: string): string {

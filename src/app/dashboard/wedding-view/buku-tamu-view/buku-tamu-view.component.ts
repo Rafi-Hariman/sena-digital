@@ -28,7 +28,7 @@ export class BukuTamuViewComponent implements OnInit {
   isLoading = true;
 
   statusFilter: 'all' | 'hadir' | 'tidak_hadir' | 'ragu' = 'all';
-  entriesToShow = 10;
+  entriesToShow = 3;
 
   private notyf: Notyf;
 
@@ -130,7 +130,18 @@ export class BukuTamuViewComponent implements OnInit {
   }
 
   loadMore(): void {
-    this.entriesToShow += 10;
+    this.entriesToShow += 3;
+  }
+
+  onScroll(event: Event): void {
+    const target = event.target as HTMLElement;
+    const threshold = 100;
+    const position = target.scrollTop + target.offsetHeight;
+    const height = target.scrollHeight;
+    
+    if (position > height - threshold && this.entriesToShow < this.entries.length) {
+      this.loadMore();
+    }
   }
 
   getStatusBadgeClass(status: string): string {

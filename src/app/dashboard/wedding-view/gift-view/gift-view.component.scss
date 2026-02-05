@@ -6,7 +6,7 @@
   min-height: 100vh;
   width: 100%;
   font-family: "Georgia", "Times New Roman", serif;
-  padding: 15px;
+  padding: 10px;
   box-sizing: border-box;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -17,7 +17,7 @@
   background: linear-gradient(135deg, #E0DADE 0%, #E0DADE 100%);
   width: 100%;
   max-width: 100%;
-  padding: 25px 15px;
+  padding: 18px 12px;
   text-align: center;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
   border-radius: 12px;
@@ -33,7 +33,7 @@
   color: #4a5568;
   font-size: 14px;
   line-height: 1.5;
-  margin-bottom: 20px;
+  margin-bottom: 14px;
   font-weight: 400;
   letter-spacing: 0.5px;
   word-break: break-word;
@@ -47,7 +47,7 @@
   font-family: "Brush Script MT", cursive;
   font-size: 32px;
   color: #2d3748;
-  margin: 20px 0;
+  margin: 14px 0;
   font-weight: normal;
   letter-spacing: 2px;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -57,7 +57,7 @@
 .gift-text {
   color: #4a5568;
   font-size: 14px;
-  margin: 20px 0 18px 0;
+  margin: 14px 0 12px 0;
   font-weight: 400;
   letter-spacing: 0.5px;
   word-break: break-word;
@@ -66,8 +66,8 @@
 .banks-container {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  margin-top: 18px;
+  gap: 10px;
+  margin-top: 12px;
   align-items: center;
 }
 
@@ -76,7 +76,7 @@
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.4);
   border-radius: 12px;
-  padding: 14px;
+  padding: 10px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
   width: 100%;
@@ -88,8 +88,8 @@
 
 .bank-header {
   text-align: center;
-  margin-bottom: 10px;
-  padding-bottom: 8px;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 }
 

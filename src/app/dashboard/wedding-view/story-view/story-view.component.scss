@@ -4,7 +4,7 @@
   display: block;
   width: 100%;
   box-sizing: border-box;
-  padding: 30px 15px;
+  padding: 16px 10px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -14,7 +14,7 @@
   max-width: 600px;
   width: 100%;
   margin: 0 auto;
-  padding: 15px;
+  padding: 10px;
   box-sizing: border-box;
 }
 
@@ -25,7 +25,7 @@
   color: #c77777;
   text-align: center;
   letter-spacing: 0.5px;
-  margin-bottom: 30px;
+  margin-bottom: 18px;
 
   // Entry animation - fade in with subtle scale
   opacity: 0;
@@ -34,9 +34,9 @@
 }
 
 .timeline-item {
-  margin-bottom: 25px;
+  margin-bottom: 15px;
   position: relative;
-  padding: 15px;
+  padding: 12px;
   background: rgba(255, 255, 255, 0.5);
   border-radius: 8px;
   touch-action: pan-y;
@@ -68,7 +68,7 @@
   font-size: 14px;
   color: #5a5a5a;
   font-weight: 600;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   text-align: left;
 
   // Subtle animation for date
@@ -81,7 +81,7 @@
   font-size: 16px;
   color: #2c4a2c;
   font-weight: 600;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   text-align: left;
   line-height: 1.4;
 
@@ -108,7 +108,7 @@
 .flower-decoration {
   width: 80px;
   height: 60px;
-  margin: 30px auto;
+  margin: 18px auto;
   position: relative;
   display: flex;
   align-items: center;
